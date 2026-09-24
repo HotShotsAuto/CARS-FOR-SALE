@@ -1,0 +1,2252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HotShots Automotive — Used vehicle inventory</title>
+<meta name="description" content="Hand-picked for you">
+<link rel="icon" href="https://hotshotsauto.com/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --paper:#ffffff;
+  --wash:#eef1f5;
+  --wash-2:#e3e8ef;
+  --ink:#111820;
+  --ink-2:#4d5b6b;
+  --ink-3:#77869a;
+  --line:#d4dbe4;
+  --line-strong:#b6c1ce;
+  --brand:#0d3b5c;
+  --brand-hover:#15527d;
+  --on-brand:#ffffff;
+  --band:#0d3b5c;
+  --band-ink:#e9f1f8;
+  --signal:#a8202c;
+  --stamp:#15653f;
+  --stamp-bg:#e4f2ea;
+  --warn:#8a5a00;
+  --warn-bg:#fdf1d8;
+  --shadow:0 1px 2px rgba(16,26,38,.08), 0 8px 20px -12px rgba(16,26,38,.25);
+  --radius:4px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#131a22;
+    --wash:#0e141b;
+    --wash-2:#1b242f;
+    --ink:#e7edf4;
+    --ink-2:#a3b1c1;
+    --ink-3:#7d8b9c;
+    --line:#2a3542;
+    --line-strong:#3a4756;
+    --brand:#2f7fb5;
+    --brand-hover:#3d92cb;
+    --on-brand:#06121c;
+    --band:#0b1622;
+    --band-ink:#dbe7f2;
+    --signal:#ff8189;
+    --stamp:#63c99a;
+    --stamp-bg:#132a20;
+    --warn:#e0b25e;
+    --warn-bg:#2a2214;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 20px -12px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131a22;
+  --wash:#0e141b;
+  --wash-2:#1b242f;
+  --ink:#e7edf4;
+  --ink-2:#a3b1c1;
+  --ink-3:#7d8b9c;
+  --line:#2a3542;
+  --line-strong:#3a4756;
+  --brand:#2f7fb5;
+  --brand-hover:#3d92cb;
+  --on-brand:#06121c;
+  --band:#0b1622;
+  --band-ink:#dbe7f2;
+  --signal:#ff8189;
+  --stamp:#63c99a;
+  --stamp-bg:#132a20;
+  --warn:#e0b25e;
+  --warn-bg:#2a2214;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 20px -12px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{
+  background:var(--wash);
+  color:var(--ink);
+  font:400 15px/1.55 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.wrap{max-width:1280px;margin:0 auto;padding:0 20px}
+.disp{font-family:"Archivo Narrow","Inter",sans-serif;letter-spacing:.005em}
+
+/* ---------- top bar ---------- */
+.topbar{background:var(--band);color:var(--band-ink);position:sticky;top:0;z-index:40}
+.topbar .wrap{display:flex;align-items:center;gap:18px;min-height:60px;flex-wrap:wrap}
+.brandmark{display:flex;align-items:baseline;gap:10px;margin-right:auto;min-width:0}
+.brandmark .nm{font-family:"Archivo Narrow",sans-serif;font-weight:700;font-size:23px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brandmark .tg{font-size:12.5px;color:rgba(233,241,248,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar a.tel{font-family:"Archivo Narrow",sans-serif;font-weight:700;font-size:19px;text-decoration:none;white-space:nowrap}
+.topbar a.tel:hover{text-decoration:underline}
+.ghostbtn{background:transparent;border:1px solid rgba(233,241,248,.4);color:inherit;border-radius:var(--radius);padding:7px 13px;font-size:13.5px;font-weight:500;cursor:pointer;white-space:nowrap}
+.ghostbtn:hover{background:rgba(255,255,255,.1)}
+
+/* ---------- page head ---------- */
+.pagehead{background:var(--paper);border-bottom:1px solid var(--line)}
+.pagehead .wrap{padding-top:26px;padding-bottom:20px}
+h1.title{font-family:"Archivo Narrow",sans-serif;font-weight:700;font-size:clamp(28px,4.2vw,40px);line-height:1.05;margin:0 0 6px}
+.subline{margin:0;color:var(--ink-2);max-width:62ch;font-size:15px}
+.trustrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.trustchip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;background:var(--stamp-bg);color:var(--stamp);border:1px solid color-mix(in srgb,var(--stamp) 30%,transparent);border-radius:999px;padding:5px 12px}
+
+/* ---------- services / perks band ---------- */
+.perksband{background:var(--band);border-bottom:2px solid color-mix(in srgb,var(--band-ink) 18%,transparent);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.perksband::-webkit-scrollbar{display:none}
+.perksband .wrap{display:flex;gap:26px;padding:10px 20px;white-space:nowrap}
+.perkitem{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--band-ink);flex-shrink:0}
+.perkitem .tick{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:10.5px;flex-shrink:0}
+
+/* ---------- toolbar ---------- */
+.toolbar{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:60px;z-index:30}
+.toolbar .wrap{display:flex;align-items:center;gap:14px;min-height:54px;flex-wrap:wrap}
+.count{font-family:"Archivo Narrow",sans-serif;font-weight:600;font-size:17px}
+.count b{font-weight:700}
+.toolbar .spacer{margin-left:auto}
+.sortwrap{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink-2)}
+select,input[type=text],input[type=number],input[type=search],textarea{
+  background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--radius);padding:8px 10px;width:100%;
+}
+select:hover{border-color:var(--brand)}
+.sortwrap select{width:auto;min-width:210px}
+.linkbtn{background:none;border:0;padding:0;color:var(--brand);font-size:13.5px;font-weight:500;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.filtertoggle{display:none}
+
+/* ---------- layout ---------- */
+.shell{display:grid;grid-template-columns:266px 1fr;gap:24px;align-items:start;padding:24px 0 60px}
+.rail{position:sticky;top:128px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);max-height:calc(100vh - 150px);overflow:auto}
+.fgroup{border-bottom:1px solid var(--line);padding:14px 16px}
+.fgroup:last-child{border-bottom:0}
+.fgroup h3{font-family:"Archivo Narrow",sans-serif;font-size:15px;font-weight:700;margin:0 0 10px}
+.fgroup label.chk{display:flex;align-items:center;gap:9px;padding:3px 0;font-size:14px;cursor:pointer}
+.fgroup label.chk input{margin:0;accent-color:var(--brand)}
+.fgroup .cnt{margin-left:auto;color:var(--ink-3);font-size:12.5px}
+.rangerow{display:grid;grid-template-columns:1fr auto 1fr;gap:7px;align-items:center;color:var(--ink-3);font-size:13px}
+.railhead{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);background:var(--wash-2);position:sticky;top:0;z-index:2}
+.railhead h2{font-family:"Archivo Narrow",sans-serif;font-size:16px;margin:0;font-weight:700}
+
+/* ---------- grid + cards ---------- */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.shot{position:relative;aspect-ratio:4/3;background:var(--wash-2);cursor:pointer;border:0;padding:0;width:100%;display:block}
+.shot img{width:100%;height:100%;object-fit:cover}
+.shot .none{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:13px}
+.pill{position:absolute;bottom:8px;right:8px;background:rgba(10,18,26,.78);color:#fff;font-size:12px;font-weight:500;padding:3px 8px;border-radius:3px}
+.statustag{position:absolute;top:0;left:0;font-family:"Archivo Narrow",sans-serif;font-weight:700;font-size:13px;letter-spacing:.04em;padding:5px 12px;color:#fff;background:var(--signal)}
+.statustag.pending{background:#9a6b00}
+.cardbody{padding:14px 15px 16px;display:flex;flex-direction:column;gap:11px;flex:1}
+.cardtop{display:flex;gap:12px;align-items:flex-start}
+.cartitle{font-family:"Archivo Narrow",sans-serif;font-weight:700;font-size:19px;line-height:1.2;margin:0;flex:1;min-width:0}
+.cartitle .trim{display:block;font-weight:500;font-size:14px;color:var(--ink-2);line-height:1.3}
+.pricebox{text-align:right;flex-shrink:0}
+.price{font-family:"Archivo Narrow",sans-serif;font-weight:700;font-size:23px;line-height:1.1;color:var(--signal)}
+.pricenote{font-size:11.5px;color:var(--ink-3)}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:3px 14px;font-size:13.2px;color:var(--ink-2);margin:0}
+.specs div{display:flex;gap:5px;min-width:0}
+.specs span{color:var(--ink-3);flex-shrink:0}
+.specs b{font-weight:500;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.paperstrip{display:flex;flex-wrap:wrap;gap:6px;padding-top:2px}
+.doctag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;border:1px solid var(--line-strong);border-radius:3px;padding:3px 8px;color:var(--ink-2);background:var(--wash)}
+.doctag.on{border-color:color-mix(in srgb,var(--stamp) 45%,transparent);background:var(--stamp-bg);color:var(--stamp)}
+.cardactions{display:flex;gap:8px;margin-top:auto;padding-top:4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:var(--radius);border:1px solid var(--brand);background:var(--brand);color:var(--on-brand);font-weight:600;font-size:14px;padding:9px 14px;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn:hover{background:var(--brand-hover);border-color:var(--brand-hover)}
+.btn.sec{background:transparent;color:var(--brand);}
+.btn.sec:hover{background:color-mix(in srgb,var(--brand) 10%,transparent)}
+.btn.sm{padding:6px 11px;font-size:13px}
+.btn.danger{border-color:var(--signal);background:transparent;color:var(--signal)}
+.btn.danger:hover{background:color-mix(in srgb,var(--signal) 12%,transparent)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.cardactions .btn{flex:1}
+
+.empty{background:var(--paper);border:1px dashed var(--line-strong);border-radius:var(--radius);padding:56px 28px;text-align:center;color:var(--ink-2)}
+.empty h3{font-family:"Archivo Narrow",sans-serif;font-size:21px;margin:0 0 8px;color:var(--ink)}
+
+/* ---------- detail ---------- */
+.detail{padding:22px 0 70px}
+.crumb{background:none;border:0;padding:0;color:var(--brand);font-weight:500;cursor:pointer;font-size:14px;margin-bottom:14px}
+.dhead{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin-bottom:18px}
+.dhead h1{font-family:"Archivo Narrow",sans-serif;font-weight:700;font-size:clamp(26px,3.6vw,36px);line-height:1.08;margin:0}
+.dhead .sub{color:var(--ink-2);font-size:14.5px;margin-top:5px}
+.dhead .pricebox{margin-left:auto;text-align:right}
+.dhead .price{font-size:34px}
+.dgrid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:26px;align-items:start}
+.gallery{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.stage{position:relative;aspect-ratio:4/3;background:#0b1118;cursor:zoom-in}
+.stage img{width:100%;height:100%;object-fit:contain}
+.stage .none{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#7d8b9c;font-size:14px}
+.navarrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(10,18,26,.55);color:#fff;border:0;width:44px;height:56px;cursor:pointer;font-size:22px;line-height:1;border-radius:3px;transition:background .15s}
+.navarrow:hover{background:rgba(10,18,26,.85)}
+.navarrow.l{left:10px}.navarrow.r{right:10px}
+.maxbtn{position:absolute;top:10px;right:10px;background:rgba(10,18,26,.55);color:#fff;border:0;width:38px;height:38px;border-radius:3px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.maxbtn:hover{background:rgba(10,18,26,.85)}
+.stagecount{position:absolute;bottom:10px;left:10px;background:rgba(10,18,26,.6);color:#fff;font-size:12.5px;font-weight:500;padding:4px 9px;border-radius:99px}
+
+/* medium-thumbnail slideshow strip, shared by inline gallery and lightbox */
+.thumbs{display:flex;gap:9px;padding:12px;overflow-x:auto;background:var(--paper);scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.thumbs::-webkit-scrollbar{height:6px}
+.thumbs::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:99px}
+.thumbs button{flex:0 0 108px;height:80px;padding:0;border:0;border-radius:6px;overflow:hidden;background:var(--wash-2);cursor:pointer;position:relative;scroll-snap-align:center;box-shadow:0 1px 3px rgba(16,26,38,.15);transition:transform .15s ease, box-shadow .15s ease;opacity:.72}
+.thumbs button:hover{opacity:1;transform:translateY(-2px)}
+.thumbs button[aria-current="true"]{opacity:1;box-shadow:0 0 0 3px var(--brand), 0 6px 14px rgba(16,26,38,.3);transform:translateY(-2px)}
+.thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.thumbs.on-dark{background:#0b1118}
+.thumbs.on-dark::-webkit-scrollbar-thumb{background:#3a4756}
+.thumbs.on-dark button{box-shadow:0 1px 3px rgba(0,0,0,.5)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:18px}
+.panel h2{font-family:"Archivo Narrow",sans-serif;font-size:19px;font-weight:700;margin:0 0 12px}
+.sidecol .panel{position:relative}
+.sidecol .stick{position:sticky;top:130px}
+.spectable{width:100%;border-collapse:collapse;font-size:14px}
+.spectable td{padding:7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.spectable tr:last-child td{border-bottom:0}
+.spectable td:first-child{color:var(--ink-3);width:44%;padding-right:12px}
+.prose{white-space:pre-wrap;line-height:1.65;max-width:72ch;color:var(--ink)}
+ul.feat{columns:2;column-gap:26px;margin:0;padding-left:19px;font-size:14.2px}
+ul.feat li{margin:0 0 4px;break-inside:avoid}
+.doclist{display:flex;flex-direction:column;gap:9px}
+.docrow{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:var(--radius);padding:10px 13px;background:var(--wash);text-decoration:none}
+.docrow:hover{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 7%,var(--wash))}
+.docicon{flex:0 0 34px;height:40px;border-radius:2px;background:var(--paper);border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:"Archivo Narrow",sans-serif;font-weight:700;font-size:11px;color:var(--ink-2)}
+.docmeta{min-width:0;flex:1}
+.docmeta .k{font-weight:600;font-size:14.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.docmeta .s{font-size:12.3px;color:var(--ink-3)}
+.docopen{font-size:13px;color:var(--brand);font-weight:500;flex-shrink:0}
+.contactbox .line{display:flex;gap:9px;font-size:14px;padding:5px 0;color:var(--ink-2)}
+.contactbox .line b{font-weight:500;color:var(--ink)}
+
+/* ---------- lightbox ---------- */
+.lightbox{position:fixed;inset:0;background:#0b1118;z-index:90;display:flex;flex-direction:column;touch-action:pan-y}
+.lightbox:fullscreen{background:#0b1118}
+.lbtopbar{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) calc(14px + env(safe-area-inset-right,0px)) 10px calc(14px + env(safe-area-inset-left,0px));color:#cfd9e4;flex:0 0 auto}
+.lbtopbar .maxbtn{position:static}
+.lbstage{position:relative;flex:1;min-height:0;min-width:0;display:flex;align-items:center;justify-content:center;padding:0 calc(14px + env(safe-area-inset-right,0px)) 0 calc(14px + env(safe-area-inset-left,0px));touch-action:pan-y;overflow:hidden}
+.lbstage img{max-width:100%;max-height:100%;object-fit:contain;-webkit-user-select:none;user-select:none;touch-action:pan-y;will-change:transform;cursor:zoom-in}
+.lbstage.zoomed img{cursor:grab;touch-action:none}
+.lbstage.zoomed img:active{cursor:grabbing}
+.lbstage .navarrow{top:50%}
+.lbhint{font-size:11.5px;color:rgba(207,217,228,.65);white-space:nowrap}
+#lb-thumbs{flex:0 0 auto;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+
+/* short/landscape viewports (phones rotated): stack the controls to the side
+   instead of on top of and below the photo, since vertical room is scarce */
+@media (orientation:landscape) and (max-height:560px){
+  .lightbox{flex-direction:row}
+  .lbtopbar{position:absolute;top:0;left:0;right:0;z-index:5;
+    background:linear-gradient(180deg,rgba(6,11,16,.75),transparent);
+    padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:22px}
+  .lbstage{flex:1;min-height:0;padding:0}
+  .lbstage .navarrow{width:38px;height:48px}
+  #lb-thumbs{flex:0 0 92px;width:92px;height:100%;flex-direction:column;
+    overflow-x:hidden;overflow-y:auto;scroll-snap-type:y proximity;
+    padding:calc(52px + env(safe-area-inset-top,0px)) 8px calc(10px + env(safe-area-inset-bottom,0px)) 8px}
+  #lb-thumbs button{flex:0 0 68px;width:100%;height:52px;scroll-snap-align:center}
+}
+
+/* ---------- admin ---------- */
+.admin{position:fixed;inset:0;background:var(--wash);z-index:80;display:flex;flex-direction:column}
+.adminbar{background:var(--band);color:var(--band-ink);display:flex;align-items:center;gap:14px;padding:11px 20px;flex-wrap:wrap}
+.adminbar h2{font-family:"Archivo Narrow",sans-serif;font-size:19px;margin:0;font-weight:700}
+.adminbar .tabs{display:flex;gap:4px;margin-left:12px}
+.adminbar .tabs button{background:transparent;border:0;color:rgba(233,241,248,.72);padding:7px 12px;border-radius:3px;cursor:pointer;font-size:14px;font-weight:500}
+.adminbar .tabs button[aria-current="true"]{background:rgba(255,255,255,.16);color:#fff}
+.adminbody{flex:1;overflow:auto;padding:22px 20px 80px}
+.adminbody .inner{max-width:960px;margin:0 auto}
+.fieldgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field>label{font-size:12.8px;font-weight:600;color:var(--ink-2)}
+.hint{font-size:12px;color:var(--ink-3);margin:0}
+.field.wide{grid-column:1/-1}
+textarea{min-height:120px;resize:vertical;line-height:1.55}
+.sectiontitle{font-family:"Archivo Narrow",sans-serif;font-size:17px;font-weight:700;margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.drop{border:2px dashed var(--line-strong);border-radius:var(--radius);padding:24px;text-align:center;color:var(--ink-2);background:var(--wash);cursor:pointer}
+.drop.over{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 10%,var(--wash))}
+.drop b{display:block;font-size:15px;color:var(--ink);font-weight:600;margin-bottom:3px}
+.drop small{font-size:12.5px;color:var(--ink-3)}
+.photogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:11px;margin-top:14px}
+.photocell{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--paper);position:relative;transition:transform .15s ease, box-shadow .15s ease}
+.photocell .ph{aspect-ratio:4/3;background:var(--wash-2);position:relative}
+.photocell .ph img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.photocell .draghandle{position:absolute;top:6px;left:6px;width:30px;height:26px;background:rgba(10,18,26,.65);color:#fff;border:0;border-radius:3px;cursor:grab;display:flex;align-items:center;justify-content:center;font-size:14px;letter-spacing:1px;touch-action:none;line-height:1}
+.photocell .draghandle:active{cursor:grabbing}
+.photocell.dragging{opacity:.35}
+.photocell.drop-target{box-shadow:0 0 0 2px var(--brand) inset}
+.photocell .seoname{font-size:10.5px;color:var(--ink-3);padding:5px 7px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.photocell .seoname.pending{color:var(--brand)}
+.photocell .tools{display:flex;gap:3px;padding:6px;border-top:1px solid var(--line)}
+.photocell .tools button{flex:1;background:var(--wash);border:1px solid var(--line);border-radius:3px;padding:4px;font-size:11.5px;cursor:pointer;color:var(--ink-2)}
+.photocell .tools button:hover{border-color:var(--brand);color:var(--brand)}
+.photocell .mainflag{font-size:11px;font-weight:600;color:var(--stamp);padding:5px 7px 0}
+.dragghost{position:fixed;pointer-events:none;z-index:200;width:120px;aspect-ratio:4/3;border-radius:4px;overflow:hidden;box-shadow:0 10px 26px rgba(0,0,0,.4);opacity:.9}
+.dragghost img{width:100%;height:100%;object-fit:cover}
+.adminlist{display:flex;flex-direction:column;gap:10px}
+.arow{display:flex;gap:13px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:10px 13px}
+.arow .thumb{flex:0 0 76px;height:57px;border-radius:3px;overflow:hidden;background:var(--wash-2);display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:11px}
+.arow .thumb img{width:100%;height:100%;object-fit:cover}
+.arow .info{flex:1;min-width:0}
+.arow .info .t{font-family:"Archivo Narrow",sans-serif;font-weight:700;font-size:16.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arow .info .m{font-size:12.8px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arow .acts{display:flex;gap:7px;flex-shrink:0}
+.statusdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--stamp);margin-right:6px;vertical-align:middle}
+.statusdot.pending{background:#c08a00}
+.statusdot.sold{background:var(--signal)}
+.savebar{position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--line);padding:12px 20px;display:flex;gap:10px;align-items:center;margin:26px -20px -80px;box-shadow:0 -6px 18px -14px rgba(0,0,0,.5)}
+.savebar .msg{font-size:13px;color:var(--ink-3);margin-left:auto}
+.meter{height:8px;border-radius:99px;background:var(--wash-2);overflow:hidden;border:1px solid var(--line)}
+.meter i{display:block;height:100%;background:var(--brand)}
+.notice{border:1px solid var(--line);border-left:3px solid var(--warn);background:var(--warn-bg);color:var(--warn);padding:11px 14px;border-radius:var(--radius);font-size:13.5px;margin-bottom:18px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:var(--radius);font-size:14px;z-index:120;box-shadow:var(--shadow);max-width:90vw}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+footer.site{background:var(--band);color:var(--band-ink);padding:30px 0;margin-top:0}
+footer.site .wrap{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;font-size:13.5px}
+footer.site .nm{font-family:"Archivo Narrow",sans-serif;font-weight:700;font-size:19px;margin-bottom:5px}
+footer.site .fine{color:rgba(233,241,248,.6);max-width:54ch;font-size:12.3px;line-height:1.5}
+
+@media (max-width:1040px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .dgrid{grid-template-columns:1fr}
+  .sidecol .stick{position:static}
+}
+@media (max-width:820px){
+  .shell{grid-template-columns:1fr}
+  .rail{position:static;max-height:none;display:none}
+  .rail.open{display:block}
+  .filtertoggle{display:inline-flex}
+  .toolbar{top:0;position:static}
+}
+@media (max-width:560px){
+  .grid{grid-template-columns:1fr}
+  .topbar .wrap{min-height:54px;padding-top:8px;padding-bottom:8px}
+  ul.feat{columns:1}
+  .dhead .pricebox{margin-left:0;text-align:left}
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>window.__LOT_DATA__ = {"vehicles":[{"id":"vmu77i279er0lj","bodyStyle":"Hatchback","createdAt":1789750943398,"description":"2016 Subaru Crosstrek Limited 2.0i AWD in Crystal White Metallic on Ivory Leather with 186k mile, fully reconditioned and ready for a new owner. This Crosstrek comes FULLY equipped with: Navigation/Keyless/Eyesight: EyeSight System, Pre-Collision Braking System, Pre-Collision Brake Assist, Steering Responsive Fog Lights, Adaptive Cruise Control, Charge-Coupled Device Cameras, Lane Departure Warning, Navigation System, SD card map, voice activated navigation controls, SiriusXM Nav Traffic (subscription required), and SiriusXM Nav Weather (subscription required), Power Moonroof, Keyless Access w/Push-Button Start, Auto Dimming Mirror w/Compass/HomeLink (Eye Sight), All Weather Floor Mats, Rear Seat Back Protector, Rear Bumper Cover, Splash Guards and tons more! This Crosstrek Limited 2.0i has the normal dents, dings, scratches that you would expect from a vehicle of this age, but the interior is in really good condition. Everything works as designed, including the windows, door locks, moon roof, electronic systems, and the engine and transmission feel strong! Carfax shows 2-owners, and 1 minor accident in 2022. Full inspection available and you are more than welcome to take this to your own mechanic for a pre-purchase inspection. We completed an oil service, replaced a wheel bearing, and completely reconditioned the interior and exterior. HotShots Automotive is open Mondays - Fridays from 8:00 AM - 5:00 PM or by appointment other times. We do not offer in-house or any type of financing, but we can help with suggestions on which banks to apply with. VIN: JF2GPANC1GH299286","docs":[{"contentType":"application/pdf","id":"729391751c5db14ed36762d313136116","kind":"carfax","label":"","name":"Dashboard - CARFAX Car Care.pdf","size":1116618},{"contentType":"application/pdf","id":"a0ad84a7c8838edff64af24228fe9142","kind":"inspection","label":"","name":"2016 Subaru Crosstrek Limited Inspection.pdf","size":345043},{"contentType":"application/pdf","id":"2eb1759e6fd8ca3099852933ada054f5","kind":"repair","label":"","name":"2016 Subaru Crosstrek Limited FINAL RO.pdf","size":102371}],"drivetrain":"AWD","engine":"2.0L H4","extColor":"Crystal White Pearl","features":["Navigation/Keyless/Eyesight: Eye Sight System, Pre-Collision Braking System, Pre-Collision Brake Assist, Steering Responsive Fog Lights, Adaptive Cruise Control, Charge-Coupled Device Cameras, Lane Departure Warning, Navigation System, SD card map, voice activated navigation controls, SiriusXM Nav Traffic (subscription required), and SiriusXM Nav Weather (subscription required), Power Moonroof, Keyless Access w/Push-Button Start, Auto Dimming Mirror w/Compass/HomeLink (Eye Sight), All Weather Floor Mats, Rear Seat Back Protector, Rear Bumper Cover, Splash Guards"],"fuel":"Gasoline","headline":"FULLY SERVICED - EYE SIGHT - NAVIGATION","intColor":"Ivory Leather","make":"Subaru","mileage":186474,"model":"Crosstrek","mpg":"26 city / 34 hwy","owners":"2","photos":[{"id":"feaf816ff3749311e3838d73aa300e8f","name":"IMG_2059.JPG"},{"id":"fae9fae951c4fbbf6d10ba12812e8ac1","name":"IMG_2060.JPG"},{"id":"3ae8180d4dc9be17c94d5b40e8f4136e","name":"IMG_2061.JPG"},{"id":"536998aef8bb3526ae29c8d95692fc72","name":"IMG_2062.JPG"},{"id":"346dc404aab7da719eb7e545d6d8d61f","name":"IMG_2063.JPG"},{"id":"39cdd4a8084689d28742eff656cf0905","name":"IMG_2064.JPG"},{"id":"a5753ff571b4e9eef6f3de5ea5934c16","name":"IMG_2065.JPG"},{"id":"9c3f1c4f79a002f74ca317d5056dc1a0","name":"IMG_2066.JPG"},{"id":"5596e872307ba60c76b8547bbd6f1a02","name":"IMG_2067.JPG"},{"id":"7f655b78c39492c55484409a23e28ddf","name":"IMG_2068.JPG"},{"id":"ba9f8781fec9479163934ebbf9b78322","name":"IMG_2069.JPG"},{"id":"c4f0c17896b315cc7ff86e24d932584d","name":"IMG_2070.JPG"},{"id":"b679a4192ff9c2fe2715fef7a46186ee","name":"IMG_2071.JPG"},{"id":"00b8e4a96289fd8a6414cdc58f099659","name":"IMG_2072.JPG"},{"id":"91125035dff3abfd79a02c270defea09","name":"IMG_2073.JPG"},{"id":"bfcdebb1b028dd3dc88daa3f530b9ac0","name":"IMG_2074.JPG"},{"id":"993344b82b2434de68e48a564ebeace2","name":"IMG_2075.JPG"},{"id":"084711bfa56f10befb32d44e1b76ebea","name":"IMG_2076.JPG"},{"id":"c7b3ea1f0ccdced750752bdcac2e7ac9","name":"IMG_2077.JPG"}],"price":7500,"priceNote":"Plus tax and fees","status":"available","stock":"H299286","titleStatus":"Clean","transmission":"6-Speed CVT","trim":"Limited 2.0i","updatedAt":1789751324892,"vin":"JF2GPANC1GH299286","year":"2016"},{"id":"vmu77qfxefqezk","bodyStyle":"SUV","createdAt":1789751334434,"description":"2011 BMW X5 xDrive35d AWD in Deep Sea Blue Metallic on Cinnamon Nevada Leather. Fully reconditioned and ready for a new owner. 3rd Row 7-Passenger Seating, Diesel Power, reliability and fuel economy! \n\nThis X5 comes equipped with; Climate Comfort Package, Premium Package: Power-adjustable steering column (tilt and telescopic) Power tailgate (open and close trunk/liftgate via button or remote) Universal garage door opener (integrated rearview mirror transmitter) Auto-dimming mirrors (interior and exterior)Digital mirror compass, Lumbar support for the front seats, Storage package (extra cargo nets and storage compartments) Ambiance/Ambient lighting package, BMW Assist with Bluetooth hands-free phone integration, Technology Package (navigation, top-view backup cameras, park distance control), iPod & USB Adapter, 3 Stage Heated Front Seats with fast heating, 4-zone balance control, 3RD Row Seat with underfloor storage, height-adjustable headrests, self-leveling suspension, 3rd row climate control, Comfort Access Keyless Entry, BMW Apps, Panoramic Moon Roof and tons more!  \n\n\nClean Carfax and Clean Title with No Accidents and 2-Prior Owners, Inspection, and repair orders for all the work completed are available, just ask.\n\n~This X5 has a few dents, dings, scratches that you would expect from a vehicle of this age, but the interior is in phenomenal condition. Everything works as designed, including the windows, door locks, electronic systems and does not have any check engine lights or issues.\n\nHotShots Automotive is open Mondays - Fridays from 8:00 AM - 5:00 PM or by appointment other times. 15035 E Hinsdale Dr. Centennial, CO 80112\n\nWe do not offer in-house or any type of financing, but we can help with suggestions on which banks to apply with. \n\nVIN: 5UXZW0C53BL662815","docs":[{"contentType":"application/pdf","id":"ef94b2e21d30bef46e54fe9b44181da0","kind":"carfax","label":"","name":"Dashboard - CARFAX Car Care.pdf","size":855410},{"contentType":"application/pdf","id":"89e4eb23bec51ec2914bfa2d36ffe107","kind":"inspection","label":"","name":"2011 BMW X5 xDrive35D Inspection.pdf","size":334226},{"contentType":"application/pdf","id":"3659810f3db23b82eac18ebd1e4019a9","kind":"repair","label":"","name":"FINAL RO 2011 X5 xDr35D.pdf","size":105285}],"drivetrain":"AWD","engine":"3.0L I-6","extColor":"Deep Sea Blue Metallic","features":["Climate Comfort Package, Premium Package: Power-adjustable steering column (tilt and telescopic) Power tailgate (open and close trunk/liftgate via button or remote) Universal garage door opener (integrated rearview mirror transmitter) Auto-dimming mirrors (interior and exterior)Digital mirror compass, Lumbar support for the front seats, Storage package (extra cargo nets and storage compartments) Ambiance/Ambient lighting package, BMW Assist with Bluetooth hands-free phone integration, Technology Package (navigation, top-view backup cameras, park distance control), iPod & USB Adapter, 3 Stage Heated Front Seats with fast heating, 4-zone balance control, 3RD Row Seat with underfloor storage, height-adjustable headrests, self-leveling suspension, 3rd row climate control, Comfort Access Keyless Entry, BMW Apps, Panoramic Moon Roof"],"fuel":"DIESEL","headline":"CLEANER THAN DRUGSTORE COTTON!","intColor":"Cinnamon Nevada Leather","make":"BMW","mileage":206403,"model":"X5 xDrive35d","mpg":"19 city / 26 hwy","owners":"2","photos":[{"id":"3bfb393ac00f07ba13462106be8007fa","name":"IMG_2027.JPG"},{"id":"3a317f11d69ea43756cf4e0513a09fa8","name":"IMG_2028.JPG"},{"id":"4c88bf662a8a38562f3304f3c42874c9","name":"IMG_2029.JPG"},{"id":"f366186979aaeee69da4677ae860ae9c","name":"IMG_2030.JPG"},{"id":"564229f0962556f662fc7a9b3c76ebd4","name":"IMG_2031.JPG"},{"id":"091be6afef434b682713c53f5c697470","name":"IMG_2032.JPG"},{"id":"4bad7db34d74bdef145cf33751846c39","name":"IMG_2033.JPG"},{"id":"02182aa6eb32cdce34de5a05c0622ec6","name":"IMG_2034.JPG"},{"id":"b2231ff215b405340bf16d28b5fbb265","name":"IMG_2035.JPG"},{"id":"eb3ef6666c55c8948e5cffa30099577d","name":"IMG_2036.JPG"},{"id":"d7020b063e5850b245e3dc11471c39ae","name":"IMG_2037.JPG"},{"id":"173eac7bc117580003047e751056fe26","name":"IMG_2038.JPG"},{"id":"86efc989fba6dd34032058538664afb8","name":"IMG_2039.JPG"},{"id":"c72f9cd3ee2d5214155d6403939533b4","name":"IMG_2040.JPG"},{"id":"7d87d7e1b77cea8cd6dde8caac282f73","name":"IMG_2041.JPG"},{"id":"2505b109012bc3536708e5243332d220","name":"IMG_2042.JPG"},{"id":"75a1de72e751a4b2978c14059bc0aac5","name":"IMG_2043.JPG"},{"id":"d9a00ffd911f7acc099757fe8f3f0ad3","name":"IMG_2044.JPG"},{"id":"bf5abd1f43fecef75dfa6e98596a62e7","name":"IMG_2045.JPG"}],"price":7500,"priceNote":"Plus taxes and fees","status":"available","stock":"BL662815","titleStatus":"Clean, in hand","transmission":"6-Speed Steptronic Automotive","trim":"","updatedAt":1789751635661,"vin":"5UXZW0C53BL662815","year":"2011"},{"id":"vmu7fcrykk7qa6","bodyStyle":"Sedan","createdAt":1789764133772,"description":"2010 Ford Fusion SEL AWD in Sport Blue Metallic on Charcoal Black Leather with 157k miles, ready for a new owner.\nThis Fusion V6 AWD comes equipped with all standard features on the SEL, including options of: Rear Spoiler, Reverse sensing system, 18 inch 10-spoke wheels and much more! \n\nCarfax, Inspection, and repair orders for the work we completed are available, just ask. Carfax shows 2-owners, and 1 minor accident in 2022. Full inspection available and you are more than welcome to take this to your own mechanic for a pre-purchase inspection. We completed an oil service, replaced a wheel bearing, and completely reconditioned the interior and exterior.\nCarfax shows 1-accident in 2024, which is likely what remains of the front bumper.\n\n~Oil Serviced\n~Washer Sprayer replaced\n~Front bumper adjusted\n~Air intake hosing repaired \n\nThis Ford Fusion has the normal dents, dings, scratches that you would expect from a vehicle of this age, but the interior is in good condition. The front bumper was replaced, but never painted. If you would like to have it painted, we can have it completed for $500.00. This would make a great first car for someone or would make a great commuter vehicle in Colorado, with the All Wheel Drive. Feel free to have the vehicle inspected by your mechanic.\n\nHotShots Automotive is open Mondays - Fridays from 8:00 AM - 5:00 PM or by appointment other times.\nWe do not offer in-house or any type of financing, but we can help with suggestions on which banks to apply with. \n\nVIN: 3FAHP0CG7AR172797","docs":[{"contentType":"application/pdf","id":"e8e447a86bc791ad0b45e44d80f20d34","kind":"carfax","label":"","name":"Dashboard - CARFAX Car Care.pdf","size":1417825},{"contentType":"application/pdf","id":"05f480691962a15640e59b76a3ad0c2c","kind":"repair","label":"","name":"2010 Ford Fusion FINAL RO.pdf","size":101761},{"contentType":"application/pdf","id":"8b2e9c37795f26723e10e23e499d5822","kind":"inspection","label":"","name":"Ford Fusion Inspection.pdf","size":342849}],"drivetrain":"AWD","engine":"3.0L V6","extColor":"Sport Blue Metallic","features":["Heated Seats, Power Seat, CD Player, 17 in Alloy wheels, Trip computer, Compass, External temperature display,"],"fuel":"Gasoline","headline":"GREAT STARTER CAR - AWD - V6 POWER","intColor":"Charcoal Black Leather","make":"Ford","mileage":157486,"model":"Fusion","mpg":"17 city / 24 hwy","owners":"4","photos":[{"id":"abd59e755c196c8520eda1b82685480d","name":"IMG_2155.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-21.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"6118e0225326c0aa2ac3b064deeeb519","name":"IMG_2156.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-17.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"0e31f9463f3be6151a6dbf9755e78c93","name":"IMG_2157.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-18.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"80b826b1c3823cfd0a361f1b7f57f789","name":"IMG_2084.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-1.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"c30ab611b7531af3ab4174719603fd61","name":"IMG_2085.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-2.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"8d76e4dcadf650e40661963ba044a6c4","name":"IMG_2086.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-3.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"ce89ae195d22ac3e0aebabd6f632e3b3","name":"IMG_2087.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-4.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"c8a79f5b3c9ee0a3c8bd83182cee5259","name":"IMG_2088.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-5.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"a8f0c03cea8ffd4a6b47918b2e16266d","name":"IMG_2089.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-6.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"dcf7ce3791377ea574ce9f1802a429ed","name":"IMG_2094.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-7.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"a31be3a2d51d33e46aefc56b19437c5f","name":"IMG_2095.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-8.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"201509964c3c9aa861f0cc4dbecabf0a","name":"IMG_2097.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-9.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"9b320434638d067855cf18eada7bc359","name":"IMG_2096.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-10.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"7f1d42599655629f181de0805f11cbab","name":"IMG_2091.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-11.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"cbfb7be733cc54e99ac4602e270c94dc","name":"IMG_2090.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-12.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"8bf342c2a31b2120157c77cdc96d13cc","name":"IMG_2092.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-13.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"8f6e0059f45a818afae7945d1b306ee8","name":"IMG_2093.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-14.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"370832da92087fbd19a29ea345cb35fa","name":"IMG_2098.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-15.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"9cae5ec84e90826294d6daa5673050c0","name":"IMG_2099.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-16.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"4d6ccb5cc543a366de272eeed8584a12","name":"IMG_2158.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-19.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false},{"id":"dcd14ec3fb85f30ca459021c74819a69","name":"IMG_2159.JPG","seoName":"2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-20.jpg","seoNamedFor":"2010-ford-fusion-sel-v6-awd","seoPending":false}],"price":4495,"priceNote":"Plus taxes and fees","status":"available","stock":"AR172797","titleStatus":"Clean, title in hand","transmission":"6-Speed Automatic","trim":"SEL V6 AWD","updatedAt":1790272734264,"vin":"3FAHP0CG7AR172797","year":"2010"},{"id":"vmu7h28o1aey07","bodyStyle":"SUV","createdAt":1789767001441,"description":"2012 Porsche Cayenne Turbo equipped with a 4.8-liter twin-turbocharged V8 engine that delivers 500 horsepower and 516 pound-feet of torque.\n\nOVER $133k NEW - CARBON CERAMIC BRAKES, 21\" 911 TURBO 2 Wheels, Burmester High-End Surround Sound System, SPORT PKG, Stainless Steel Pedals and tons more! *Original Monroney Sticker is in pics.\n\nThis was a recent trade-in at the Maserati Dealer. We offer select vehicles, fully reconditioned at discount prices. The Cayenne Turbo has a clean carfax, no accidents, and was definitely well cared for during its on average 10,000 miles driven per year. \n\nInspection, reconditioning Repair Order and AutoCheck & CarFax available and ready for the next owner!\n\nWe completed in repair:\n~Replaced Engine Oil Separator\n~Replaced broken Turbo vacuum lines\n~Replaced all spark plugs\n~Replaced all coils\n~Oil service completed\n~Transfer Case Serviced\n~Replaced timing cover bolts with Steel Bolts (recommended to avoid future leaks)\n~Replaced Engine Oil Cooler Gasket\n~Reseal Lower Engine Oil Pan\n~Mounted and Balance New Tires\n\nAs you can see, we spared no expense in getting this Cayenne Turbo ready for the next owner.\n\n~All repair orders, Carfax and any other information is available so just ask!\n\nHotShots Automotive is open Mondays - Fridays from 8:00 AM - 5:00 PM or by appointment other times. \n\nWe do NOT offer in-house or any type of financing, but we can help with suggestions on which banks to apply with.\n\nVIN: WP1AC2A23CLA81147","docs":[{"contentType":"application/pdf","id":"866b4464bd7e5f2cbd480d4ebf8f80a0","kind":"carfax","label":"","name":"Dashboard - CARFAX Car Care.pdf","size":931720},{"contentType":"application/pdf","id":"e8e2bd2210bfa4b6c0df07b81062c886","kind":"inspection","label":"","name":"Porsche Cayenne Turbo Inspection.pdf","size":336076},{"contentType":"application/pdf","id":"0179d58e4e0a5a18aaccb62ba12cef17","kind":"repair","label":"","name":"FINAL RO CAYENNE TURBO.pdf","size":108260}],"drivetrain":"AWD","engine":"4.8L Twin-Turbo V8","extColor":"Deep Blue Metallic","features":["CARBON CERAMIC BRAKES, 21\" 911 TURBO 2 Wheels, Burmester High-End Surround Sound System, SPORT PKG, Stainless Steel Pedals and tons more! *Original Monroney Sticker is in pics."],"fuel":"Gasoline","headline":"500HP /516 lb-ft Torque","intColor":"Grey Leather","make":"Porsche","mileage":115889,"model":"Cayenne","mpg":"15 city / 22 hwy","owners":"2","photos":[{"id":"aa9a61444a1857b12e454b309c4377ff","name":"IMG_1989.JPG"},{"id":"1ee2c3bc75a80230a1505dd4a470ba2c","name":"IMG_1990.JPG"},{"id":"20db00541a6eb32ec5e456355144d0ea","name":"IMG_1991.JPG"},{"id":"f538755808db4df5c8575389f6bb445f","name":"IMG_1992.JPG"},{"id":"95ad1fa98a227ff44646c906bbd72cac","name":"IMG_1993.JPG"},{"id":"4d90eafedea117fe6061645d4b2c6c69","name":"IMG_1994.JPG"},{"id":"658dc7d61ac493c8b98c2723e2243df4","name":"IMG_1995.JPG"},{"id":"b2da277a929310a269175fab582d9ec0","name":"IMG_1996.JPG"},{"id":"b57e670d572218c607b5db14b7a7e38c","name":"IMG_1999.JPG"},{"id":"53ca0c028a3134ea9320e2a55328123c","name":"IMG_2001.JPG"},{"id":"f94920035fe8c09cd8467efcc13b1946","name":"IMG_2002.JPG"},{"id":"57e180bf052da8c1a8f944353ed3bdf4","name":"IMG_2003.JPG"},{"id":"7f38cf989fc403b648a5d94e408a0815","name":"IMG_2004.JPG"},{"id":"799540ff8c96dcf9f75d129d6101b3f4","name":"IMG_2005.JPG"},{"id":"da762790bec6ecfe8e53f2e8c28ad676","name":"IMG_2008.JPG"},{"id":"2aed18ca0455d2d312a3426703e23de2","name":"IMG_2007.JPG"},{"id":"4412502d20d37111e67a8f17a6a699f1","name":"IMG_1997.JPG"},{"id":"5d00cd94674bc7f5d4d0960adf9fac30","name":"IMG_1998.JPG"}],"price":16500,"priceNote":"Plus taxes and fees","status":"available","stock":"CLA81147","titleStatus":"Clean","transmission":"8-Speed Automatic","trim":"Turbo","updatedAt":1790116586144,"vin":"WP1AC2A23CLA81147","year":"2012"},{"id":"vmu7hae8mlpyhx","bodyStyle":"SUV","createdAt":1789767381910,"description":"2013 Mercedes-Benz GLK 350 4MATIC ALL WHEEL DRIVE in Steel Grey Metallic on Black MB-TEX with ONLY 121k miles :) Fully reconditioned and ready for a new owner, with GREAT tires!\n1-Owner, Clean Carfax with No Accidents reported, with full Inspection and repair orders for all the work completed are available, just ask. This vehicle comes with 3 MASTER KEYS, which shows that the prior owner truly loved this vehicle! \nThis GLK comes equipped with: LIGHTING PKG: Includes bi-xenon headlamps w/active curve illumination, headlamp washing system, adaptive high beam assist, PREMIUM 1 PKG: Includes garage door opener, auto-dimming rearview mirror w/compass, auto-dimming driver & front passenger side exterior mirrors w/memory, iPod & MP3 media interface, SiriusXM satellite radio, power liftgate, power tilt/sliding panorama sunroof, 115V power outlet in cargo, HEATED FRONT SEATS, PRE-WIRING FOR BECKER MAP PILOT, KEYLESS-GO, Panoramic Moon Roof and tons more! \n\nFully serviced with:\n~Oil Change with Full Synthetic and Long Life\n~Replaced INTAKE SPROCKETS ALONG WITH ADDING CHECK VALVES TO HYDRAULIC TIMING CHAIN TENSIONER ($5,500 Job Retail)\n~Replaced the Radio Faceplate as the prior owner wore away the buttons\n~New Emblems and Wheel Center Caps\n~A few dent and dings repaired\n\nOver $6,700 in services completed. Our loss is your gain. SEE REPAIR ORDER\n~This GLK has the dents, dings, scratches that you would expect from a vehicle of this age, but the interior is in great condition, aside from the driver seat wear. Everything works as designed, including the windows, door locks, electronic systems and more. \n\nHotShots Automotive is open Mondays - Fridays from 8:00 AM - 5:00 PM or by appointment other times.\n\nWe do not offer in-house or any type of financing, but we can help with suggestions on which banks to apply with. \n\nVIN: WDCGG8JB0DG008423","docs":[{"contentType":"application/pdf","id":"e228802205312ed64a3ebc8435d84400","kind":"carfax","label":"","name":"CARFAX Vehicle History Report for this 2013 MERCEDES-BENZ GLK 350 4MATIC_ WDCGG8JB0DG008423.pdf","size":1040722},{"contentType":"application/pdf","id":"72de46ba48ddd9e709a5abe7c60708ae","kind":"repair","label":"","name":"FINAL RO.pdf","size":107072}],"drivetrain":"AWD","engine":"3.5L V6","extColor":"Steel Grey Metallic","features":["LIGHTING PKG: Includes bi-xenon headlamps w/active curve illumination, headlamp washing system, adaptive high beam assist, PREMIUM 1 PKG: Includes garage door opener, auto-dimming rearview mirror w/compass, auto-dimming driver & front passenger side exterior mirrors w/memory, iPod & MP3 media interface, SiriusXM satellite radio, power liftgate, power tilt/sliding panorama sunroof, 115V power outlet in cargo, HEATED FRONT SEATS, PRE-WIRING FOR BECKER MAP PILOT, KEYLESS-GO, Panoramic Moon Roof and tons more!"],"fuel":"Gasoline","headline":"FULLY SERVICED!","intColor":"Black","make":"Mercedes-Benz","mileage":121372,"model":"GLK 350 4MATIC","mpg":"19 city / 25 hwy","owners":"1","photos":[{"id":"e73370f0acc9ec6d5176fd651345a519","name":"IMG_1854.JPG"},{"id":"a179b8d8e5cef593bd8ec08bc459df9f","name":"IMG_1855.JPG"},{"id":"40e16d985271d88de804ab793a1b4e89","name":"IMG_1856.JPG"},{"id":"6c6ae5c1051492394054f5da8cbcc26c","name":"IMG_1857.JPG"},{"id":"1f21ec17c641e551185b7ffc92d4a08c","name":"IMG_1858.JPG"},{"id":"81b91fb7e1b5518883895cbf200fac40","name":"IMG_1859.JPG"},{"id":"4c7f6f3ca0a61d83c10c8d560aa4d4ae","name":"IMG_1860.JPG"},{"id":"1b8a9ddb4254f0a32e807699de961a32","name":"IMG_1861.JPG"},{"id":"12f2b59983c65e8dd19508fefb53f16e","name":"IMG_1862.JPG"},{"id":"49b236e0de85e72e994d2a38c3baeff5","name":"IMG_1863.JPG"},{"id":"84a065d27c5bffdbabaf47f9ce33aad5","name":"IMG_1864.JPG"},{"id":"6a38bcdef5e59ab7cfa08dacab3847fd","name":"IMG_1865.JPG"},{"id":"eb490c4de4e1ce12e6809742ca68b5ee","name":"IMG_1866.JPG"},{"id":"540dfb978080bb523591158ec45e3359","name":"IMG_1867.JPG"},{"id":"54e94f21a8ce969b4e06a8fbba9a90f9","name":"IMG_1868.JPG"},{"id":"951c267a51f984e2da17136e58825af2","name":"IMG_1869.JPG"},{"id":"a75837476bba951ed863914045a50078","name":"IMG_1870.JPG"},{"id":"762ddd16229f09181a87feebf705034a","name":"IMG_1872.JPG"},{"id":"5918a1c5138d5c965dfec78d553b8587","name":"IMG_1873.JPG"}],"price":7500,"priceNote":"Plus taxes and fees","status":"sold","stock":"DG008423","titleStatus":"Clean","transmission":"7-Speed Automatic","trim":"","updatedAt":1790027323705,"vin":"WDCGG8JB0DG008423","year":"2013"},{"id":"vmud6f7i7zs8bm","bodyStyle":"SUV","createdAt":1790111927743,"description":"","docs":[],"drivetrain":"AWD","engine":"3.0L I-6","extColor":"Space Gray Metallic","features":[],"fuel":"Gasoline","headline":"","intColor":"Canberra Beige","make":"BMW","mileage":191651,"model":"X5 xDrive35i","mpg":"","owners":"","photos":[{"id":"8c11ead3bf7b3e06aef52e8d76d987d1","name":"IMG_1825.JPG","seoName":"2014-bmw-x5-xdrive35i-space-gray-metallic-photo-1.jpg","seoNamedFor":"2014-bmw-x5-xdrive35i","seoPending":false}],"price":8900,"priceNote":"Plus taxes and fees","status":"sold","stock":"0H26654","titleStatus":"Clean, in hand","transmission":"Automatic","trim":"","updatedAt":1790112093321,"vin":"5UXKR0C56E0H26654","year":"2014"},{"id":"vmud6ivdu28hu5","bodyStyle":"Sedan","createdAt":1790112098658,"description":"","docs":[],"drivetrain":"RWD","engine":"3.0L V6","extColor":"Palladium Silver Metallic","features":[],"fuel":"Diesel","headline":"","intColor":"Grey Twin Leather","make":"Mercedes-Benz","mileage":117147,"model":"E350 Bluetec","mpg":"","owners":"","photos":[{"id":"6311b041d91e43ec8b3599d242432959","name":"IMG_1972.JPG","seoName":"2011-mercedes-benz-e350-bluetec-sport-palladium-silver-metal.jpg","seoNamedFor":"2011-mercedes-benz-e350-bluetec-sport","seoPending":false}],"price":9100,"priceNote":"Plus taxes and fees","status":"sold","stock":"BA495737","titleStatus":"Clean, in hand","transmission":"Automatic","trim":"Sport","updatedAt":1790112207126,"vin":"WDDHF2EBXBA495737","year":"2011"},{"id":"vmud6l8pe39123","bodyStyle":"SUV","createdAt":1790112209234,"description":"","docs":[],"drivetrain":"AWD","engine":"4.4L V8","extColor":"Titanium Silver Metallic","features":[],"fuel":"Gasoline","headline":"","intColor":"Gray Leather","make":"BMW","mileage":129135,"model":"X5 4.4i","mpg":"","owners":"","photos":[{"id":"fea7fefd2925643d6b320644761e039d","name":"IMG_1968.JPG","seoName":"2005-bmw-x5-4-4i-sport-titanium-silver-metallic-photo-1.jpg","seoNamedFor":"2005-bmw-x5-4-4i-sport","seoPending":false}],"price":4500,"priceNote":"Plus taxes and fees","soldAt":1790112307688,"status":"sold","stock":"5LV13655","titleStatus":"Clean, in hand","transmission":"Steptronic Automative","trim":"SPORT","updatedAt":1790112307688,"vin":"5UXFB53585LV13655","year":"2005"},{"id":"vmud6ngnfjhd54","bodyStyle":"Sedan","createdAt":1790112312843,"description":"","docs":[],"drivetrain":"AWD","engine":"3.0L I6","extColor":"Titanium Silver Metallic","features":[],"fuel":"Gasoline","headline":"","intColor":"Black Dakota Leather","make":"BMW","mileage":85055,"model":"528i xDrive","mpg":"","owners":"","photos":[{"id":"607b1fa740920b44049c11a239dd86e1","name":"IMG_1471.JPG","seoName":"2010-bmw-528i-xdrive-titanium-silver-metallic-photo-1.jpg","seoNamedFor":"2010-bmw-528i-xdrive","seoPending":false}],"price":7500,"priceNote":"Plus taxes and fees","status":"sold","stock":"AC444608","titleStatus":"Clean, in hand","transmission":"Steptronic Automatic","trim":"","updatedAt":1790112396071,"vin":"WBANV1C59AC444608","year":"2010"},{"id":"vmud6pbbx6i16j","bodyStyle":"Sedan","createdAt":1790112399261,"description":"","docs":[],"drivetrain":"AWD","engine":"3.0L I-6","extColor":"Arctic Silver Metallic","features":[],"fuel":"Gasoline","headline":"","intColor":"Black Dakota Leather","make":"BMW","mileage":108389,"model":"328xi","mpg":"","owners":"","photos":[{"id":"f428a16832521843667138b0f96cfeee","name":"IMG_0687.JPG","seoName":"2007-bmw-328xi-sport-arctic-silver-metallic-photo-1.jpg","seoNamedFor":"2007-bmw-328xi-sport","seoPending":false}],"price":8900,"priceNote":"Plus taxes and fees","status":"sold","stock":"7KZ71713","titleStatus":"Clean, in hand","transmission":"6-Speed Manual","trim":"Sport","updatedAt":1790288457440,"vin":"WBAVC93577KZ71713","year":"2007"}],"settings":{"dealerName":"HotShots Automotive","tagline":"Not your typical car dealer","phone":"(303) 617-1125","email":"Dustin@HotShotsAuto.com","address":"15035 E Hinsdale Dr. Centennial, CO 80112","hours":"Mon-Fri 8AM - 5PM or by Appt","intro":"Hand-picked for you","disclaimer":"$0 Dealer & Handling - Price excludes tax, title and license fees.","faviconUrl":"https://hotshotsauto.com/favicon.ico","services":"$0 Dealer & Handling fee\nUsed car finder service\nFleet management\nBroker services\nFull service repair facility — all makes & models\nPreferred service scheduling\nLoaner vehicle available with purchase"},"files":{"feaf816ff3749311e3838d73aa300e8f":"assets/2016-subaru-crosstrek-limited-2-0i-photo-1.jpg","fae9fae951c4fbbf6d10ba12812e8ac1":"assets/2016-subaru-crosstrek-limited-2-0i-photo-2.jpg","3ae8180d4dc9be17c94d5b40e8f4136e":"assets/2016-subaru-crosstrek-limited-2-0i-photo-3.jpg","536998aef8bb3526ae29c8d95692fc72":"assets/2016-subaru-crosstrek-limited-2-0i-photo-4.jpg","346dc404aab7da719eb7e545d6d8d61f":"assets/2016-subaru-crosstrek-limited-2-0i-photo-5.jpg","39cdd4a8084689d28742eff656cf0905":"assets/2016-subaru-crosstrek-limited-2-0i-photo-6.jpg","a5753ff571b4e9eef6f3de5ea5934c16":"assets/2016-subaru-crosstrek-limited-2-0i-photo-7.jpg","9c3f1c4f79a002f74ca317d5056dc1a0":"assets/2016-subaru-crosstrek-limited-2-0i-photo-8.jpg","5596e872307ba60c76b8547bbd6f1a02":"assets/2016-subaru-crosstrek-limited-2-0i-photo-9.jpg","7f655b78c39492c55484409a23e28ddf":"assets/2016-subaru-crosstrek-limited-2-0i-photo-10.jpg","ba9f8781fec9479163934ebbf9b78322":"assets/2016-subaru-crosstrek-limited-2-0i-photo-11.jpg","c4f0c17896b315cc7ff86e24d932584d":"assets/2016-subaru-crosstrek-limited-2-0i-photo-12.jpg","b679a4192ff9c2fe2715fef7a46186ee":"assets/2016-subaru-crosstrek-limited-2-0i-photo-13.jpg","00b8e4a96289fd8a6414cdc58f099659":"assets/2016-subaru-crosstrek-limited-2-0i-photo-14.jpg","91125035dff3abfd79a02c270defea09":"assets/2016-subaru-crosstrek-limited-2-0i-photo-15.jpg","bfcdebb1b028dd3dc88daa3f530b9ac0":"assets/2016-subaru-crosstrek-limited-2-0i-photo-16.jpg","993344b82b2434de68e48a564ebeace2":"assets/2016-subaru-crosstrek-limited-2-0i-photo-17.jpg","084711bfa56f10befb32d44e1b76ebea":"assets/2016-subaru-crosstrek-limited-2-0i-photo-18.jpg","c7b3ea1f0ccdced750752bdcac2e7ac9":"assets/2016-subaru-crosstrek-limited-2-0i-photo-19.jpg","729391751c5db14ed36762d313136116":"assets/2016-subaru-crosstrek-limited-2-0i-carfax.pdf","a0ad84a7c8838edff64af24228fe9142":"assets/2016-subaru-crosstrek-limited-2-0i-inspection.pdf","2eb1759e6fd8ca3099852933ada054f5":"assets/2016-subaru-crosstrek-limited-2-0i-repair-orders.pdf","3bfb393ac00f07ba13462106be8007fa":"assets/2011-bmw-x5-xdrive35d-photo-1.jpg","3a317f11d69ea43756cf4e0513a09fa8":"assets/2011-bmw-x5-xdrive35d-photo-2.jpg","4c88bf662a8a38562f3304f3c42874c9":"assets/2011-bmw-x5-xdrive35d-photo-3.jpg","f366186979aaeee69da4677ae860ae9c":"assets/2011-bmw-x5-xdrive35d-photo-4.jpg","564229f0962556f662fc7a9b3c76ebd4":"assets/2011-bmw-x5-xdrive35d-photo-5.jpg","091be6afef434b682713c53f5c697470":"assets/2011-bmw-x5-xdrive35d-photo-6.jpg","4bad7db34d74bdef145cf33751846c39":"assets/2011-bmw-x5-xdrive35d-photo-7.jpg","02182aa6eb32cdce34de5a05c0622ec6":"assets/2011-bmw-x5-xdrive35d-photo-8.jpg","b2231ff215b405340bf16d28b5fbb265":"assets/2011-bmw-x5-xdrive35d-photo-9.jpg","eb3ef6666c55c8948e5cffa30099577d":"assets/2011-bmw-x5-xdrive35d-photo-10.jpg","d7020b063e5850b245e3dc11471c39ae":"assets/2011-bmw-x5-xdrive35d-photo-11.jpg","173eac7bc117580003047e751056fe26":"assets/2011-bmw-x5-xdrive35d-photo-12.jpg","86efc989fba6dd34032058538664afb8":"assets/2011-bmw-x5-xdrive35d-photo-13.jpg","c72f9cd3ee2d5214155d6403939533b4":"assets/2011-bmw-x5-xdrive35d-photo-14.jpg","7d87d7e1b77cea8cd6dde8caac282f73":"assets/2011-bmw-x5-xdrive35d-photo-15.jpg","2505b109012bc3536708e5243332d220":"assets/2011-bmw-x5-xdrive35d-photo-16.jpg","75a1de72e751a4b2978c14059bc0aac5":"assets/2011-bmw-x5-xdrive35d-photo-17.jpg","d9a00ffd911f7acc099757fe8f3f0ad3":"assets/2011-bmw-x5-xdrive35d-photo-18.jpg","bf5abd1f43fecef75dfa6e98596a62e7":"assets/2011-bmw-x5-xdrive35d-photo-19.jpg","ef94b2e21d30bef46e54fe9b44181da0":"assets/2011-bmw-x5-xdrive35d-carfax.pdf","89e4eb23bec51ec2914bfa2d36ffe107":"assets/2011-bmw-x5-xdrive35d-inspection.pdf","3659810f3db23b82eac18ebd1e4019a9":"assets/2011-bmw-x5-xdrive35d-repair-orders.pdf","abd59e755c196c8520eda1b82685480d":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-21.jpg","6118e0225326c0aa2ac3b064deeeb519":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-17.jpg","0e31f9463f3be6151a6dbf9755e78c93":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-18.jpg","80b826b1c3823cfd0a361f1b7f57f789":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-1.jpg","c30ab611b7531af3ab4174719603fd61":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-2.jpg","8d76e4dcadf650e40661963ba044a6c4":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-3.jpg","ce89ae195d22ac3e0aebabd6f632e3b3":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-4.jpg","c8a79f5b3c9ee0a3c8bd83182cee5259":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-5.jpg","a8f0c03cea8ffd4a6b47918b2e16266d":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-6.jpg","dcf7ce3791377ea574ce9f1802a429ed":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-7.jpg","a31be3a2d51d33e46aefc56b19437c5f":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-8.jpg","201509964c3c9aa861f0cc4dbecabf0a":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-9.jpg","9b320434638d067855cf18eada7bc359":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-10.jpg","7f1d42599655629f181de0805f11cbab":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-11.jpg","cbfb7be733cc54e99ac4602e270c94dc":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-12.jpg","8bf342c2a31b2120157c77cdc96d13cc":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-13.jpg","8f6e0059f45a818afae7945d1b306ee8":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-14.jpg","370832da92087fbd19a29ea345cb35fa":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-15.jpg","9cae5ec84e90826294d6daa5673050c0":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-16.jpg","4d6ccb5cc543a366de272eeed8584a12":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-19.jpg","dcd14ec3fb85f30ca459021c74819a69":"assets/2010-ford-fusion-sel-v6-awd-sport-blue-metallic-photo-20.jpg","e8e447a86bc791ad0b45e44d80f20d34":"assets/2010-ford-fusion-sel-v6-awd-carfax.pdf","05f480691962a15640e59b76a3ad0c2c":"assets/2010-ford-fusion-sel-v6-awd-repair-orders.pdf","8b2e9c37795f26723e10e23e499d5822":"assets/2010-ford-fusion-sel-v6-awd-inspection.pdf","aa9a61444a1857b12e454b309c4377ff":"assets/2012-porsche-cayenne-turbo-photo-1.jpg","1ee2c3bc75a80230a1505dd4a470ba2c":"assets/2012-porsche-cayenne-turbo-photo-2.jpg","20db00541a6eb32ec5e456355144d0ea":"assets/2012-porsche-cayenne-turbo-photo-3.jpg","f538755808db4df5c8575389f6bb445f":"assets/2012-porsche-cayenne-turbo-photo-4.jpg","95ad1fa98a227ff44646c906bbd72cac":"assets/2012-porsche-cayenne-turbo-photo-5.jpg","4d90eafedea117fe6061645d4b2c6c69":"assets/2012-porsche-cayenne-turbo-photo-6.jpg","658dc7d61ac493c8b98c2723e2243df4":"assets/2012-porsche-cayenne-turbo-photo-7.jpg","b2da277a929310a269175fab582d9ec0":"assets/2012-porsche-cayenne-turbo-photo-8.jpg","b57e670d572218c607b5db14b7a7e38c":"assets/2012-porsche-cayenne-turbo-photo-9.jpg","53ca0c028a3134ea9320e2a55328123c":"assets/2012-porsche-cayenne-turbo-photo-10.jpg","f94920035fe8c09cd8467efcc13b1946":"assets/2012-porsche-cayenne-turbo-photo-11.jpg","57e180bf052da8c1a8f944353ed3bdf4":"assets/2012-porsche-cayenne-turbo-photo-12.jpg","7f38cf989fc403b648a5d94e408a0815":"assets/2012-porsche-cayenne-turbo-photo-13.jpg","799540ff8c96dcf9f75d129d6101b3f4":"assets/2012-porsche-cayenne-turbo-photo-14.jpg","da762790bec6ecfe8e53f2e8c28ad676":"assets/2012-porsche-cayenne-turbo-photo-15.jpg","2aed18ca0455d2d312a3426703e23de2":"assets/2012-porsche-cayenne-turbo-photo-16.jpg","4412502d20d37111e67a8f17a6a699f1":"assets/2012-porsche-cayenne-turbo-photo-17.jpg","5d00cd94674bc7f5d4d0960adf9fac30":"assets/2012-porsche-cayenne-turbo-photo-18.jpg","866b4464bd7e5f2cbd480d4ebf8f80a0":"assets/2012-porsche-cayenne-turbo-carfax.pdf","e8e2bd2210bfa4b6c0df07b81062c886":"assets/2012-porsche-cayenne-turbo-inspection.pdf","0179d58e4e0a5a18aaccb62ba12cef17":"assets/2012-porsche-cayenne-turbo-repair-orders.pdf","e73370f0acc9ec6d5176fd651345a519":"assets/2013-mercedes-benz-glk-350-4matic-photo-1.jpg","a179b8d8e5cef593bd8ec08bc459df9f":"assets/2013-mercedes-benz-glk-350-4matic-photo-2.jpg","40e16d985271d88de804ab793a1b4e89":"assets/2013-mercedes-benz-glk-350-4matic-photo-3.jpg","6c6ae5c1051492394054f5da8cbcc26c":"assets/2013-mercedes-benz-glk-350-4matic-photo-4.jpg","1f21ec17c641e551185b7ffc92d4a08c":"assets/2013-mercedes-benz-glk-350-4matic-photo-5.jpg","81b91fb7e1b5518883895cbf200fac40":"assets/2013-mercedes-benz-glk-350-4matic-photo-6.jpg","4c7f6f3ca0a61d83c10c8d560aa4d4ae":"assets/2013-mercedes-benz-glk-350-4matic-photo-7.jpg","1b8a9ddb4254f0a32e807699de961a32":"assets/2013-mercedes-benz-glk-350-4matic-photo-8.jpg","12f2b59983c65e8dd19508fefb53f16e":"assets/2013-mercedes-benz-glk-350-4matic-photo-9.jpg","49b236e0de85e72e994d2a38c3baeff5":"assets/2013-mercedes-benz-glk-350-4matic-photo-10.jpg","84a065d27c5bffdbabaf47f9ce33aad5":"assets/2013-mercedes-benz-glk-350-4matic-photo-11.jpg","6a38bcdef5e59ab7cfa08dacab3847fd":"assets/2013-mercedes-benz-glk-350-4matic-photo-12.jpg","eb490c4de4e1ce12e6809742ca68b5ee":"assets/2013-mercedes-benz-glk-350-4matic-photo-13.jpg","540dfb978080bb523591158ec45e3359":"assets/2013-mercedes-benz-glk-350-4matic-photo-14.jpg","54e94f21a8ce969b4e06a8fbba9a90f9":"assets/2013-mercedes-benz-glk-350-4matic-photo-15.jpg","951c267a51f984e2da17136e58825af2":"assets/2013-mercedes-benz-glk-350-4matic-photo-16.jpg","a75837476bba951ed863914045a50078":"assets/2013-mercedes-benz-glk-350-4matic-photo-17.jpg","762ddd16229f09181a87feebf705034a":"assets/2013-mercedes-benz-glk-350-4matic-photo-18.jpg","5918a1c5138d5c965dfec78d553b8587":"assets/2013-mercedes-benz-glk-350-4matic-photo-19.jpg","e228802205312ed64a3ebc8435d84400":"assets/2013-mercedes-benz-glk-350-4matic-carfax.pdf","72de46ba48ddd9e709a5abe7c60708ae":"assets/2013-mercedes-benz-glk-350-4matic-repair-orders.pdf","8c11ead3bf7b3e06aef52e8d76d987d1":"assets/2014-bmw-x5-xdrive35i-space-gray-metallic-photo-1.jpg","6311b041d91e43ec8b3599d242432959":"assets/2011-mercedes-benz-e350-bluetec-sport-palladium-silver-metal.jpg","fea7fefd2925643d6b320644761e039d":"assets/2005-bmw-x5-4-4i-sport-titanium-silver-metallic-photo-1.jpg","607b1fa740920b44049c11a239dd86e1":"assets/2010-bmw-528i-xdrive-titanium-silver-metallic-photo-1.jpg","f428a16832521843667138b0f96cfeee":"assets/2007-bmw-328xi-sport-arctic-silver-metallic-photo-1.jpg"}};</script>
+<script>
+
+"use strict";
+
+/* ============================ constants ============================ */
+const DOC_KINDS = [
+  {k:"carfax",     label:"Carfax / AutoCheck",  short:"Carfax"},
+  {k:"inspection", label:"Inspection report",   short:"Inspection"},
+  {k:"repair",     label:"Repair order",        short:"Repair orders"},
+  {k:"service",    label:"Service records",     short:"Service records"},
+  {k:"sticker",    label:"Window sticker",      short:"Window sticker"},
+  {k:"title",      label:"Title / registration",short:"Title"},
+  {k:"other",      label:"Other document",      short:"Document"}
+];
+const TRUST_ORDER = ["carfax","inspection","repair","service"];
+const SORTS = [
+  {v:"newest",   label:"Newest listed first"},
+  {v:"oldest",   label:"Oldest listed first"},
+  {v:"price_hi", label:"Price: high to low"},
+  {v:"price_lo", label:"Price: low to high"},
+  {v:"miles_lo", label:"Mileage: low to high"},
+  {v:"miles_hi", label:"Mileage: high to low"},
+  {v:"year_hi",  label:"Year: newest to oldest"},
+  {v:"year_lo",  label:"Year: oldest to newest"},
+  {v:"alpha",    label:"Alphabetical"}
+];
+const STATUSES = {available:"Available", pending:"Sale pending", sold:"Sold"};
+const DRIVETRAINS = ["FWD", "4WD", "RWD", "AWD"];
+const DEFAULT_SETTINGS = {
+  dealerName:"", tagline:"", phone:"", email:"", address:"", hours:"",
+  intro:"", disclaimer:"", faviconUrl:"https://hotshotsauto.com/favicon.ico",
+  services: [
+    "$0 Dealer & Handling fee",
+    "Consignment available",
+    "Used car finder service",
+    "Fleet management",
+    "Broker services",
+    "Full service repair facility — all makes & models",
+    "Preferred service scheduling",
+    "Loaner vehicle available with purchase"
+  ].join("\n")
+};
+
+/* ============================ state ============================ */
+const S = {
+  vehicles: [],
+  settings: {...DEFAULT_SETTINGS},
+  ready: false,
+  isAdmin: false,
+  localMode: false,
+  db: null,
+  assets: null,
+  sample: null,
+  view: "list",          // list | detail
+  currentId: null,
+  photoIndex: 0,
+  lightbox: false,
+  requestFullscreenOnOpen: false,
+  admin: null,           // null | {tab:'inventory'|'site'|'storage', draft, dirty, saving}
+  filters: {q:"", makes:new Set(), bodies:new Set(), docs:new Set(), status:"forsale",
+            priceMin:"", priceMax:"", yearMin:"", yearMax:"", milesMax:""},
+  sort: "newest",
+  railOpen: false,
+  usage: null,
+  localBlobs: new Map()
+};
+
+/* ============================ helpers ============================ */
+const $ = sel => document.querySelector(sel);
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num = v => (v===""||v==null||isNaN(Number(v))) ? null : Number(v);
+const money = n => n==null ? "" : "$" + Number(n).toLocaleString("en-US",{maximumFractionDigits:0});
+const miles = n => n==null ? "" : Number(n).toLocaleString("en-US") + " mi";
+const kb = n => n<1024 ? n+" B" : n<1048576 ? (n/1024).toFixed(0)+" KB" : (n/1048576).toFixed(1)+" MB";
+const uid = () => "v" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const STATIC = (typeof window !== "undefined" && window.__LOT_DATA__) ? window.__LOT_DATA__ : null;
+const assetUrl = id => STATIC
+  ? ((STATIC.files && STATIC.files[id]) || "")
+  : (S.localBlobs.has(id) ? S.localBlobs.get(id) : "/_blob/" + id);
+const carName = v => [v.year, v.make, v.model].filter(Boolean).join(" ") || "Untitled vehicle";
+function photoAlt(v, photo){
+  const base = carName(v) + (v.trim?" "+v.trim:"");
+  if(photo && photo.seoName){
+    const words = photo.seoName.replace(/\.[a-z0-9]+$/i,"").split("-");
+    const base_words = slugify(vehicleSlugBase(v)).split("-");
+    const desc = words.slice(base_words.length, /^\d+$/.test(words[words.length-1]) ? words.length-1 : words.length).join(" ");
+    if(desc) return `${base} — ${desc}`;
+  }
+  return base;
+}
+const docKind = k => DOC_KINDS.find(d=>d.k===k) || DOC_KINDS[DOC_KINDS.length-1];
+
+function toast(msg, ms){
+  const old = document.querySelector(".toast"); if(old) old.remove();
+  const t = document.createElement("div"); t.className="toast"; t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{ if(t.parentNode) t.remove(); }, ms||3200);
+}
+
+function blankVehicle(){
+  return { id:uid(), createdAt:Date.now(), updatedAt:Date.now(),
+    year:"", make:"", model:"", trim:"", price:null, priceNote:"", mileage:null,
+    vin:"", stock:"", bodyStyle:"", extColor:"", intColor:"", transmission:"",
+    drivetrain:"", engine:"", fuel:"", mpg:"", owners:"", titleStatus:"",
+    status:"available", headline:"", description:"", features:[], photos:[], docs:[] };
+}
+
+/* ============================ storage layer ============================ */
+async function boot(){
+  if(STATIC){
+    S.vehicles = STATIC.vehicles || [];
+    S.settings = Object.assign({}, DEFAULT_SETTINGS, STATIC.settings || {});
+    S.isAdmin = false; S.localMode = false; S.ready = true;
+    render();
+    return;
+  }
+  try{
+    if(window.claude && typeof window.claude.use === "function"){
+      const [db, assets, user, sample] = await Promise.all([
+        claude.use("db").catch(()=>null),
+        claude.use("assets").catch(()=>null),
+        claude.use("user").catch(()=>null),
+        claude.use("sample").catch(()=>null)
+      ]);
+      S.db = db || null;
+      S.assets = assets || null;
+      S.sample = sample || null;
+      if(user){ try{ S.isAdmin = await user.canEdit(); }catch(e){ S.isAdmin = false; } }
+      if(!S.isAdmin && S.assets) S.isAdmin = true; // assets is writer-only
+    }
+  }catch(e){ /* fall through to local mode */ }
+
+  if(!S.db){
+    S.localMode = true;
+    S.isAdmin = true;
+    S.ready = true;
+    render();
+    return;
+  }
+
+  S.db.doc("config/site").onSnapshot(snap=>{
+    const d = (snap && snap.exists) ? snap.data() : null;
+    S.settings = Object.assign({}, DEFAULT_SETTINGS, d || {});
+    render();
+  }, err=>{ console.warn("settings subscription ended", err); });
+
+  S.db.collection("vehicles").onSnapshot(snap=>{
+    const list = [];
+    (snap.docs||[]).forEach(doc => { const d = doc.data(); if(d) list.push(Object.assign({id:doc.id}, d)); });
+    S.vehicles = list;
+    S.ready = true;
+    render();
+  }, err=>{
+    S.ready = true;
+    toast("Inventory could not load right now. Reload the page to try again.");
+    render();
+  });
+
+  setTimeout(()=>{ if(!S.ready){ S.ready = true; render(); } }, 6000);
+}
+
+async function saveVehicle(v){
+  v.updatedAt = Date.now();
+  if(S.db){
+    const {id, ...body} = v;
+    await S.db.doc("vehicles/"+id).set(body);
+  }else{
+    const i = S.vehicles.findIndex(x=>x.id===v.id);
+    if(i>=0) S.vehicles[i] = v; else S.vehicles.push(v);
+    render();
+  }
+}
+async function deleteVehicle(id){
+  if(S.db){ await S.db.doc("vehicles/"+id).delete(); }
+  else { S.vehicles = S.vehicles.filter(v=>v.id!==id); render(); }
+}
+async function saveSettings(s){
+  S.settings = Object.assign({}, DEFAULT_SETTINGS, s);
+  if(S.db){ await S.db.doc("config/site").set(S.settings); }
+  else render();
+}
+
+/* image downscale before upload — keeps storage small and pages fast */
+function shrinkImage(file, maxDim, quality){
+  return new Promise((resolve)=>{
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = ()=>{
+      const scale = Math.min(1, maxDim/Math.max(img.width, img.height));
+      if(scale === 1 && file.size < 1200000){ URL.revokeObjectURL(url); return resolve(file); }
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width*scale); c.height = Math.round(img.height*scale);
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      c.toBlob(b=>{ URL.revokeObjectURL(url); resolve(b && b.size < file.size ? b : file); }, "image/jpeg", quality);
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
+
+const UPLOAD_ERRORS = {
+  too_large: "That file is over the 20 MB limit. Compress it or split it into parts.",
+  unsupported_type: "That file type can't be stored. Use JPG, PNG, WebP or PDF (iPhone HEIC photos need converting first).",
+  quota_or_state: "Storage for this site is full. Delete some photos or documents and try again.",
+  rate_limited: "Too many uploads at once. Wait a moment and try the rest.",
+  upstream_auth: "Your session expired. Reload the page and sign in again.",
+  not_granted: "You don't have upload access on this page.",
+  capability_disabled: "Uploads aren't available in this view.",
+  store_unavailable: "Storage hiccuped. Try that file again."
+};
+
+async function uploadFile(file, opts){
+  const isImage = /^image\//.test(file.type);
+  let blob = file, type = file.type;
+  if(isImage && file.type !== "image/svg+xml"){
+    blob = await shrinkImage(file, (opts&&opts.maxDim)||2400, 0.82);
+    if(blob !== file) type = "image/jpeg";
+  }
+  if(!S.assets){
+    const id = "local:" + uid();
+    S.localBlobs.set(id, URL.createObjectURL(blob));
+    return {id, name:file.name, contentType:type||"application/octet-stream", size:blob.size};
+  }
+  const res = await S.assets.upload(blob, type ? {type} : undefined);
+  return {id:res.id, name:file.name, contentType:res.contentType, size:res.sizeBytes};
+}
+
+async function refreshUsage(){
+  if(!S.assets) return;
+  try{ const r = await S.assets.list(); S.usage = r.usage; }catch(e){ S.usage = null; }
+}
+
+/* ============================ derived data ============================ */
+function visibleVehicles(){
+  const f = S.filters;
+  const q = f.q.trim().toLowerCase();
+  let list = S.vehicles.filter(v=>{
+    if(f.status==="forsale" && v.status==="sold") return false;
+    if(f.status==="sold" && v.status!=="sold") return false;
+    if(f.makes.size && !f.makes.has(v.make||"—")) return false;
+    if(f.bodies.size && !f.bodies.has(v.bodyStyle||"—")) return false;
+    if(f.docs.size){
+      const kinds = new Set((v.docs||[]).map(d=>d.kind));
+      for(const k of f.docs){ if(!kinds.has(k)) return false; }
+    }
+    const p = num(v.price), m = num(v.mileage), y = num(v.year);
+    if(f.priceMin!=="" && (p==null || p < Number(f.priceMin))) return false;
+    if(f.priceMax!=="" && (p==null || p > Number(f.priceMax))) return false;
+    if(f.milesMax!=="" && (m==null || m > Number(f.milesMax))) return false;
+    if(f.yearMin!=="" && (y==null || y < Number(f.yearMin))) return false;
+    if(f.yearMax!=="" && (y==null || y > Number(f.yearMax))) return false;
+    if(q){
+      const hay = [v.year,v.make,v.model,v.trim,v.vin,v.stock,v.extColor,v.headline,v.description]
+        .filter(Boolean).join(" ").toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  const by = S.sort;
+  const n = (x,d)=> x==null?d:Number(x);
+  list.sort((a,b)=>{
+    switch(by){
+      case "oldest":   return (a.createdAt||0)-(b.createdAt||0);
+      case "price_hi": return n(b.price,-1)-n(a.price,-1);
+      case "price_lo": return n(a.price,Infinity)-n(b.price,Infinity);
+      case "miles_lo": return n(a.mileage,Infinity)-n(b.mileage,Infinity);
+      case "miles_hi": return n(b.mileage,-1)-n(a.mileage,-1);
+      case "year_hi":  return n(b.year,-1)-n(a.year,-1);
+      case "year_lo":  return n(a.year,Infinity)-n(b.year,Infinity);
+      case "alpha":    return carName(a).localeCompare(carName(b));
+      default:         return (b.createdAt||0)-(a.createdAt||0);
+    }
+  });
+  return list;
+}
+function facet(field){
+  const m = new Map();
+  S.vehicles.forEach(v=>{ if(S.filters.status==="forsale" && v.status==="sold") return;
+    const k = v[field] || "—"; m.set(k,(m.get(k)||0)+1); });
+  return [...m.entries()].sort((a,b)=> a[0]==="—" ? 1 : b[0]==="—" ? -1 : a[0].localeCompare(b[0]));
+}
+function docFacet(){
+  const m = new Map();
+  S.vehicles.forEach(v=>{ if(S.filters.status==="forsale" && v.status==="sold") return;
+    new Set((v.docs||[]).map(d=>d.kind)).forEach(k=> m.set(k,(m.get(k)||0)+1)); });
+  return DOC_KINDS.filter(d=>m.has(d.k) && d.k!=="other").map(d=>[d, m.get(d.k)]);
+}
+
+/* ============================ render ============================ */
+function render(){
+  const app = $("#app");
+  const scrollY = window.scrollY;
+  if(S.admin){ app.innerHTML = viewAdmin(); wireAdmin(); return; }
+  if(S.view === "detail"){
+    const v = S.vehicles.find(x=>x.id===S.currentId);
+    app.innerHTML = chrome(v ? viewDetail(v) : viewMissing());
+    wireCommon();
+    if(v) wireDetail(v);
+    return;
+  }
+  app.innerHTML = chrome(viewList());
+  wireCommon(); wireList();
+  window.scrollTo(0, scrollY);
+}
+
+function chrome(main){
+  const st = S.settings;
+  const name = st.dealerName || "My inventory";
+  const tel = st.phone ? `<a class="tel" href="tel:${esc(st.phone.replace(/[^0-9+]/g,""))}">${esc(st.phone)}</a>` : "";
+  return `
+  <header class="topbar">
+    <div class="wrap">
+      <div class="brandmark">
+        <span class="nm">${esc(name)}</span>
+        ${st.tagline ? `<span class="tg">${esc(st.tagline)}</span>` : ""}
+      </div>
+      ${tel}
+      <button class="ghostbtn" data-act="view-sold">Sold Vehicles</button>
+      ${S.isAdmin ? `<button class="ghostbtn" data-act="open-admin">Manage inventory</button>` : ""}
+    </div>
+  </header>
+  ${perksBandHTML()}
+  ${S.localMode ? `<div style="background:var(--warn-bg);color:var(--warn);font-size:13px;padding:8px 0;border-bottom:1px solid var(--line)">
+      <div class="wrap">Preview mode: anything you add here disappears on reload. Publish the page and open it from the artifact link to save your inventory for real.</div>
+    </div>` : ""}
+  <main>${main}</main>
+  <footer class="site">
+    <div class="wrap">
+      <div>
+        <div class="nm">${esc(name)}</div>
+        ${st.address ? `<div>${esc(st.address)}</div>` : ""}
+        ${st.hours ? `<div>${esc(st.hours)}</div>` : ""}
+      </div>
+      <div>
+        ${st.phone ? `<div><a href="tel:${esc(st.phone.replace(/[^0-9+]/g,""))}" style="text-decoration:none">${esc(st.phone)}</a></div>` : ""}
+        ${st.email ? `<div><a href="mailto:${esc(st.email)}" style="text-decoration:none">${esc(st.email)}</a></div>` : ""}
+      </div>
+      <div class="fine">${esc(st.disclaimer || "Prices exclude tax, title, license and any dealer fees. Vehicles are sold as described; documents shown are provided for reference. Confirm availability before traveling.")}</div>
+    </div>
+  </footer>`;
+}
+
+function perksBandHTML(){
+  const items = (S.settings.services||"").split("\n").map(s=>s.trim()).filter(Boolean);
+  if(!items.length) return "";
+  return `<div class="perksband"><div class="wrap">
+    ${items.map(t=>`<span class="perkitem"><span class="tick">✓</span>${esc(t)}</span>`).join("")}
+  </div></div>`;
+}
+
+function viewList(){
+  let list = visibleVehicles();
+  const st = S.settings;
+  if(S.filters.status === "sold"){
+    list = [...list].sort((a,b)=>(b.soldAt||b.updatedAt||0)-(a.soldAt||a.updatedAt||0));
+  }
+  const totalDocs = S.vehicles.reduce((a,v)=>a+(v.docs||[]).length,0);
+  const withCarfax = S.vehicles.filter(v=>(v.docs||[]).some(d=>d.kind==="carfax")).length;
+  const withInsp = S.vehicles.filter(v=>(v.docs||[]).some(d=>d.kind==="inspection")).length;
+  const chips = [];
+  if(withCarfax) chips.push(`${withCarfax} with vehicle history reports`);
+  if(withInsp) chips.push(`${withInsp} with inspection reports`);
+  if(totalDocs && !chips.length) chips.push(`${totalDocs} documents on file`);
+
+  const soldPage = S.filters.status === "sold";
+  return `
+  <section class="pagehead"><div class="wrap">
+    <h1 class="title">${soldPage ? "Recently sold vehicles" : "Used car, truck and SUV inventory"}</h1>
+    <p class="subline">${soldPage
+      ? "A look at what's moved through our lot recently. See something like it? Get in touch and we'll help you find the next one."
+      : esc(st.intro || "Every vehicle listed here comes with its paperwork attached — read the repair orders, inspections and history reports before you ever drive out.")}</p>
+    ${!soldPage && chips.length ? `<div class="trustrow">${chips.map(c=>`<span class="trustchip">${esc(c)}</span>`).join("")}</div>` : ""}
+    ${soldPage ? `<p style="margin-top:14px"><button class="btn sec" data-act="view-forsale">← Back to current inventory</button></p>` : ""}
+  </div></section>
+
+  <section class="toolbar"><div class="wrap">
+    <button class="ghostbtn filtertoggle" data-act="toggle-rail" style="border-color:var(--line-strong);color:var(--ink)">Filters</button>
+    <span class="count"><b>${list.length}</b> ${list.length===1?"vehicle":"vehicles"}</span>
+    ${activeFilterCount() ? `<button class="linkbtn" data-act="reset-filters">Reset filters</button>` : ""}
+    <span class="spacer"></span>
+    <span class="sortwrap"><label for="sortsel">Sort</label>
+      <select id="sortsel">${SORTS.map(s=>`<option value="${s.v}"${S.sort===s.v?" selected":""}>${esc(s.label)}</option>`).join("")}</select>
+    </span>
+  </div></section>
+
+  <div class="wrap"><div class="shell">
+    <aside class="rail${S.railOpen?" open":""}">${viewFilters()}</aside>
+    <div>
+      ${!S.ready ? `<div class="empty"><h3>Loading inventory…</h3></div>`
+        : list.length ? `<div class="grid">${list.map(card).join("")}</div>`
+        : S.vehicles.length ? `<div class="empty"><h3>Nothing matches those filters</h3><p>Widen the price or mileage range, or clear the filters to see everything.</p><p><button class="btn sec" data-act="reset-filters">Clear filters</button></p></div>`
+        : `<div class="empty"><h3>No vehicles listed yet</h3><p>${S.isAdmin ? "Open Manage inventory to add your first car, upload photos and attach its paperwork." : "Check back shortly — inventory is being added."}</p>${S.isAdmin?`<p><button class="btn" data-act="open-admin">Add your first vehicle</button></p>`:""}</div>`}
+    </div>
+  </div></div>`;
+}
+
+function activeFilterCount(){
+  const f = S.filters;
+  return f.makes.size + f.bodies.size + f.docs.size +
+    (f.q?1:0) + (f.priceMin!==""?1:0) + (f.priceMax!==""?1:0) +
+    (f.milesMax!==""?1:0) + (f.yearMin!==""?1:0) + (f.yearMax!==""?1:0) +
+    (f.status!=="forsale"?1:0);
+}
+
+function viewFilters(){
+  const f = S.filters;
+  const makes = facet("make"), bodies = facet("bodyStyle"), docs = docFacet();
+  const chkList = (items, setName) => items.map(([k,c])=>`
+    <label class="chk"><input type="checkbox" data-facet="${setName}" value="${esc(k)}"${f[setName].has(k)?" checked":""}>
+      <span>${esc(k==="—"?"Not specified":k)}</span><span class="cnt">${c}</span></label>`).join("");
+  return `
+  <div class="railhead"><h2>Narrow it down</h2>
+    ${activeFilterCount()?`<button class="linkbtn" style="margin-left:auto" data-act="reset-filters">Reset</button>`:""}</div>
+  <div class="fgroup">
+    <h3>Search</h3>
+    <input type="search" id="qbox" placeholder="Make, model, VIN, stock #" value="${esc(f.q)}">
+  </div>
+  <div class="fgroup">
+    <h3>Availability</h3>
+    <label class="chk"><input type="radio" name="statusf" value="forsale"${f.status==="forsale"?" checked":""}><span>For sale</span></label>
+    <label class="chk"><input type="radio" name="statusf" value="all"${f.status==="all"?" checked":""}><span>Everything, including sold</span></label>
+    <label class="chk"><input type="radio" name="statusf" value="sold"${f.status==="sold"?" checked":""}><span>Recently sold</span></label>
+  </div>
+  ${docs.length ? `<div class="fgroup"><h3>Paperwork on file</h3>
+    ${docs.map(([d,c])=>`<label class="chk"><input type="checkbox" data-facet="docs" value="${d.k}"${f.docs.has(d.k)?" checked":""}>
+      <span>${esc(d.short)}</span><span class="cnt">${c}</span></label>`).join("")}</div>` : ""}
+  ${makes.length>1 ? `<div class="fgroup"><h3>Make</h3>${chkList(makes,"makes")}</div>` : ""}
+  ${bodies.length>1 ? `<div class="fgroup"><h3>Body style</h3>${chkList(bodies,"bodies")}</div>` : ""}
+  <div class="fgroup">
+    <h3>Price</h3>
+    <div class="rangerow">
+      <input type="number" inputmode="numeric" id="pmin" placeholder="Min" value="${esc(f.priceMin)}">
+      <span>to</span>
+      <input type="number" inputmode="numeric" id="pmax" placeholder="Max" value="${esc(f.priceMax)}">
+    </div>
+  </div>
+  <div class="fgroup">
+    <h3>Mileage</h3>
+    <input type="number" inputmode="numeric" id="mmax" placeholder="Under how many miles?" value="${esc(f.milesMax)}">
+  </div>
+  <div class="fgroup">
+    <h3>Year</h3>
+    <div class="rangerow">
+      <input type="number" inputmode="numeric" id="ymin" placeholder="From" value="${esc(f.yearMin)}">
+      <span>to</span>
+      <input type="number" inputmode="numeric" id="ymax" placeholder="To" value="${esc(f.yearMax)}">
+    </div>
+  </div>`;
+}
+
+function card(v){
+  const photo = (v.photos||[])[0];
+  const kinds = new Set((v.docs||[]).map(d=>d.kind));
+  const tags = TRUST_ORDER.filter(k=>kinds.has(k)).map(k=>{
+    const d = docKind(k);
+    return `<span class="doctag on">${esc(d.short)}</span>`;
+  });
+  const extra = (v.docs||[]).length - (v.docs||[]).filter(d=>TRUST_ORDER.includes(d.kind)).length;
+  if(extra>0) tags.push(`<span class="doctag">+${extra} more</span>`);
+  const spec = (label, val) => val ? `<div><span>${label}</span><b>${esc(val)}</b></div>` : "";
+  return `
+  <article class="card">
+    <button class="shot" data-open="${esc(v.id)}" aria-label="View ${esc(carName(v))}">
+      ${photo ? `<img src="${esc(assetUrl(photo.id))}" alt="${esc(photoAlt(v,photo))}" loading="lazy">`
+              : `<span class="none">No photos yet</span>`}
+      ${v.status && v.status!=="available" ? `<span class="statustag${v.status==="pending"?" pending":""}">${esc(STATUSES[v.status]||"")}</span>`:""}
+      ${(v.photos||[]).length>1 ? `<span class="pill">${v.photos.length} photos</span>`:""}
+    </button>
+    <div class="cardbody">
+      <div class="cardtop">
+        <h2 class="cartitle">${esc(carName(v))}${v.trim?`<span class="trim">${esc(v.trim)}</span>`:""}</h2>
+        <div class="pricebox">
+          <div class="price">${v.price!=null?esc(money(v.price)):"Call"}</div>
+          ${v.priceNote?`<div class="pricenote">${esc(v.priceNote)}</div>`:""}
+        </div>
+      </div>
+      <div class="specs">
+        ${spec("Miles", v.mileage!=null?miles(v.mileage):"")}
+        ${spec("Trans", v.transmission)}
+        ${spec("Color", v.extColor)}
+        ${spec("Drive", v.drivetrain)}
+      </div>
+      ${tags.length?`<div class="paperstrip">${tags.join("")}</div>`:""}
+      <div class="cardactions">
+        <button class="btn" data-open="${esc(v.id)}">View details</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+function viewMissing(){
+  return `<div class="wrap detail"><div class="empty"><h3>That vehicle isn't listed anymore</h3>
+    <p>It may have sold. <button class="linkbtn" data-act="back">Back to inventory</button></p></div></div>`;
+}
+
+function viewDetail(v){
+  const photos = v.photos||[];
+  const i = Math.min(S.photoIndex, Math.max(0,photos.length-1));
+  const cur = photos[i];
+  const st = S.settings;
+  const rows = [
+    ["Mileage", v.mileage!=null?miles(v.mileage):""],
+    ["VIN", v.vin], ["Stock number", v.stock], ["Body style", v.bodyStyle],
+    ["Exterior", v.extColor], ["Interior", v.intColor], ["Transmission", v.transmission],
+    ["Drivetrain", v.drivetrain], ["Engine", v.engine], ["Fuel", v.fuel],
+    ["Fuel economy", v.mpg], ["Previous owners", v.owners], ["Title", v.titleStatus],
+    ["Status", STATUSES[v.status]||""]
+  ].filter(r=>r[1]);
+  const subject = encodeURIComponent(`Question about ${carName(v)}${v.stock?" (stock "+v.stock+")":""}`);
+  const mailto = st.email ? `mailto:${st.email}?subject=${subject}` : "";
+  const tel = st.phone ? "tel:"+st.phone.replace(/[^0-9+]/g,"") : "";
+
+  return `
+  <div class="wrap detail">
+    <button class="crumb" data-act="back">← All inventory</button>
+    <div class="dhead">
+      <div>
+        <h1>${esc(carName(v))}${v.trim?" "+esc(v.trim):""}</h1>
+        <div class="sub">${[v.mileage!=null?miles(v.mileage):"", v.transmission, v.drivetrain, v.extColor].filter(Boolean).map(esc).join(" · ")}</div>
+      </div>
+      <div class="pricebox">
+        <div class="price">${v.price!=null?esc(money(v.price)):"Call for price"}</div>
+        ${v.priceNote?`<div class="pricenote">${esc(v.priceNote)}</div>`:""}
+      </div>
+    </div>
+
+    <div class="dgrid">
+      <div>
+        <div class="gallery" style="margin-bottom:18px">
+          <div class="stage" data-act="lightbox">
+            ${cur ? `<img src="${esc(assetUrl(cur.id))}" alt="${esc(photoAlt(v,cur))}">`
+                  : `<span class="none">No photos uploaded for this vehicle yet</span>`}
+            ${photos.length>1?`<button class="navarrow l" data-photo="prev" aria-label="Previous photo">‹</button>
+                               <button class="navarrow r" data-photo="next" aria-label="Next photo">›</button>
+                               <span class="stagecount">${i+1} / ${photos.length}</span>`:""}
+            ${photos.length?`<button class="maxbtn" data-act="maximize" aria-label="View full screen" title="View full screen">⤢</button>`:""}
+          </div>
+          ${photos.length>1?`<div class="thumbs" id="inline-thumbs">${thumbStripHTML(v,photos,i)}</div>`:""}
+        </div>
+
+        ${(v.headline||v.description) ? `<div class="panel">
+          <h2>${esc(v.headline || "About this vehicle")}</h2>
+          <div class="prose">${esc(v.description||"")}</div>
+        </div>` : ""}
+
+        ${(v.features||[]).length ? `<div class="panel"><h2>Equipment</h2>
+          <ul class="feat">${v.features.map(f=>`<li>${esc(f)}</li>`).join("")}</ul></div>` : ""}
+
+        <div class="panel">
+          <h2>Paperwork on this vehicle</h2>
+          ${(v.docs||[]).length ? `<div class="doclist">${v.docs.map(docRow).join("")}</div>
+            <p style="font-size:12.5px;color:var(--ink-3);margin:13px 0 0">Open or download any of these before you visit. Ask if something you want to see isn't here.</p>`
+          : `<p style="color:var(--ink-2);margin:0">No documents have been posted for this vehicle yet. Ask and they can be sent over.</p>`}
+        </div>
+      </div>
+
+      <div class="sidecol"><div class="stick">
+        <div class="panel">
+          <h2>Vehicle details</h2>
+          <table class="spectable"><tbody>
+            ${rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("")}
+          </tbody></table>
+        </div>
+        <div class="panel contactbox">
+          <h2>Ask about this one</h2>
+          ${st.phone?`<div class="line"><b>Call or text</b></div><p style="margin:0 0 12px"><a class="btn" style="width:100%" href="${esc(tel)}">${esc(st.phone)}</a></p>`:""}
+          ${mailto?`<p style="margin:0 0 12px"><a class="btn sec" style="width:100%" href="${esc(mailto)}">Email about this vehicle</a></p>`:""}
+          ${!st.phone && !st.email ? `<p style="margin:0;color:var(--ink-2)">Contact details haven't been added to this site yet.</p>`:""}
+          ${st.address?`<div class="line"><b>${esc(st.address)}</b></div>`:""}
+          ${st.hours?`<div class="line">${esc(st.hours)}</div>`:""}
+          ${v.vin?`<div class="line" style="font-size:12.5px;color:var(--ink-3);padding-top:10px">VIN ${esc(v.vin)}</div>`:""}
+        </div>
+      </div></div>
+    </div>
+  </div>
+  ${S.lightbox && cur ? `<div class="lightbox" id="lightbox-root" data-act="close-lightbox">
+      <div class="lbtopbar">
+        <span class="stagecount" style="position:static">${i+1} / ${photos.length}</span>
+        <span class="lbhint">Pinch or double-tap to zoom</span>
+        <span style="margin-left:auto"></span>
+        <button class="maxbtn" data-act="toggle-fullscreen" aria-label="Toggle full screen" title="Toggle full screen">⛶</button>
+        <button class="maxbtn" data-act="close-lightbox" aria-label="Shrink and close" title="Shrink and close">✕</button>
+      </div>
+      <div class="lbstage">
+        <img src="${esc(assetUrl(cur.id))}" alt="${esc(photoAlt(v,cur))}">
+        ${photos.length>1?`<button class="navarrow l" data-photo="prev" aria-label="Previous photo">‹</button>
+                           <button class="navarrow r" data-photo="next" aria-label="Next photo">›</button>`:""}
+      </div>
+      ${photos.length>1?`<div class="thumbs on-dark" id="lb-thumbs">${thumbStripHTML(v,photos,i)}</div>`:""}
+    </div>`:""}`;
+}
+
+function thumbStripHTML(v, photos, current){
+  return photos.map((p,idx)=>`
+    <button data-thumb="${idx}" aria-current="${idx===current}" aria-label="Photo ${idx+1} of ${photos.length}">
+      <img src="${esc(assetUrl(p.id))}" alt="" loading="lazy"></button>`).join("");
+}
+
+function docRow(d){
+  const k = docKind(d.kind);
+  const ext = /pdf/.test(d.contentType||"") ? "PDF" : /image/.test(d.contentType||"") ? "IMG" : "FILE";
+  return `<a class="docrow" href="${esc(assetUrl(d.id))}" target="_blank" rel="noopener">
+    <span class="docicon">${ext}</span>
+    <span class="docmeta">
+      <span class="k">${esc(d.label || k.label)}</span>
+      <span class="s">${esc(d.name||"")}${d.size?" · "+kb(d.size):""}</span>
+    </span>
+    <span class="docopen">Open ↗</span>
+  </a>`;
+}
+
+function defaultFilters(status){
+  return {q:"",makes:new Set(),bodies:new Set(),docs:new Set(),status:status||"forsale",
+    priceMin:"",priceMax:"",yearMin:"",yearMax:"",milesMax:""};
+}
+
+/* ============================ wiring: public ============================ */
+function wireCommon(){
+  document.querySelectorAll("[data-act]").forEach(el=>{
+    el.addEventListener("click", ev=>{
+      const act = el.getAttribute("data-act");
+      if(act==="open-admin"){ ev.preventDefault(); openAdmin(); }
+      if(act==="back"){ S.view="list"; S.currentId=null; S.lightbox=false; location.hash=""; render(); window.scrollTo(0,0); }
+      if(act==="reset-filters"){ S.filters = defaultFilters(); render(); }
+      if(act==="view-sold"){
+        S.view="list"; S.filters = defaultFilters("sold"); S.railOpen=false;
+        location.hash = "sold"; render(); window.scrollTo(0,0);
+      }
+      if(act==="view-forsale"){
+        S.view="list"; S.filters = defaultFilters("forsale"); S.railOpen=false;
+        location.hash = ""; render(); window.scrollTo(0,0);
+      }
+      if(act==="toggle-rail"){ S.railOpen=!S.railOpen; render(); }
+      if(act==="lightbox"){ if(!ev.target.closest("[data-photo],[data-act='maximize']")){ S.lightbox=true; render(); } }
+      if(act==="maximize"){ ev.stopPropagation(); S.lightbox=true; S.requestFullscreenOnOpen=true; render(); }
+      if(act==="close-lightbox"){ if(ev.target===el){ exitFullscreenIfActive(); S.lightbox=false; render(); } }
+      if(act==="toggle-fullscreen"){ toggleFullscreen(); }
+    });
+  });
+  document.querySelectorAll("[data-open]").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      S.currentId = el.getAttribute("data-open"); S.view="detail"; S.photoIndex=0; S.lightbox=false;
+      location.hash = "v=" + S.currentId;
+      render(); window.scrollTo(0,0);
+    });
+  });
+}
+
+function wireList(){
+  const sort = $("#sortsel");
+  if(sort) sort.addEventListener("change", e=>{ S.sort = e.target.value; render(); });
+  const q = $("#qbox");
+  if(q) q.addEventListener("input", debounce(e=>{ S.filters.q = e.target.value; render(); restoreFocus("#qbox"); }, 280));
+  document.querySelectorAll("[data-facet]").forEach(cb=>{
+    cb.addEventListener("change", ()=>{
+      const set = S.filters[cb.getAttribute("data-facet")];
+      if(cb.checked) set.add(cb.value); else set.delete(cb.value);
+      render();
+    });
+  });
+  document.querySelectorAll('input[name="statusf"]').forEach(r=>{
+    r.addEventListener("change", ()=>{ S.filters.status = r.value; render(); });
+  });
+  [["#pmin","priceMin"],["#pmax","priceMax"],["#mmax","milesMax"],["#ymin","yearMin"],["#ymax","yearMax"]]
+    .forEach(([sel,key])=>{
+      const el = $(sel); if(!el) return;
+      el.addEventListener("input", debounce(()=>{ S.filters[key]=el.value; render(); restoreFocus(sel); }, 400));
+    });
+}
+
+function wireDetail(v){
+  document.querySelectorAll("[data-photo]").forEach(b=>{
+    b.addEventListener("click", ev=>{
+      ev.stopPropagation();
+      const n = (v.photos||[]).length; if(!n) return;
+      S.photoIndex = b.getAttribute("data-photo")==="next"
+        ? (S.photoIndex+1)%n : (S.photoIndex-1+n)%n;
+      render();
+    });
+  });
+  document.querySelectorAll("[data-thumb]").forEach(b=>{
+    b.addEventListener("click", ()=>{ S.photoIndex = Number(b.getAttribute("data-thumb")); render(); });
+  });
+  scrollActiveThumbIntoView("inline-thumbs");
+  scrollActiveThumbIntoView("lb-thumbs");
+  wireSwipe(".stage", v);
+  wireZoom(v);
+  if(S.lightbox && S.requestFullscreenOnOpen){
+    S.requestFullscreenOnOpen = false;
+    const el = document.getElementById("lightbox-root");
+    if(el && el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+  }
+}
+
+function toggleFullscreen(){
+  const el = document.getElementById("lightbox-root");
+  if(!el) return;
+  if(document.fullscreenElement){ document.exitFullscreen().catch(()=>{}); }
+  else if(el.requestFullscreen){ el.requestFullscreen().catch(()=>{}); }
+}
+function exitFullscreenIfActive(){
+  if(document.fullscreenElement && document.exitFullscreen){ document.exitFullscreen().catch(()=>{}); }
+}
+function wireSwipe(sel, v){
+  const el = document.querySelector(sel);
+  if(!el) return;
+  let sx=null, sy=null, st=0;
+  el.addEventListener("pointerdown", e=>{
+    if(e.pointerType==="mouse") return;
+    sx=e.clientX; sy=e.clientY; st=Date.now();
+  }, {passive:true});
+  el.addEventListener("pointerup", e=>{
+    if(sx==null) return;
+    const dx=e.clientX-sx, dy=e.clientY-sy, dt=Date.now()-st;
+    sx=null;
+    const n=(v.photos||[]).length;
+    if(n>1 && dt<650 && Math.abs(dx)>44 && Math.abs(dx)>Math.abs(dy)*1.4){
+      S.photoIndex = dx<0 ? (S.photoIndex+1)%n : (S.photoIndex-1+n)%n;
+      render();
+    }
+  }, {passive:true});
+}
+
+/* Zoom + pan for the full-screen (lightbox) image. When not zoomed, a
+   quick single-finger drag navigates to the next/previous photo, matching
+   wireSwipe's behavior; once zoomed in, the same gesture pans instead. */
+function wireZoom(v){
+  if(!S.lightbox) return;
+  const stage = document.querySelector(".lbstage");
+  const img = stage && stage.querySelector("img");
+  if(!stage || !img) return;
+
+  const MAX_SCALE = 4;
+  let scale = 1, tx = 0, ty = 0;
+  const pointers = new Map();
+  let pinchStart = null;   // {dist, scale, tx, ty, mid}
+  let dragStart = null;    // {x, y, t, tx, ty}
+  let lastTap = null;      // {x, y, t}
+
+  function apply(smooth){
+    img.style.transition = smooth ? "transform .18s ease" : "none";
+    img.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`;
+    stage.classList.toggle("zoomed", scale > 1.01);
+  }
+  function clampPan(){
+    const r = stage.getBoundingClientRect();
+    const maxX = (r.width*(scale-1))/2 + r.width*0.12;
+    const maxY = (r.height*(scale-1))/2 + r.height*0.12;
+    tx = Math.max(-maxX, Math.min(maxX, tx));
+    ty = Math.max(-maxY, Math.min(maxY, ty));
+  }
+  function reset(smooth){ scale=1; tx=0; ty=0; apply(smooth); }
+  function zoomAt(clientX, clientY, target){
+    const r = img.getBoundingClientRect();
+    const cx = clientX - (r.left + r.width/2), cy = clientY - (r.top + r.height/2);
+    const ratio = target/scale;
+    tx = tx*ratio - cx*(ratio-1);
+    ty = ty*ratio - cy*(ratio-1);
+    scale = target;
+    clampPan();
+    apply(true);
+  }
+
+  img.addEventListener("dblclick", e=>{
+    e.preventDefault();
+    scale > 1.01 ? reset(true) : zoomAt(e.clientX, e.clientY, 2.5);
+  });
+
+  img.addEventListener("pointerdown", e=>{
+    try{ img.setPointerCapture(e.pointerId); }catch(err){}
+    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+
+    if(pointers.size === 2){
+      const [a,b] = [...pointers.values()];
+      pinchStart = {
+        dist: Math.hypot(a.x-b.x, a.y-b.y), scale,
+        tx, ty, mid: {x:(a.x+b.x)/2, y:(a.y+b.y)/2}
+      };
+      dragStart = null;
+    }else if(pointers.size === 1){
+      dragStart = {x:e.clientX, y:e.clientY, t:Date.now(), tx, ty};
+      if(e.pointerType === "touch"){
+        const now = Date.now();
+        if(lastTap && now-lastTap.t < 320 && Math.hypot(e.clientX-lastTap.x, e.clientY-lastTap.y) < 30){
+          scale > 1.01 ? reset(true) : zoomAt(e.clientX, e.clientY, 2.5);
+          lastTap = null;
+        }else{
+          lastTap = {x:e.clientX, y:e.clientY, t:now};
+        }
+      }
+    }
+  });
+
+  img.addEventListener("pointermove", e=>{
+    if(!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+
+    if(pointers.size === 2 && pinchStart){
+      const [a,b] = [...pointers.values()];
+      const dist = Math.hypot(a.x-b.x, a.y-b.y);
+      const mid = {x:(a.x+b.x)/2, y:(a.y+b.y)/2};
+      scale = Math.max(1, Math.min(MAX_SCALE, pinchStart.scale * (dist/pinchStart.dist)));
+      tx = pinchStart.tx + (mid.x - pinchStart.mid.x);
+      ty = pinchStart.ty + (mid.y - pinchStart.mid.y);
+      clampPan();
+      apply(false);
+    }else if(pointers.size === 1 && dragStart && scale > 1.01){
+      tx = dragStart.tx + (e.clientX - dragStart.x);
+      ty = dragStart.ty + (e.clientY - dragStart.y);
+      clampPan();
+      apply(false);
+    }
+  });
+
+  function onUp(e){
+    pointers.delete(e.pointerId);
+    if(pointers.size === 0 && dragStart && scale <= 1.01){
+      const dx = e.clientX - dragStart.x, dy = e.clientY - dragStart.y, dt = Date.now() - dragStart.t;
+      const n = (v.photos||[]).length;
+      if(n > 1 && dt < 650 && Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy)*1.4){
+        S.photoIndex = dx < 0 ? (S.photoIndex+1)%n : (S.photoIndex-1+n)%n;
+        render();
+        return;
+      }
+    }
+    dragStart = null;
+    pinchStart = null;
+    if(pointers.size === 0 && scale < 1.02) reset(false);
+  }
+  img.addEventListener("pointerup", onUp);
+  img.addEventListener("pointercancel", onUp);
+
+  img.addEventListener("wheel", e=>{
+    e.preventDefault();
+    const next = Math.max(1, Math.min(MAX_SCALE, scale * (e.deltaY < 0 ? 1.12 : 0.89)));
+    zoomAt(e.clientX, e.clientY, next);
+  }, {passive:false});
+}
+
+function scrollActiveThumbIntoView(containerId){
+  const c = document.getElementById(containerId); if(!c) return;
+  const active = c.querySelector('[aria-current="true"]'); if(!active) return;
+  active.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"});
+}
+
+function restoreFocus(sel){
+  const el = $(sel); if(!el) return;
+  const v = el.value; el.focus(); try{ el.setSelectionRange(v.length, v.length); }catch(e){}
+}
+function debounce(fn, ms){ let t; return function(...a){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a), ms); }; }
+
+/* ============================ admin ============================ */
+function openAdmin(){
+  S.admin = {tab:"inventory", draft:null, dirty:false, saving:false, embedResult:null};
+  refreshUsage().then(()=>{ if(S.admin) render(); });
+  render();
+}
+function closeAdmin(){
+  if(S.admin && S.admin.dirty && !confirm("You have unsaved changes on this vehicle. Leave without saving?")) return;
+  S.admin = null; render();
+}
+
+function viewAdmin(){
+  const a = S.admin;
+  return `<div class="admin">
+    <div class="adminbar">
+      <h2>Inventory manager</h2>
+      <div class="tabs">
+        <button data-tab="inventory" aria-current="${a.tab==='inventory'}">Vehicles</button>
+        <button data-tab="site" aria-current="${a.tab==='site'}">Site details</button>
+        <button data-tab="storage" aria-current="${a.tab==='storage'}">Storage</button>
+        <button data-tab="export" aria-current="${a.tab==='export'}">Publish</button>
+      </div>
+      <span style="margin-left:auto"></span>
+      <button class="ghostbtn" data-admin="close">Back to site</button>
+    </div>
+    <div class="adminbody"><div class="inner">
+      ${a.draft ? adminEditor(a.draft) : a.tab==="site" ? adminSite() : a.tab==="storage" ? adminStorage() : a.tab==="export" ? adminExport() : adminInventory()}
+    </div></div>
+  </div>`;
+}
+
+function adminInventory(){
+  const list = [...S.vehicles].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  return `
+  ${S.localMode ? `<div class="notice">This view can't save. Publish the page, open it from its artifact link, and your vehicles, photos and documents will be stored there permanently.</div>`:""}
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+    <h3 class="sectiontitle" style="border:0;margin:0;flex:1">${list.length} ${list.length===1?"vehicle":"vehicles"} on the lot</h3>
+    <button class="btn" data-admin="new">Add a vehicle</button>
+  </div>
+  ${list.length ? `<div class="adminlist">${list.map(v=>{
+    const p = (v.photos||[])[0];
+    return `<div class="arow">
+      <div class="thumb">${p?`<img src="${esc(assetUrl(p.id))}" alt="">`:"No photo"}</div>
+      <div class="info">
+        <div class="t">${esc(carName(v))} ${esc(v.trim||"")}</div>
+        <div class="m"><span class="statusdot ${esc(v.status)}"></span>${esc(STATUSES[v.status]||"")} ·
+          ${v.price!=null?esc(money(v.price)):"No price"} ·
+          ${v.mileage!=null?esc(miles(v.mileage)):"No mileage"} ·
+          ${(v.photos||[]).length} photos · ${(v.docs||[]).length} documents</div>
+      </div>
+      <div class="acts">
+        ${v.status==="sold"
+          ? `<button class="btn sec sm" data-unsell="${esc(v.id)}">Mark available</button>`
+          : `<button class="btn sec sm" data-sell="${esc(v.id)}">Mark sold</button>`}
+        <button class="btn sec sm" data-edit="${esc(v.id)}">Edit</button>
+        <button class="btn danger sm" data-del="${esc(v.id)}">Delete</button>
+      </div>
+    </div>`;
+  }).join("")}</div>`
+  : `<div class="empty"><h3>Nothing listed yet</h3><p>Add a vehicle, drop in its photos, then attach the repair orders, inspection and history report.</p>
+     <p><button class="btn" data-admin="new">Add a vehicle</button></p></div>`}`;
+}
+
+function adminEditor(v){
+  const f = (key,label,attrs) => `<div class="field"><label for="f_${key}">${label}</label>
+    <input id="f_${key}" data-k="${key}" ${attrs||'type="text"'} value="${esc(v[key]==null?"":v[key])}"></div>`;
+  return `
+  <button class="crumb" data-admin="cancel">← Back to vehicle list</button>
+  <h3 class="sectiontitle">The basics</h3>
+  <div class="fieldgrid">
+    ${f("year","Year",'type="number" inputmode="numeric" placeholder="2019"')}
+    ${f("make","Make",'type="text" placeholder="Toyota"')}
+    ${f("model","Model",'type="text" placeholder="4Runner"')}
+    ${f("trim","Trim",'type="text" placeholder="SR5 Premium"')}
+    ${f("price","Asking price",'type="number" inputmode="numeric" placeholder="24995"')}
+    ${f("mileage","Mileage",'type="number" inputmode="numeric" placeholder="86400"')}
+    <div class="field"><label for="f_status">Availability</label>
+      <select id="f_status" data-k="status">${Object.entries(STATUSES).map(([k,l])=>`<option value="${k}"${v.status===k?" selected":""}>${l}</option>`).join("")}</select></div>
+    ${f("priceNote","Note under the price",'type="text" placeholder="Plus tax and fees"')}
+  </div>
+
+  <h3 class="sectiontitle" style="margin-top:26px">Identification</h3>
+  <div class="fieldgrid">
+    ${f("vin","VIN",'type="text" placeholder="JTEBU5JR0K5..."')}
+    ${f("stock","Stock number",'type="text" placeholder="A1042"')}
+    ${f("titleStatus","Title",'type="text" placeholder="Clean, in hand"')}
+    ${f("owners","Previous owners",'type="text" placeholder="2"')}
+  </div>
+
+  <h3 class="sectiontitle" style="margin-top:26px">Specifications</h3>
+  <div class="fieldgrid">
+    ${f("bodyStyle","Body style",'type="text" placeholder="SUV"')}
+    ${f("extColor","Exterior color",'type="text" placeholder="Magnetic Gray"')}
+    ${f("intColor","Interior",'type="text" placeholder="Black cloth"')}
+    ${f("transmission","Transmission",'type="text" placeholder="5-speed automatic"')}
+    <div class="field"><label for="f_drivetrain">Drivetrain</label>
+      <select id="f_drivetrain" data-k="drivetrain">
+        <option value=""${!v.drivetrain?" selected":""}>—</option>
+        ${DRIVETRAINS.map(d=>`<option value="${d}"${v.drivetrain===d?" selected":""}>${d}</option>`).join("")}
+      </select></div>
+    ${f("engine","Engine",'type="text" placeholder="4.0L V6"')}
+    ${f("fuel","Fuel",'type="text" placeholder="Gasoline"')}
+    ${f("mpg","Fuel economy",'type="text" placeholder="16 city / 19 hwy"')}
+  </div>
+
+  <h3 class="sectiontitle" style="margin-top:26px">Description</h3>
+  <div class="fieldgrid">
+    <div class="field wide"><label for="f_headline">Headline</label>
+      <input id="f_headline" data-k="headline" type="text" placeholder="One owner, every service done on time" value="${esc(v.headline||"")}"></div>
+    <div class="field wide"><label for="f_description">Full description</label>
+      <textarea id="f_description" data-k="description" placeholder="What you'd tell a buyer standing next to the car: how you got it, what's been fixed, what still needs attention, why it's priced where it is.">${esc(v.description||"")}</textarea>
+      <span class="hint">Line breaks are kept exactly as you type them.</span></div>
+    <div class="field wide"><label for="f_features">Equipment list</label>
+      <textarea id="f_features" data-k="features" style="min-height:96px" placeholder="Heated seats&#10;Backup camera&#10;Tow package">${esc((v.features||[]).join("\n"))}</textarea>
+      <span class="hint">One item per line.</span></div>
+  </div>
+
+  <h3 class="sectiontitle" style="margin-top:26px">Photos</h3>
+  <div class="drop" id="photodrop">
+    <b>Drop photos here, or click to choose</b>
+    <small>JPG, PNG or WebP. Pick as many as you like at once — the first photo is the one buyers see on the listing.</small>
+  </div>
+  <input type="file" id="photoinput" accept="image/*" multiple hidden>
+  <p class="hint" style="margin:10px 0 0">Drag the ⠿ handle to reorder — the first photo is what buyers see on the listing card.
+    ${S.sample && (v.photos||[]).length ? ` · <button class="linkbtn" data-admin="renamephotos">Regenerate SEO file names</button>`
+      : !S.sample ? ` File names use the vehicle's details; AI-described names aren't available in this view.` : ""}</p>
+  <div class="photogrid" id="photogrid">${photoGridHTML(v)}</div>
+
+  <h3 class="sectiontitle" style="margin-top:26px">Documents</h3>
+  <div class="fieldgrid" style="margin-bottom:12px">
+    <div class="field"><label for="dockind">What are you attaching?</label>
+      <select id="dockind">${DOC_KINDS.map(d=>`<option value="${d.k}">${d.label}</option>`).join("")}</select></div>
+    <div class="field"><label for="doclabel">Label shown to buyers</label>
+      <input type="text" id="doclabel" placeholder="Leave blank to use the type above"></div>
+  </div>
+  <div class="drop" id="docdrop">
+    <b>Drop repair orders, inspections, Carfax PDFs here</b>
+    <small>PDF, JPG or PNG, up to 20 MB each. Set the type above first, then drop the files.</small>
+  </div>
+  <input type="file" id="docinput" accept="application/pdf,image/*" multiple hidden>
+  <div class="doclist" id="docgrid" style="margin-top:14px">${(v.docs||[]).map((d,i)=>{
+    const k = docKind(d.kind);
+    return `<div class="docrow" style="cursor:default">
+      <span class="docicon">${/pdf/.test(d.contentType||"")?"PDF":"IMG"}</span>
+      <span class="docmeta"><span class="k">${esc(d.label||k.label)}</span>
+        <span class="s">${esc(d.name||"")}${d.size?" · "+kb(d.size):""}</span></span>
+      <a class="btn sec sm" href="${esc(assetUrl(d.id))}" target="_blank" rel="noopener">Open</a>
+      <button class="btn danger sm" data-ddel="${i}">Remove</button>
+    </div>`;
+  }).join("")}</div>
+
+  <div class="savebar">
+    <button class="btn" data-admin="save"${S.admin.saving?" disabled":""}>${S.admin.saving?'<span class="spin"></span> Saving…':"Save vehicle"}</button>
+    <button class="btn sec" data-admin="cancel">Cancel</button>
+    <span class="msg">${S.admin.dirty?"Unsaved changes":"Saved"}</span>
+  </div>`;
+}
+
+function adminSite(){
+  const s = S.settings;
+  const f = (key,label,attrs,hint) => `<div class="field ${attrs&&attrs.includes('textarea')?'wide':''}"><label for="s_${key}">${label}</label>
+    <input id="s_${key}" data-s="${key}" type="text" value="${esc(s[key]||"")}" ${attrs||""}>
+    ${hint?`<span class="hint">${hint}</span>`:""}</div>`;
+  return `
+  <h3 class="sectiontitle">How your lot appears to buyers</h3>
+  <div class="fieldgrid">
+    ${f("dealerName","Business or seller name",'placeholder="Harper Auto Sales"')}
+    ${f("tagline","Short line beside the name",'placeholder="Family owned since 2004"')}
+    ${f("phone","Phone",'placeholder="(303) 555-0142"',"Becomes a tap-to-call button on every listing.")}
+    ${f("email","Email",'placeholder="sales@example.com"',"Buyers get a prefilled email with the vehicle and stock number.")}
+    ${f("address","Address",'placeholder="118 Wilcox St, Castle Rock, CO"')}
+    ${f("hours","Hours",'placeholder="Mon–Sat 9–6, Sunday by appointment"')}
+    <div class="field wide"><label for="s_services">Services &amp; perks banner</label>
+      <textarea id="s_services" data-s="services" style="min-height:120px" placeholder="$0 Doc &amp; Handling fee&#10;Consignment available&#10;Used car finder service">${esc(s.services||"")}</textarea>
+      <span class="hint">One per line. Shown as a scrolling banner at the top of every page — this is where you boast.</span></div>
+    <div class="field wide"><label for="s_intro">Intro under the page title</label>
+      <textarea id="s_intro" data-s="intro" style="min-height:80px" placeholder="Every vehicle here comes with its paperwork attached…">${esc(s.intro||"")}</textarea></div>
+    <div class="field wide"><label for="s_disclaimer">Fine print in the footer</label>
+      <textarea id="s_disclaimer" data-s="disclaimer" style="min-height:80px" placeholder="Prices exclude tax, title and license…">${esc(s.disclaimer||"")}</textarea></div>
+    ${f("faviconUrl","Favicon (browser tab icon)",'placeholder="https://yoursite.com/favicon.ico"')}
+    <div class="field wide" style="margin-top:-8px"><span class="hint">Defaults to your main site's icon so the two match. Only matters when you publish the site to your own domain — leave as-is unless you want something different.</span></div>
+  </div>
+  <div class="savebar">
+    <button class="btn" data-admin="save-site">Save site details</button>
+    <span class="msg">Shown in the header, footer and every vehicle page.</span>
+  </div>`;
+}
+
+function adminStorage(){
+  const u = S.usage;
+  const files = S.vehicles.reduce((a,v)=>a+(v.photos||[]).length+(v.docs||[]).length,0);
+  const pct = u && u.maxBytes ? Math.min(100, Math.round(u.bytes/u.maxBytes*100)) : 0;
+  return `
+  <h3 class="sectiontitle">Files stored for this site</h3>
+  ${u ? `<p style="color:var(--ink-2);margin-top:0">${u.files} files · ${kb(u.bytes)} of ${kb(u.maxBytes)} used</p>
+     <div class="meter"><i style="width:${pct}%"></i></div>
+     <p style="font-size:13px;color:var(--ink-3)">${u.files} of ${u.maxFiles} file slots used.</p>`
+   : `<p style="color:var(--ink-2)">Storage details aren't available in this view.</p>`}
+  <p style="color:var(--ink-2)">Your listings point at ${files} files. Photos are automatically resized to 2400px on the long edge before they're stored, so a full photo set for one car usually lands well under 10 MB.</p>
+  <h3 class="sectiontitle" style="margin-top:26px">Good to know</h3>
+  <ul style="color:var(--ink-2);line-height:1.7;padding-left:20px;max-width:70ch">
+    <li>Removing a photo or document from a vehicle takes it off the site immediately.</li>
+    <li>PDFs open in a new tab and can be downloaded by anyone who can see the listing — don't attach anything with a customer's personal details on it.</li>
+    <li>iPhone photos saved as HEIC need converting to JPG first. On the phone: Settings → Camera → Formats → Most Compatible.</li>
+  </ul>`;
+}
+
+function adminExport(){
+  const cars = S.vehicles.length;
+  const fileCount = S.vehicles.reduce((a,v)=>a+(v.photos||[]).length+(v.docs||[]).length,0);
+  const manifest = loadManifest();
+  const hasManifest = !!(manifest && manifest.files && Object.keys(manifest.files).length);
+  const lastWhen = manifest && manifest.exportedAt ? new Date(manifest.exportedAt).toLocaleString() : null;
+
+  return `
+  <h3 class="sectiontitle">Put this inventory on your own website</h3>
+  <p style="color:var(--ink-2);max-width:70ch;margin-top:0">This builds a ZIP containing a complete, ordinary website — one <code>index.html</code>
+  page plus an <code>assets</code> folder holding photos and documents. Upload it to your hosting and it works on any
+  web address, no sign-in required. Right now that's ${cars} ${cars===1?"vehicle":"vehicles"} and ${fileCount} files.</p>
+
+  ${hasManifest ? `<div class="notice" style="border-left-color:var(--stamp);background:var(--stamp-bg);color:var(--stamp)">
+      Last built ${esc(lastWhen)} — ${manifest.fileCount||Object.keys(manifest.files).length} files remembered.
+      The build below will only repack what's new or changed since then, so it should be much faster.</div>`
+    : `<p style="color:var(--ink-2);font-size:13.5px">This browser hasn't built this site before, so the first build packs everything.</p>`}
+
+  <div class="fieldgrid" style="margin:16px 0">
+    <label class="chk" style="border:1px solid var(--line);border-radius:var(--radius);padding:10px 13px;background:var(--wash)">
+      <input type="checkbox" id="fullrebuild">
+      <span>Repack every photo and document, not just what changed<br><span class="hint">Use this if your live site looks out of date, or you're starting a brand-new hosting account.</span></span>
+    </label>
+  </div>
+
+  <p><button class="btn" data-admin="export" id="exportbtn">Build website files</button>
+  ${hasManifest ? ` <button class="linkbtn" data-admin="reset-manifest" style="margin-left:6px">Forget what was last built</button>`:""}</p>
+  <p id="exportlog" style="color:var(--ink-3);font-size:13.5px;min-height:20px;margin-top:-4px"></p>
+
+  <h3 class="sectiontitle" style="margin-top:26px">Keeping your Netlify site in sync — the fast way</h3>
+  <p style="color:var(--ink-2);max-width:70ch">Netlify's drag-and-drop always replaces your <em>whole</em> site with whatever folder you drop, so
+  the trick is to keep one folder on your computer permanently and only ever add the new pieces into it, rather than starting fresh each time.</p>
+  <ol style="color:var(--ink-2);line-height:1.8;padding-left:20px;max-width:70ch">
+    <li><b>First time:</b> unzip the download into a folder on your computer and keep it — call it something like <code>inventory-site</code>. Drag that whole folder onto Netlify.</li>
+    <li><b>Every time after that:</b> when you build again, this tool only includes files that are new or different. Unzip the new download into
+      a <em>temporary</em> spot, then copy just its contents into your original <code>inventory-site</code> folder — the readme inside tells you
+      exactly what's new and, if anything, which old files it replaced.</li>
+    <li>Drag your <code>inventory-site</code> folder (now updated) onto Netlify again. Because it's usually just an index.html and one or two new
+      photos, this upload is quick even though Netlify re-deploys the whole thing.</li>
+  </ol>
+  <p style="color:var(--ink-2);font-size:13.5px;max-width:70ch">Want zero manual copying? Netlify's own command-line tool
+  (<code>netlify deploy</code>) can watch that same local folder and upload only what changed automatically — ask me and I'll walk you through
+  setting it up once.</p>
+
+  <h3 class="sectiontitle" style="margin-top:34px">No hosting account at all — embed it straight into GoDaddy</h3>
+  <p style="color:var(--ink-2);max-width:70ch">GoDaddy's own page editor has a <b>Custom HTML</b> section that lets you paste code directly onto one of your existing
+  pages — no separate host, no other account, nothing to point at your domain. The trade-off: that box is a small text field, not real file
+  storage, so this build is a lighter, <b>text-first</b> version of your listings — prices, specs and descriptions for every vehicle, with one
+  small photo per car if you choose to include them. <b>Documents (Carfax, inspections, repair orders) aren't included</b> — there's simply
+  nowhere to put megabytes of PDFs inside a text box. Any vehicle that has documents attached shows a line inviting the buyer to call or email
+  for them instead.</p>
+
+  <div class="fieldgrid" style="margin:16px 0">
+    <label class="chk" style="border:1px solid var(--line);border-radius:var(--radius);padding:10px 13px;background:var(--wash)">
+      <input type="checkbox" id="embedphotos" checked>
+      <span>Include one small photo per vehicle<br><span class="hint">Adds the most size by far. Uncheck this first if a build turns out too large.</span></span>
+    </label>
+  </div>
+
+  ${S.admin.embedResult ? "" : `<p><button class="btn" data-admin="build-embed" id="embedbtn">Build embed code</button></p>
+  <p id="embedlog" style="color:var(--ink-3);font-size:13.5px;min-height:20px;margin-top:-4px"></p>`}
+  ${S.admin.embedResult ? embedResultHTML(S.admin.embedResult) : ""}
+
+  <h4 style="font-size:14.5px;margin:22px 0 8px">Where it goes in GoDaddy</h4>
+  <ol style="color:var(--ink-2);line-height:1.8;padding-left:20px;max-width:70ch">
+    <li>In GoDaddy, go to <b>My Products → Websites + Marketing → Edit Site</b>.</li>
+    <li>Go to the page where you want the inventory (a new blank page works well) and click <b>Add Section</b>.</li>
+    <li>Choose <b>Files &amp; Web → HTML</b>, then <b>Embed custom code on the page</b>.</li>
+    <li>Paste the code from below into the <b>Custom Code</b> field.</li>
+    <li>Leave <b>Forced Height</b> blank (auto) — this version is a simple scrolling page, not a fixed viewer, so auto-height fits it correctly.</li>
+    <li>Preview, then <b>Publish</b> your site.</li>
+  </ol>
+  <div class="notice" style="margin-top:16px">If GoDaddy still won't save the code, the size gauge below will say so — uncheck photos, or mark a
+  few older vehicles sold, and build again. GoDaddy's exact limit isn't published, but this build is aimed well under where comparable site
+  builders cap out.</div>`;
+}
+
+function embedResultHTML(r){
+  const risky = r.bytes > 45000;
+  const tight = !risky && r.bytes > 25000;
+  const color = risky ? "var(--signal)" : tight ? "var(--warn)" : "var(--stamp)";
+  const bg = risky ? "color-mix(in srgb,var(--signal) 12%,var(--wash))" : tight ? "var(--warn-bg)" : "var(--stamp-bg)";
+  const verdict = risky
+    ? " That's large for a text field like this — uncheck photos, or mark some older vehicles sold, then rebuild before pasting it in."
+    : tight
+    ? " That should fit, but it's not a lot of margin. If GoDaddy rejects it, uncheck photos and rebuild."
+    : " Comfortably small — this should paste into GoDaddy without any trouble.";
+  return `
+  <div class="notice" style="border-left-color:${color};background:${bg};color:${color}">
+    ${kb(r.bytes)} of code · ${r.vehicleCount} ${r.vehicleCount===1?"vehicle":"vehicles"}${r.photoCount?` · ${r.photoCount} photos`:" · no photos"}.
+    ${verdict}
+  </div>
+  <p style="display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn" data-admin="copy-embed">Copy code</button>
+    <button class="btn sec" data-admin="download-embed">Download as a text file instead</button>
+    <button class="linkbtn" data-admin="rebuild-embed">Rebuild</button>
+  </p>
+  <textarea readonly id="embedcode" style="min-height:160px;font-family:monospace;font-size:11.5px;white-space:pre" onclick="this.select()">${esc(r.code)}</textarea>
+  <p class="hint" style="margin-top:6px">Click the box to select it all if the Copy button doesn't work in your browser.</p>`;
+}
+
+/* ---------- incremental export: remember what was last shipped ---------- */
+const MANIFEST_KEY = "lot_export_manifest_v1";
+function loadManifest(){
+  try{ const raw = localStorage.getItem(MANIFEST_KEY); return raw ? JSON.parse(raw) : null; }
+  catch(e){ return null; }
+}
+function saveManifest(m){ try{ localStorage.setItem(MANIFEST_KEY, JSON.stringify(m)); }catch(e){} }
+function clearManifest(){ try{ localStorage.removeItem(MANIFEST_KEY); }catch(e){} }
+
+/* Deterministic id -> desired-name map, independent of upload order, so
+   re-running the export assigns the same file name to the same photo
+   unless its vehicle info or SEO description actually changed. */
+function buildCurrentFileMap(){
+  const map = new Map();
+  [...S.vehicles].sort((a,b)=> (a.id||"").localeCompare(b.id||"")).forEach(v=>{
+    (v.photos||[]).forEach((p,i)=>{
+      const seoBase = p.seoName ? slugify(p.seoName.replace(/\.[a-z0-9]+$/i,"")) : slugify(vehicleSlugBase(v)+"-photo-"+(i+1));
+      map.set(p.id, {seoBase, name:p.name, guessType:"image/jpeg"});
+    });
+    (v.docs||[]).forEach(d=>{
+      const seoBase = slugify(vehicleSlugBase(v)+"-"+(d.label||docKind(d.kind).short));
+      map.set(d.id, {seoBase, name:d.name, guessType:d.contentType});
+    });
+  });
+  return map;
+}
+
+function blobToDataURL(blob){
+  return new Promise((resolve,reject)=>{
+    const r = new FileReader();
+    r.onload = ()=> resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(blob);
+  });
+}
+
+/* A self-contained mini viewer, built from scratch and independent of the
+   main app's CSS/JS — the full app is far too large to fit in a code-box
+   field. System fonts only (no Google Fonts <link>, one less thing that can
+   go wrong in someone else's page). Prefixed classes (li-*) so it can't
+   collide with the host site's own styles. */
+const LITE_CSS = `.li{font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#111820;background:#eef1f5}
+.li,.li *{box-sizing:border-box}
+.li .li-band{background:#0d3b5c;color:#e9f1f8;padding:9px 14px;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;font-weight:600}
+.li .li-head{padding:18px 16px 14px;background:#fff;border-bottom:1px solid #d4dbe4}
+.li .li-head h1{font-size:23px;margin:0 0 4px;font-weight:700}
+.li .li-head p{margin:0;color:#4d5b6b;font-size:14px;max-width:60ch}
+.li .li-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:13px;padding:16px}
+.li .li-card{background:#fff;border:1px solid #d4dbe4;border-radius:4px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;text-align:left}
+.li .li-card .li-ph{aspect-ratio:4/3;background:#e3e8ef;display:flex;align-items:center;justify-content:center;color:#77869a;font-size:12px}
+.li .li-card .li-ph img{width:100%;height:100%;object-fit:cover}
+.li .li-card .li-b{padding:10px 12px 12px}
+.li .li-card h3{font-size:16px;margin:0 0 2px;font-weight:700}
+.li .li-card .li-tr{font-size:12.5px;color:#4d5b6b;margin:0 0 6px;min-height:16px}
+.li .li-card .li-pr{font-size:18px;font-weight:700;color:#a8202c}
+.li .li-card .li-sp{font-size:12.5px;color:#4d5b6b;margin-top:4px}
+.li .li-empty{padding:44px 20px;text-align:center;color:#4d5b6b}
+.li .li-modal{position:fixed;inset:0;background:rgba(8,14,20,.72);display:flex;align-items:center;justify-content:center;padding:16px;z-index:999}
+.li .li-box{background:#fff;max-width:540px;width:100%;max-height:88vh;overflow:auto;border-radius:6px;position:relative}
+.li .li-box .li-ph{aspect-ratio:4/3;background:#e3e8ef}
+.li .li-box .li-ph img{width:100%;height:100%;object-fit:cover}
+.li .li-box .li-c{padding:18px 20px 22px}
+.li .li-box h2{font-size:21px;margin:0 0 4px;font-weight:700}
+.li .li-box .li-pr{font-size:24px;color:#a8202c;font-weight:700;margin:2px 0 10px}
+.li .li-box .li-sp{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px;font-size:13px;color:#4d5b6b;margin-bottom:10px}
+.li .li-box .li-sp b{color:#111820;font-weight:600}
+.li .li-box p.li-desc{white-space:pre-wrap;font-size:14px;line-height:1.65;margin:10px 0;color:#111820}
+.li .li-box .li-docnote{background:#fdf1d8;color:#8a5a00;border-left:3px solid #8a5a00;padding:9px 12px;font-size:12.5px;border-radius:3px;margin:12px 0}
+.li .li-box .li-actions a{display:inline-block;background:#0d3b5c;color:#fff;text-decoration:none;padding:10px 16px;border-radius:4px;font-weight:600;font-size:14px;margin:10px 8px 0 0}
+.li .li-box .li-close{position:absolute;top:10px;right:10px;background:rgba(10,18,26,.55);color:#fff;border:0;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;line-height:1}`;
+
+const LITE_JS = `(function(){
+var D=window.__LITE_DATA__||{vehicles:[],settings:{}};
+var s=D.settings||{};
+var root=document.getElementById('li-app');
+if(!root)return;
+function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function money(n){return n==null?'Call':'$'+Number(n).toLocaleString('en-US',{maximumFractionDigits:0});}
+function miles(n){return n==null?'':Number(n).toLocaleString('en-US')+' mi';}
+function nm(v){return [v.year,v.make,v.model].filter(Boolean).join(' ')||'Vehicle';}
+var list=D.vehicles||[];
+var html='<div class="li">';
+if(s.services){
+  var perks=String(s.services).split('\\n').map(function(x){return x.trim();}).filter(Boolean);
+  if(perks.length)html+='<div class="li-band">'+perks.map(function(p){return '<span>\\u2713 '+esc(p)+'</span>';}).join('')+'</div>';
+}
+html+='<div class="li-head"><h1>'+esc(s.dealerName||'Our Inventory')+'</h1>'+(s.intro?'<p>'+esc(s.intro)+'</p>':'')+'</div>';
+if(!list.length){
+  html+='<div class="li-empty">No vehicles listed right now \\u2014 check back soon, or call us.</div>';
+}else{
+  html+='<div class="li-grid">'+list.map(function(v,i){
+    var ph=v.photo?'<img src="'+v.photo+'" alt="'+esc(nm(v))+'">':'No photo';
+    return '<button class="li-card" data-i="'+i+'"><div class="li-ph">'+ph+'</div><div class="li-b"><h3>'+esc(nm(v))+'</h3><div class="li-tr">'+esc(v.trim||'')+'</div><div class="li-pr">'+money(v.price)+'</div><div class="li-sp">'+esc(v.mileage!=null?miles(v.mileage):'')+'</div></div></button>';
+  }).join('')+'</div>';
+}
+html+='</div>';
+root.innerHTML=html;
+var modal=null;
+function closeModal(){if(modal){modal.remove();modal=null;}}
+root.addEventListener('click',function(e){
+  var card=e.target.closest?e.target.closest('.li-card'):null;
+  if(!card)return;
+  var v=list[Number(card.getAttribute('data-i'))];
+  if(!v)return;
+  closeModal();
+  var tel=s.phone?'tel:'+String(s.phone).replace(/[^0-9+]/g,''):'';
+  var mail=s.email?'mailto:'+s.email+'?subject='+encodeURIComponent('Question about '+nm(v)):'';
+  var specs=[['Mileage',v.mileage!=null?miles(v.mileage):''],['Exterior',v.extColor],['Transmission',v.transmission],['Drivetrain',v.drivetrain]].filter(function(r){return r[1];});
+  var m=document.createElement('div');
+  m.className='li li-modal';
+  m.innerHTML='<div class="li-box"><button class="li-close" aria-label="Close">\\u2715</button>'+
+    (v.photo?'<div class="li-ph"><img src="'+v.photo+'" alt=""></div>':'')+
+    '<div class="li-c"><h2>'+esc(nm(v))+' '+esc(v.trim||'')+'</h2>'+
+    '<div class="li-pr">'+money(v.price)+'</div>'+
+    '<div class="li-sp">'+specs.map(function(r){return '<div>'+r[0]+': <b>'+esc(r[1])+'</b></div>';}).join('')+'</div>'+
+    (v.description?'<p class="li-desc">'+esc(v.description)+'</p>':'')+
+    (v.hasDocs?'<div class="li-docnote">Vehicle history, inspection and service documents are available for this vehicle \\u2014 call or email to request them.</div>':'')+
+    '<div class="li-actions">'+(tel?'<a href="'+tel+'">Call '+esc(s.phone)+'</a>':'')+(mail?'<a href="'+mail+'">Email about this vehicle</a>':'')+'</div>'+
+    '</div></div>';
+  document.body.appendChild(m);
+  modal=m;
+  m.addEventListener('click',function(ev){ if(ev.target===m||ev.target.classList.contains('li-close'))closeModal(); });
+});
+})();`;
+
+async function buildEmbedSnippet(includePhotos){
+  const log = m => { const el = document.getElementById("embedlog"); if(el) el.textContent = m; };
+  const active = S.vehicles.filter(v => v.status !== "sold");
+  const out = [];
+  let photoCount = 0, done = 0;
+
+  for(const v of active){
+    done++;
+    let photo;
+    if(includePhotos && v.photos && v.photos[0]){
+      log(`Preparing photo ${done} of ${active.length}…`);
+      try{
+        const res = await fetch(assetUrl(v.photos[0].id));
+        if(res.ok){
+          const shrunk = await shrinkImage(await res.blob(), 480, 0.55); // deliberately tiny — this travels as text
+          photo = await blobToDataURL(shrunk);
+          photoCount++;
+        }
+      }catch(e){ /* that one vehicle just shows no photo */ }
+    }
+    out.push({
+      year:v.year, make:v.make, model:v.model, trim:v.trim,
+      price:v.price, mileage:v.mileage, extColor:v.extColor,
+      transmission:v.transmission, drivetrain:v.drivetrain,
+      description:v.description, hasDocs: !!(v.docs && v.docs.length),
+      photo
+    });
+  }
+
+  log("Assembling the code…");
+  const data = JSON.stringify({
+    vehicles: out,
+    settings: {
+      dealerName: S.settings.dealerName, intro: S.settings.intro,
+      services: S.settings.services, phone: S.settings.phone, email: S.settings.email
+    }
+  }).replace(/</g, "\\u003c").replace(/\u2028/g,"\\u2028").replace(/\u2029/g,"\\u2029");
+
+  // No <!DOCTYPE>/<html>/<head>/<body> — GoDaddy's Custom Code box already
+  // runs inside its own page, so this is a plain snippet the box wraps itself.
+  const code =
+    '<style>\n' + LITE_CSS + '\n</style>\n' +
+    '<div id="li-app"></div>\n' +
+    '<script>window.__LITE_DATA__ = ' + data + ';<\/script>\n' +
+    '<script>\n' + LITE_JS + '\n<\/script>\n';
+
+  return { code, bytes: new Blob([code]).size, vehicleCount: out.length, photoCount };
+}
+
+function loadJSZip(){
+  return new Promise((resolve, reject)=>{
+    if(window.JSZip) return resolve(window.JSZip);
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+    s.onload = ()=> window.JSZip ? resolve(window.JSZip) : reject(new Error("missing"));
+    s.onerror = ()=> reject(new Error("blocked"));
+    document.head.appendChild(s);
+  });
+}
+
+function extFor(type, name){
+  const t = (type||"").toLowerCase();
+  if(t.includes("pdf")) return "pdf";
+  if(t.includes("png")) return "png";
+  if(t.includes("webp")) return "webp";
+  if(t.includes("gif")) return "gif";
+  if(t.includes("svg")) return "svg";
+  if(t.includes("jpeg")||t.includes("jpg")) return "jpg";
+  const m = /\.([a-z0-9]{2,4})$/i.exec(name||"");
+  return m ? m[1].toLowerCase() : "jpg";
+}
+
+function exportReadme(info){
+  const lines = [
+    "YOUR INVENTORY WEBSITE",
+    "",
+    "This folder is a complete website. It needs no database and no plugins.",
+    "",
+    "WHAT IS HERE",
+    "  index.html          the page itself — ALWAYS replace your old copy with this one",
+    "  assets/             photos and documents this build actually packed",
+    ""
+  ];
+  if(info.isFirstBuild){
+    lines.push(
+      "THIS IS YOUR FIRST BUILD",
+      "  Everything is included. Unzip this somewhere permanent on your computer",
+      "  (not a temp folder) — you'll reuse this same folder for every future update.",
+      "",
+      "TO PUT IT ONLINE",
+      "  cPanel/FTP hosting: upload index.html and the assets folder into a folder",
+      "    such as public_html/inventory — your page is then at yoursite.com/inventory/",
+      "  Netlify: drag this whole folder onto Netlify's manual deploy area.",
+      ""
+    );
+  }else{
+    lines.push(
+      "THIS IS AN UPDATE, NOT A FRESH SITE",
+      `  ${info.packed} file(s) are new or changed and are included in assets/ here.`,
+      `  ${info.skipped} file(s) are unchanged and were skipped to keep this build fast —`,
+      "  they already exist in your original site folder, so nothing to do for those.",
+      "",
+      "HOW TO APPLY THIS UPDATE",
+      "  1. Unzip this somewhere temporary.",
+      "  2. Copy index.html into your original site folder, overwriting the old one.",
+      "  3. Copy everything inside this assets/ folder into your original site's",
+      "     assets/ folder (just add the files — don't delete anything yet).",
+      "  4. Re-upload: for Netlify, drag your original (now updated) folder onto",
+      "     Netlify's deploy area again. For cPanel/FTP, upload the changed files.",
+      ""
+    );
+    if(info.obsolete && info.obsolete.length){
+      lines.push(
+        "OPTIONAL CLEANUP — these files are no longer used by any listing and",
+        "can be deleted from your site's assets/ folder if you want to tidy up:",
+        ...info.obsolete.map(p=>"  - "+p),
+        ""
+      );
+    }
+  }
+  lines.push(
+    "KEEP THE FOLDER STRUCTURE. index.html looks for assets/ files next to itself.",
+    ""
+  );
+  return lines.join("\n");
+}
+
+async function exportSite(){
+  const log = m => { const el = document.getElementById("exportlog"); if(el) el.textContent = m; };
+  const btn = document.getElementById("exportbtn");
+  const fullRebuild = document.getElementById("fullrebuild") ? document.getElementById("fullrebuild").checked : false;
+  if(btn) btn.disabled = true;
+
+  try{
+    let ZipCtor;
+    try{ ZipCtor = await loadJSZip(); }
+    catch(e){ log(""); toast("Couldn't load the packaging tool. Check your connection and try again.", 5000); return; }
+
+    const zip = new ZipCtor();
+    const currentMap = buildCurrentFileMap();
+    const manifest = fullRebuild ? null : loadManifest();
+    const prevFiles = (manifest && manifest.files) || {};
+    const isFirstBuild = !manifest || !Object.keys(prevFiles).length;
+
+    const files = {};        // id -> final relative path (whether packed this run or reused)
+    const usedNames = new Set();
+    const total = currentMap.size;
+    let done = 0, packed = 0, skipped = 0, missing = 0;
+
+    for(const [id, meta] of currentMap){
+      done++;
+      const prevPath = prevFiles[id];
+      const prevBase = prevPath ? prevPath.replace(/^assets\//,"").replace(/\.[a-z0-9]+$/i,"") : null;
+      // matches exactly, or matches with a "-2"/"-3" suffix our own name-collision handling may have added
+      const unchanged = !fullRebuild && prevBase && (prevBase === meta.seoBase || new RegExp("^"+meta.seoBase+"-\\d+$").test(prevBase));
+
+      if(unchanged){
+        files[id] = prevPath;
+        usedNames.add(prevPath.replace(/^assets\//,""));
+        skipped++;
+        continue;
+      }
+
+      log(`Packing file ${done} of ${total}…`);
+      try{
+        const res = await fetch(assetUrl(id));
+        if(!res.ok) throw new Error("fetch");
+        const blob = await res.blob();
+        const ext = extFor(blob.type || meta.guessType, meta.name);
+        let base = meta.seoBase, name = base + "." + ext, n = 2;
+        while(usedNames.has(name)){ name = base + "-" + n + "." + ext; n++; }
+        usedNames.add(name);
+        const path = "assets/" + name;
+        zip.file(path, blob);
+        files[id] = path;
+        packed++;
+      }catch(e){ missing++; }
+    }
+
+    /* files that existed in the previous build but aren't referenced by any
+       vehicle any more, or were renamed — safe to delete from the live site */
+    const currentPaths = new Set(Object.values(files));
+    const obsolete = Object.entries(prevFiles)
+      .filter(([id,path]) => !currentMap.has(id) || files[id] !== path)
+      .map(([,path]) => path)
+      .filter(path => !currentPaths.has(path));
+
+    log("Writing the page…");
+    const css = document.querySelector("style").textContent;
+    const js  = document.getElementById("app-script").textContent.replace(/<\/script/gi, "<\\/script");
+    const data = JSON.stringify({vehicles:S.vehicles, settings:S.settings, files})
+      .replace(/</g, "\\u003c").replace(/\u2028/g,"\\u2028").replace(/\u2029/g,"\\u2029");
+    const name = S.settings.dealerName || "Used vehicle inventory";
+
+    const html =
+      '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' +
+      '<title>' + esc(name) + ' — Used vehicle inventory</title>\n' +
+      '<meta name="description" content="' + esc((S.settings.intro||"Used vehicles for sale, with photos and full service paperwork attached.").slice(0,180)) + '">\n' +
+      (S.settings.faviconUrl ? '<link rel="icon" href="' + esc(S.settings.faviconUrl) + '">\n' : '') +
+      '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
+      '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
+      '<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">\n' +
+      '<style>\n' + css + '\n</style>\n</head>\n<body>\n<div id="app"></div>\n' +
+      '<script>window.__LOT_DATA__ = ' + data + ';<\/script>\n' +
+      '<script>\n' + js + '\n<\/script>\n</body>\n</html>\n';
+
+    zip.file("index.html", html);
+    zip.file("READ ME FIRST.txt", exportReadme({isFirstBuild, packed, skipped, obsolete}));
+
+    log("Compressing…");
+    const blob = await zip.generateAsync({type:"blob"});
+
+    const dl = window.claude ? await claude.use("downloads").catch(()=>null) : null;
+    if(!dl){ log(""); toast("Saving files isn't available in this view.", 5000); return; }
+
+    log(`Ready — ${kb(blob.size)}.`);
+    await dl.save({filename: isFirstBuild ? "inventory-website.zip" : "inventory-website-update.zip", data:blob});
+
+    saveManifest({files, exportedAt: Date.now(), fileCount: Object.keys(files).length});
+
+    if(missing) toast(`Built, but ${missing} attachment${missing>1?"s":""} couldn't be read and were left out.`, 6000);
+    else if(isFirstBuild) toast("Website files saved. Unzip and upload the whole folder to your host.", 6000);
+    else toast(`Saved — ${packed} file${packed===1?"":"s"} new or changed, ${skipped} unchanged and skipped. See the readme for how to merge it in.`, 7000);
+
+    if(S.admin) render();
+  }catch(e){
+    const code = e && e.code;
+    if(code === "declined"){ log("Cancelled."); }
+    else if(code === "too_large"){ log(""); toast("That package is too large to save here. Mark some sold vehicles and try again.", 6000); }
+    else { log(""); toast("The export didn't finish. Try again in a moment.", 5000); }
+  }finally{
+    const b = document.getElementById("exportbtn"); if(b) b.disabled = false;
+  }
+}
+
+function photoGridHTML(v){
+  return (v.photos||[]).map((p,i)=>`
+    <div class="photocell" data-idx="${i}">
+      <div class="ph">
+        <button class="draghandle" data-drag="${i}" aria-label="Drag to reorder" title="Drag to reorder">⠿</button>
+        <img src="${esc(assetUrl(p.id))}" alt="">
+      </div>
+      ${i===0?`<div class="mainflag">Main photo</div>`:""}
+      <div class="seoname${p.seoPending?" pending":""}">${p.seoPending?"Naming for SEO…":esc(p.seoName||p.name||"")}</div>
+      <div class="tools">
+        <button data-pmove="${i}:-1" title="Move earlier">←</button>
+        <button data-pmove="${i}:1" title="Move later">→</button>
+        <button data-pdel="${i}" title="Remove">Remove</button>
+      </div>
+    </div>`).join("");
+}
+
+function wirePhotoGrid(d){
+  document.querySelectorAll("#photogrid [data-pmove]").forEach(b=>b.addEventListener("click",()=>{
+    const [i,dir] = b.getAttribute("data-pmove").split(":").map(Number);
+    const j = i + dir; if(j<0 || j>=d.photos.length) return;
+    const t = d.photos[i]; d.photos[i]=d.photos[j]; d.photos[j]=t;
+    S.admin.dirty = true; refreshPhotoGrid(d);
+  }));
+  document.querySelectorAll("#photogrid [data-pdel]").forEach(b=>b.addEventListener("click",()=>{
+    d.photos.splice(Number(b.getAttribute("data-pdel")),1); S.admin.dirty=true; refreshPhotoGrid(d);
+  }));
+  wirePhotoDrag(d);
+}
+
+function refreshPhotoGrid(d){
+  const grid = document.getElementById("photogrid");
+  if(!grid) return;
+  grid.innerHTML = photoGridHTML(d);
+  wirePhotoGrid(d);
+  const msg = document.querySelector(".savebar .msg");
+  if(msg) msg.textContent = "Unsaved changes";
+}
+
+/* pointer-based drag reorder — works for both mouse and touch */
+function wirePhotoDrag(d){
+  const grid = document.getElementById("photogrid");
+  if(!grid) return;
+  let dragIndex = null, ghost = null, lastOver = null;
+
+  grid.querySelectorAll("[data-drag]").forEach(handle=>{
+    handle.addEventListener("pointerdown", ev=>{
+      ev.preventDefault();
+      dragIndex = Number(handle.getAttribute("data-drag"));
+      const cell = handle.closest(".photocell");
+      cell.classList.add("dragging");
+      const img = cell.querySelector("img");
+      ghost = document.createElement("div");
+      ghost.className = "dragghost";
+      ghost.innerHTML = img ? `<img src="${img.src}" alt="">` : "";
+      document.body.appendChild(ghost);
+      positionGhost(ev.clientX, ev.clientY);
+      handle.setPointerCapture(ev.pointerId);
+
+      const onMove = mv=>{
+        positionGhost(mv.clientX, mv.clientY);
+        const target = document.elementFromPoint(mv.clientX, mv.clientY);
+        const overCell = target && target.closest && target.closest(".photocell");
+        if(lastOver && lastOver !== overCell) lastOver.classList.remove("drop-target");
+        if(overCell && overCell !== cell){ overCell.classList.add("drop-target"); lastOver = overCell; }
+        else lastOver = null;
+      };
+      const onUp = up=>{
+        handle.releasePointerCapture(ev.pointerId);
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        if(ghost){ ghost.remove(); ghost = null; }
+        cell.classList.remove("dragging");
+        if(lastOver){
+          lastOver.classList.remove("drop-target");
+          const targetIndex = Number(lastOver.getAttribute("data-idx"));
+          if(targetIndex !== dragIndex){
+            const [moved] = d.photos.splice(dragIndex, 1);
+            d.photos.splice(targetIndex, 0, moved);
+            S.admin.dirty = true;
+          }
+        }
+        dragIndex = null; lastOver = null;
+        refreshPhotoGrid(d);
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp, {once:true});
+    });
+  });
+
+  function positionGhost(x,y){
+    if(!ghost) return;
+    ghost.style.left = (x - 60) + "px";
+    ghost.style.top = (y - 45) + "px";
+  }
+}
+
+/* ---------- SEO filename generation ---------- */
+function slugify(s){
+  return String(s||"").toLowerCase()
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-+|-+$/g,"")
+    .slice(0,60) || "photo";
+}
+
+function vehicleSlugBase(v){
+  return slugify([v.year, v.make, v.model, v.trim].filter(Boolean).join(" ")) || "used-vehicle";
+}
+
+/* Falls back to a plain descriptive name (year-make-model-color-position-n)
+   when the sample capability is unavailable, declined, or fails — every
+   photo still gets an SEO-friendlier name than a random id. */
+function fallbackSeoName(v, index, ext){
+  const parts = [v.year, v.make, v.model, v.trim, v.extColor, "photo", index+1].filter(Boolean);
+  return slugify(parts.join(" ")) + "." + ext;
+}
+
+async function nameSinglePhotoWithAI(v, photo, index, blob, ext){
+  if(!S.sample) return fallbackSeoName(v, index, ext);
+  const base = vehicleSlugBase(v);
+  const prompt = `This photo is one of several listing images for a used ${[v.year,v.make,v.model,v.trim].filter(Boolean).join(" ")||"vehicle"} for sale.
+Look at the photo and identify what it shows (for example: front three-quarter view, rear view, driver's seat, dashboard and infotainment, engine bay, wheel and tire, odometer, undercarriage, cargo area, damage close-up).
+Reply with ONLY 2 to 5 lowercase words separated by hyphens describing what's shown, suitable for use in an SEO-friendly image file name. No punctuation besides hyphens, no the vehicle's make/model/year (that will be added separately), no generic filler words like "photo" or "image".`;
+  try{
+    const res = await S.sample(prompt, {images:[blob], modelTier:"quick", cache:false});
+    const words = (res.text||"").trim().toLowerCase().replace(/[^a-z0-9\s-]/g,"").split(/[\s-]+/).filter(Boolean).slice(0,5);
+    const desc = words.join("-");
+    return desc ? `${base}-${desc}-${index+1}.${ext}` : fallbackSeoName(v, index, ext);
+  }catch(e){
+    return fallbackSeoName(v, index, ext);
+  }
+}
+
+/* Rename every photo currently on the draft once enough vehicle details
+   exist to make the name meaningful (called after upload and after key
+   fields change on save). Runs one photo at a time so a decline or a
+   single failure doesn't block the rest. */
+async function renameAllPhotosForSEO(d){
+  if(!S.sample || !d.photos || !d.photos.length) return;
+  for(let i=0;i<d.photos.length;i++){
+    const p = d.photos[i];
+    if(p.seoNamedFor === vehicleSlugBase(d) && p.seoName) continue; // already named for this vehicle info
+    p.seoPending = true;
+  }
+  refreshPhotoGrid(d);
+  for(let i=0;i<d.photos.length;i++){
+    const p = d.photos[i];
+    if(!p.seoPending) continue;
+    try{
+      const res = await fetch(assetUrl(p.id));
+      const blob = await res.blob();
+      const ext = extFor(blob.type, p.name);
+      p.seoName = await nameSinglePhotoWithAI(d, p, i, blob, ext);
+      p.seoNamedFor = vehicleSlugBase(d);
+    }catch(e){
+      p.seoName = fallbackSeoName(d, i, extFor(p.contentType, p.name));
+    }finally{
+      p.seoPending = false;
+      refreshPhotoGrid(d);
+    }
+  }
+}
+
+/* ---------- admin wiring ---------- */
+function wireAdmin(){
+  document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{
+    if(S.admin.dirty && !confirm("Leave this vehicle without saving?")) return;
+    S.admin.tab = b.getAttribute("data-tab"); S.admin.draft=null; S.admin.dirty=false;
+    if(S.admin.tab==="storage") refreshUsage().then(render); else render();
+  }));
+  document.querySelectorAll("[data-admin]").forEach(b=>b.addEventListener("click", async ()=>{
+    const a = b.getAttribute("data-admin");
+    if(a==="close") closeAdmin();
+    if(a==="new"){ S.admin.draft = blankVehicle(); S.admin.dirty=false; render(); }
+    if(a==="cancel"){
+      if(S.admin.dirty && !confirm("Discard changes to this vehicle?")) return;
+      S.admin.draft=null; S.admin.dirty=false; render();
+    }
+    if(a==="save"){ await commitVehicle(); }
+    if(a==="save-site"){ await commitSite(); }
+    if(a==="export"){ await exportSite(); }
+    if(a==="renamephotos"){ if(S.admin.draft) renameAllPhotosForSEO(S.admin.draft); }
+    if(a==="build-embed" || a==="rebuild-embed"){
+      const bb = document.getElementById("embedbtn"); if(bb) bb.disabled = true;
+      const includePhotos = document.getElementById("embedphotos") ? document.getElementById("embedphotos").checked : true;
+      try{
+        S.admin.embedResult = await buildEmbedSnippet(includePhotos);
+        render();
+        toast("Embed code ready. Copy it into GoDaddy's Custom HTML section.");
+      }catch(e){
+        toast("Couldn't build the embed code. Try again in a moment.", 5000);
+      }finally{ if(bb) bb.disabled = false; }
+    }
+    if(a==="copy-embed" && S.admin.embedResult){
+      const code = S.admin.embedResult.code;
+      try{
+        await navigator.clipboard.writeText(code);
+        toast("Copied. Paste it into GoDaddy's Custom Code field.");
+      }catch(e){
+        const ta = document.getElementById("embedcode");
+        if(ta){ ta.focus(); ta.select(); }
+        toast("Couldn't copy automatically — the box is selected, use Ctrl/Cmd+C.", 5000);
+      }
+    }
+    if(a==="download-embed" && S.admin.embedResult){
+      const dl = window.claude ? await claude.use("downloads").catch(()=>null) : null;
+      if(!dl){ toast("Saving files isn't available in this view.", 5000); }
+      else{
+        const blob = new Blob([S.admin.embedResult.code], {type:"text/plain"});
+        try{ await dl.save({filename:"godaddy-embed-code.txt", data:blob}); toast("Saved. Open it and copy everything into GoDaddy."); }
+        catch(e){ toast("Couldn't save that file. Try again.", 5000); }
+      }
+    }
+    if(a==="reset-manifest"){
+      if(confirm("Forget the last build? The next build will repack every photo and document from scratch.")){
+        clearManifest(); render();
+      }
+    }
+  }));
+  document.querySelectorAll("[data-sell]").forEach(b=>b.addEventListener("click", async ()=>{
+    const v = S.vehicles.find(x=>x.id===b.getAttribute("data-sell"));
+    if(!v) return;
+    v.status = "sold"; v.soldAt = Date.now();
+    b.disabled = true;
+    try{ await saveVehicle(v); toast(`${carName(v)} marked sold — now showing on the Sold Vehicles page.`); }
+    catch(e){ v.status = v.status==="sold" ? "available" : v.status; toast("Couldn't update that listing. Try again."); }
+    render();
+  }));
+  document.querySelectorAll("[data-unsell]").forEach(b=>b.addEventListener("click", async ()=>{
+    const v = S.vehicles.find(x=>x.id===b.getAttribute("data-unsell"));
+    if(!v) return;
+    v.status = "available"; delete v.soldAt;
+    b.disabled = true;
+    try{ await saveVehicle(v); toast(`${carName(v)} marked available again.`); }
+    catch(e){ v.status = "sold"; toast("Couldn't update that listing. Try again."); }
+    render();
+  }));
+  document.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>{
+    const v = S.vehicles.find(x=>x.id===b.getAttribute("data-edit"));
+    if(!v) return;
+    S.admin.draft = JSON.parse(JSON.stringify(v)); S.admin.dirty=false; render();
+  }));
+  document.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click", async ()=>{
+    const v = S.vehicles.find(x=>x.id===b.getAttribute("data-del"));
+    if(!v) return;
+    if(!confirm(`Delete ${carName(v)}? Its photos and documents stay in storage but the listing is gone.`)) return;
+    try{ await deleteVehicle(v.id); toast("Listing deleted."); }
+    catch(e){ toast("Couldn't delete that listing. Try again."); }
+    render();
+  }));
+
+  if(!S.admin.draft){ wireSiteFields(); return; }
+  const d = S.admin.draft;
+
+  document.querySelectorAll("[data-k]").forEach(el=>{
+    el.addEventListener("input", ()=>{
+      const k = el.getAttribute("data-k");
+      if(k==="features") d.features = el.value.split("\n").map(s=>s.trim()).filter(Boolean);
+      else if(k==="price"||k==="mileage") d[k] = num(el.value);
+      else d[k] = el.value;
+      if(!S.admin.dirty){ S.admin.dirty = true; const m=document.querySelector(".savebar .msg"); if(m) m.textContent="Unsaved changes"; }
+    });
+    el.addEventListener("change", ()=>{ if(el.tagName==="SELECT"){ d[el.getAttribute("data-k")] = el.value; S.admin.dirty=true; } });
+  });
+
+  setupDrop("#photodrop", "#photoinput", files => addPhotos(d, files));
+  setupDrop("#docdrop", "#docinput", files => addDocs(d, files));
+  wirePhotoGrid(d);
+
+  document.querySelectorAll("[data-ddel]").forEach(b=>b.addEventListener("click",()=>{
+    d.docs.splice(Number(b.getAttribute("data-ddel")),1); S.admin.dirty=true; render();
+  }));
+}
+
+function wireSiteFields(){
+  document.querySelectorAll("[data-s]").forEach(el=>{
+    el.addEventListener("input", ()=>{ S.settings[el.getAttribute("data-s")] = el.value; });
+  });
+}
+
+function setupDrop(dropSel, inputSel, handler){
+  const drop = document.querySelector(dropSel), input = document.querySelector(inputSel);
+  if(!drop || !input) return;
+  drop.addEventListener("click", ()=> input.click());
+  input.addEventListener("change", ()=>{ if(input.files.length) handler([...input.files]); input.value=""; });
+  ["dragenter","dragover"].forEach(e=>drop.addEventListener(e, ev=>{ ev.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave","drop"].forEach(e=>drop.addEventListener(e, ev=>{ ev.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", ev=>{
+    const files = [...(ev.dataTransfer?ev.dataTransfer.files:[])];
+    if(files.length) handler(files);
+  });
+}
+
+async function addPhotos(d, files){
+  const imgs = files.filter(f=>/^image\//.test(f.type));
+  if(!imgs.length){ toast("Those aren't image files. Photos need to be JPG, PNG or WebP."); return; }
+  toast(`Uploading ${imgs.length} photo${imgs.length>1?"s":""}…`, 60000);
+  let ok = 0;
+  for(const file of imgs){
+    try{ const a = await uploadFile(file, {maxDim:2400}); d.photos.push({id:a.id, name:a.name}); ok++; }
+    catch(e){ toast(UPLOAD_ERRORS[e && e.code] || `Couldn't upload ${file.name}.`, 5000); }
+  }
+  S.admin.dirty = true;
+  render();
+  if(ok) toast(`${ok} photo${ok>1?"s":""} added. Save the vehicle to publish them.`);
+  if(ok && S.sample) renameAllPhotosForSEO(d);
+}
+
+async function addDocs(d, files){
+  const kindEl = document.querySelector("#dockind"), labelEl = document.querySelector("#doclabel");
+  const kind = kindEl ? kindEl.value : "other";
+  const label = labelEl && labelEl.value.trim() ? labelEl.value.trim() : "";
+  toast(`Uploading ${files.length} file${files.length>1?"s":""}…`, 60000);
+  let ok = 0;
+  for(const file of files){
+    if(!/pdf|^image\//.test(file.type)){ toast(`${file.name} isn't a PDF or image.`, 5000); continue; }
+    try{
+      const a = await uploadFile(file, {maxDim:2600});
+      d.docs.push({id:a.id, name:a.name, kind, label, contentType:a.contentType, size:a.size});
+      ok++;
+    }catch(e){ toast(UPLOAD_ERRORS[e && e.code] || `Couldn't upload ${file.name}.`, 5000); }
+  }
+  S.admin.dirty = true;
+  render();
+  if(ok) toast(`${ok} document${ok>1?"s":""} attached. Save the vehicle to publish them.`);
+}
+
+async function commitVehicle(){
+  const d = S.admin.draft;
+  if(!d.year && !d.make && !d.model){ toast("Give the vehicle at least a year, make or model first."); return; }
+  S.admin.saving = true; render();
+  try{
+    await saveVehicle(d);
+    S.admin.saving = false; S.admin.dirty = false; S.admin.draft = null;
+    render();
+    toast("Vehicle saved and live on the site.");
+  }catch(e){
+    S.admin.saving = false; render();
+    toast(e && e.code==="invalid_argument"
+      ? "That didn't save — the description may be too long, or you may not have edit access."
+      : "Couldn't save right now. Try again in a moment.", 5000);
+  }
+}
+
+async function commitSite(){
+  try{ await saveSettings(S.settings); toast("Site details saved."); }
+  catch(e){ toast("Couldn't save site details. Try again."); }
+}
+
+/* ============================ routing ============================ */
+function readHash(){
+  const m = /v=([A-Za-z0-9_-]+)/.exec(location.hash||"");
+  if(m){ S.currentId = m[1]; S.view = "detail"; }
+  else if(/^#?sold$/.test(location.hash||"")){
+    S.view = "list"; S.currentId = null; S.filters = defaultFilters("sold");
+  }
+  else { S.view = "list"; S.currentId = null; }
+}
+window.addEventListener("hashchange", ()=>{ readHash(); S.photoIndex=0; S.lightbox=false; render(); });
+window.addEventListener("keydown", e=>{
+  if(e.key==="Escape"){ if(S.lightbox){ exitFullscreenIfActive(); S.lightbox=false; render(); } }
+  if(S.view==="detail" && !S.admin){
+    if(e.key==="ArrowRight"||e.key==="ArrowLeft"){
+      const v = S.vehicles.find(x=>x.id===S.currentId); const n = v && (v.photos||[]).length;
+      if(n>1){ S.photoIndex = e.key==="ArrowRight" ? (S.photoIndex+1)%n : (S.photoIndex-1+n)%n; render(); }
+    }
+  }
+});
+
+readHash();
+render();
+boot();
+
+</script>
+</body>
+</html>

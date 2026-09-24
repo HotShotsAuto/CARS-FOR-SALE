@@ -1,0 +1,18 @@
+YOUR INVENTORY WEBSITE
+
+This folder is a complete website. It needs no database and no plugins.
+
+WHAT IS HERE
+  index.html          the page itself — ALWAYS replace your old copy with this one
+  assets/             photos and documents this build actually packed
+
+THIS IS YOUR FIRST BUILD
+  Everything is included. Unzip this somewhere permanent on your computer
+  (not a temp folder) — you'll reuse this same folder for every future update.
+
+TO PUT IT ONLINE
+  cPanel/FTP hosting: upload index.html and the assets folder into a folder
+    such as public_html/inventory — your page is then at yoursite.com/inventory/
+  Netlify: drag this whole folder onto Netlify's manual deploy area.
+
+KEEP THE FOLDER STRUCTURE. index.html looks for assets/ files next to itself.
