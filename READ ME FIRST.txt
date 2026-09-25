@@ -6,13 +6,17 @@ WHAT IS HERE
   index.html          the page itself — ALWAYS replace your old copy with this one
   assets/             photos and documents this build actually packed
 
-THIS IS YOUR FIRST BUILD
-  Everything is included. Unzip this somewhere permanent on your computer
-  (not a temp folder) — you'll reuse this same folder for every future update.
+THIS IS AN UPDATE, NOT A FRESH SITE
+  0 file(s) are new or changed and are included in assets/ here.
+  115 file(s) are unchanged and were skipped to keep this build fast —
+  they already exist in your original site folder, so nothing to do for those.
 
-TO PUT IT ONLINE
-  cPanel/FTP hosting: upload index.html and the assets folder into a folder
-    such as public_html/inventory — your page is then at yoursite.com/inventory/
-  Netlify: drag this whole folder onto Netlify's manual deploy area.
+HOW TO APPLY THIS UPDATE
+  1. Unzip this somewhere temporary.
+  2. Copy index.html into your original site folder, overwriting the old one.
+  3. Copy everything inside this assets/ folder into your original site's
+     assets/ folder (just add the files — don't delete anything yet).
+  4. Re-upload: for Netlify, drag your original (now updated) folder onto
+     Netlify's deploy area again. For cPanel/FTP, upload the changed files.
 
 KEEP THE FOLDER STRUCTURE. index.html looks for assets/ files next to itself.
