@@ -5,14 +5,14 @@ This folder is a complete website. It needs no database and no plugins.
 WHAT IS HERE
   index.html          the page itself — ALWAYS replace your old copy with this one
   assets/             photos and documents this build actually packed
-  {VIN}/index.html    10 folder(s), one per vehicle with a VIN —
+  {VIN}/index.html    14 folder(s), one per vehicle with a VIN —
                       each opens straight to that vehicle, e.g. yoursite.com/1FT.../
 
 THIS IS AN UPDATE, NOT A FRESH SITE
-  0 file(s) are new or changed and are included in assets/ here.
+  4 file(s) are new or changed and are included in assets/ here.
   115 file(s) are unchanged and were skipped to keep this build fast —
   they already exist in your original site folder, so nothing to do for those.
-  All 10 {VIN} folders are freshly rebuilt every time (they're small
+  All 14 {VIN} folders are freshly rebuilt every time (they're small
   text files, not images) — always copy every one of them in, overwriting
   what's there, even for vehicles whose photos didn't change.
 
