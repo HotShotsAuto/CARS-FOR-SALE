@@ -5,26 +5,25 @@ This folder is a complete website. It needs no database and no plugins.
 WHAT IS HERE
   index.html          the page itself — ALWAYS replace your old copy with this one
   assets/             photos and documents this build actually packed
+  {VIN}/index.html    10 folder(s), one per vehicle with a VIN —
+                      each opens straight to that vehicle, e.g. yoursite.com/1FT.../
 
 THIS IS AN UPDATE, NOT A FRESH SITE
-  5 file(s) are new or changed and are included in assets/ here.
-  110 file(s) are unchanged and were skipped to keep this build fast —
+  0 file(s) are new or changed and are included in assets/ here.
+  115 file(s) are unchanged and were skipped to keep this build fast —
   they already exist in your original site folder, so nothing to do for those.
+  All 10 {VIN} folders are freshly rebuilt every time (they're small
+  text files, not images) — always copy every one of them in, overwriting
+  what's there, even for vehicles whose photos didn't change.
 
 HOW TO APPLY THIS UPDATE
   1. Unzip this somewhere temporary.
   2. Copy index.html into your original site folder, overwriting the old one.
   3. Copy everything inside this assets/ folder into your original site's
      assets/ folder (just add the files — don't delete anything yet).
-  4. Re-upload: for Netlify, drag your original (now updated) folder onto
-     Netlify's deploy area again. For cPanel/FTP, upload the changed files.
-
-OPTIONAL CLEANUP — these files are no longer used by any listing and
-can be deleted from your site's assets/ folder if you want to tidy up:
-  - assets/2016-subaru-crosstrek-limited-2-0i-repair-orders.pdf
-  - assets/2011-bmw-x5-xdrive35d-repair-orders.pdf
-  - assets/2010-ford-fusion-sel-v6-awd-repair-orders.pdf
-  - assets/2012-porsche-cayenne-turbo-repair-orders.pdf
-  - assets/2013-mercedes-benz-glk-350-4matic-repair-orders.pdf
+  4. Copy every {VIN} folder into your original site folder too, overwriting
+     any folders with the same name.
+  5. Re-upload: drag your original (now updated) folder onto your host's
+     deploy area again, or push it through GitHub Desktop as usual.
 
 KEEP THE FOLDER STRUCTURE. index.html looks for assets/ files next to itself.
