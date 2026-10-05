@@ -9,8 +9,8 @@ WHAT IS HERE
                       each opens straight to that vehicle, e.g. yoursite.com/1FT.../
 
 THIS IS AN UPDATE, NOT A FRESH SITE
-  0 file(s) are new or changed and are included in assets/ here.
-  127 file(s) are unchanged and were skipped to keep this build fast —
+  8 file(s) are new or changed and are included in assets/ here.
+  125 file(s) are unchanged and were skipped to keep this build fast —
   they already exist in your original site folder, so nothing to do for those.
   All 14 {VIN} folders are freshly rebuilt every time (they're small
   text files, not images) — always copy every one of them in, overwriting
