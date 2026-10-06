@@ -9,8 +9,8 @@ WHAT IS HERE
                       each opens straight to that vehicle, e.g. yoursite.com/1FT.../
 
 THIS IS AN UPDATE, NOT A FRESH SITE
-  8 file(s) are new or changed and are included in assets/ here.
-  125 file(s) are unchanged and were skipped to keep this build fast —
+  22 file(s) are new or changed and are included in assets/ here.
+  132 file(s) are unchanged and were skipped to keep this build fast —
   they already exist in your original site folder, so nothing to do for those.
   All 14 {VIN} folders are freshly rebuilt every time (they're small
   text files, not images) — always copy every one of them in, overwriting
@@ -25,5 +25,9 @@ HOW TO APPLY THIS UPDATE
      any folders with the same name.
   5. Re-upload: drag your original (now updated) folder onto your host's
      deploy area again, or push it through GitHub Desktop as usual.
+
+OPTIONAL CLEANUP — these files are no longer used by any listing and
+can be deleted from your site's assets/ folder if you want to tidy up:
+  - assets/2015-nissan-rogue-select-s-awd-brilliant-silver-photo-1.png
 
 KEEP THE FOLDER STRUCTURE. index.html looks for assets/ files next to itself.
