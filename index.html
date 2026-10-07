@@ -471,6 +471,44 @@ function shortTrans(t){
   return s;
 }
 
+// Card-only: "Deep Blue Metallic" -> "Blue". Looks for a plain color word
+// first (earliest one wins, so "Steel Blue" is Blue), then falls back to
+// common descriptor names (charcoal, onyx...). Unrecognized names are left
+// exactly as typed rather than guessed at.
+const COLOR_WORDS = [
+  ["Black",  /\bblack\b/i], ["White",  /\bwhite\b/i], ["Silver", /\bsilver\b/i],
+  ["Gray",   /\bgr[ae]y\b/i], ["Blue",   /\bblue\b/i], ["Red",    /\bred\b/i],
+  ["Green",  /\bgreen\b/i], ["Brown",  /\bbrown\b/i], ["Beige",  /\b(beige|tan)\b/i],
+  ["Gold",   /\bgold\b/i], ["Orange", /\borange\b/i], ["Yellow", /\byellow\b/i],
+  ["Purple", /\bpurple\b/i]
+];
+const COLOR_DESCRIPTORS = [
+  ["Black",  /\b(onyx|ebony|obsidian|jet)\b/i],
+  ["Gray",   /\b(charcoal|graphite|gunmetal|slate|titanium|granite|storm|ash|steel)\b/i],
+  ["Silver", /\b(platinum|sterling|chrome)\b/i],
+  ["White",  /\b(ivory|cream|snow|alpine|frost)\b/i],
+  ["Blue",   /\b(navy|azure|cobalt|sapphire|indigo|denim|sky)\b/i],
+  ["Red",    /\b(maroon|burgundy|crimson|ruby|cherry|garnet|scarlet|wine|cranberry)\b/i],
+  ["Green",  /\b(emerald|olive|forest|hunter|jade|teal|moss)\b/i],
+  ["Brown",  /\b(bronze|chocolate|mocha|espresso|coffee|java|cocoa|mahogany)\b/i],
+  ["Beige",  /\b(sand|champagne|khaki|taupe|desert|stone)\b/i],
+  ["Orange", /\b(copper|tangerine|rust)\b/i],
+  ["Purple", /\b(violet|plum|amethyst|lavender)\b/i]
+];
+function shortColor(c){
+  const s = String(c||"").trim();
+  if(!s) return "";
+  const earliest = list => {
+    let best = null, bestAt = Infinity;
+    for(const [name, re] of list){
+      const m = re.exec(s);
+      if(m && m.index < bestAt){ best = name; bestAt = m.index; }
+    }
+    return best;
+  };
+  return earliest(COLOR_WORDS) || earliest(COLOR_DESCRIPTORS) || s;
+}
+
 function photoAlt(v, photo){
   const base = carName(v) + (v.trim?" "+v.trim:"");
   if(photo && photo.seoName){
@@ -877,7 +915,7 @@ function card(v){
       <div class="specs">
         ${spec("Miles", v.mileage!=null?miles(v.mileage):"")}
         ${spec("Trans", shortTrans(v.transmission))}
-        ${spec("Color", v.extColor)}
+        ${spec("Color", shortColor(v.extColor))}
         ${spec("Drive", v.drivetrain)}
       </div>
       ${tags.length?`<div class="paperstrip">${tags.join("")}</div>`:""}
