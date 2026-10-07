@@ -886,15 +886,19 @@ function viewFilters(){
 
 function card(v){
   const photo = (v.photos||[])[0];
-  const docsByKind = new Map();
-  (v.docs||[]).forEach(doc=>{ if(!docsByKind.has(doc.kind)) docsByKind.set(doc.kind, doc); });
-  const tags = TRUST_ORDER.filter(k=>docsByKind.has(k)).map(k=>{
-    const d = docKind(k);
-    const doc = docsByKind.get(k);
-    return `<a class="doctag on" href="${esc(assetUrl(doc.id))}"${docLinkAttrs} aria-label="Open ${esc(d.short)} for ${esc(carName(v))}">${esc(d.short)}</a>`;
+  // Every attached document gets its own clickable badge. The four main
+  // paperwork types come first, in a fixed order; anything else (window
+  // sticker, title, other) follows, named by its label or type. If a vehicle
+  // has two of the same main type, they're numbered ("Carfax 1", "Carfax 2").
+  const docLink = (doc, text) =>
+    `<a class="doctag on" href="${esc(assetUrl(doc.id))}"${docLinkAttrs} aria-label="Open ${esc(text)} for ${esc(carName(v))}">${esc(text)}</a>`;
+  const tags = [];
+  TRUST_ORDER.forEach(k=>{
+    const ds = (v.docs||[]).filter(d=>d.kind===k);
+    ds.forEach((doc,i)=> tags.push(docLink(doc, ds.length>1 ? `${docKind(k).short} ${i+1}` : docKind(k).short)));
   });
-  const extra = (v.docs||[]).length - (v.docs||[]).filter(d=>TRUST_ORDER.includes(d.kind)).length;
-  if(extra>0) tags.push(`<span class="doctag">+${extra} more</span>`);
+  (v.docs||[]).filter(d=>!TRUST_ORDER.includes(d.kind))
+    .forEach(doc=> tags.push(docLink(doc, doc.label || docKind(doc.kind).short)));
   const spec = (label, val) => val ? `<div><span>${label}</span><b>${esc(val)}</b></div>` : "";
   return `
   <article class="card">
