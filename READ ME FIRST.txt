@@ -8,22 +8,14 @@ WHAT IS HERE
   {VIN}/index.html    14 folder(s), one per vehicle with a VIN —
                       each opens straight to that vehicle, e.g. yoursite.com/1FT.../
 
-THIS IS AN UPDATE, NOT A FRESH SITE
-  19 file(s) are new or changed and are included in assets/ here.
-  169 file(s) are unchanged and were skipped to keep this build fast —
-  they already exist in your original site folder, so nothing to do for those.
-  All 14 {VIN} folders are freshly rebuilt every time (they're small
-  text files, not images) — always copy every one of them in, overwriting
-  what's there, even for vehicles whose photos didn't change.
+THIS IS YOUR FIRST BUILD
+  Everything is included. Unzip this somewhere permanent on your computer
+  (not a temp folder) — you'll reuse this same folder for every future update.
 
-HOW TO APPLY THIS UPDATE
-  1. Unzip this somewhere temporary.
-  2. Copy index.html into your original site folder, overwriting the old one.
-  3. Copy everything inside this assets/ folder into your original site's
-     assets/ folder (just add the files — don't delete anything yet).
-  4. Copy every {VIN} folder into your original site folder too, overwriting
-     any folders with the same name.
-  5. Re-upload: drag your original (now updated) folder onto your host's
-     deploy area again, or push it through GitHub Desktop as usual.
+TO PUT IT ONLINE
+  cPanel/FTP hosting: upload index.html, the assets folder, and every {VIN}
+    folder into a folder such as public_html/inventory — your page is then
+    at yoursite.com/inventory/ and each vehicle at yoursite.com/inventory/{VIN}/
+  GitHub Pages / Netlify: drag this whole folder onto your deploy area, same as always.
 
 KEEP THE FOLDER STRUCTURE. index.html looks for assets/ files next to itself.
