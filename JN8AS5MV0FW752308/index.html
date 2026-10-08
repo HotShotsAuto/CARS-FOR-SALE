@@ -434,7 +434,7 @@ const S = {
   lightbox: false,
   requestFullscreenOnOpen: false,
   admin: null,           // null | {tab:'inventory'|'site'|'storage', draft, dirty, saving}
-  filters: {q:"", makes:new Set(), bodies:new Set(), docs:new Set(), status:"forsale",
+  filters: {q:"", makes:new Set(), bodies:new Set(), status:"forsale",
             priceMin:"", priceMax:"", yearMin:"", yearMax:"", milesMax:""},
   sort: "price_hi",
   railOpen: false,
@@ -672,10 +672,6 @@ function visibleVehicles(){
     if(f.status==="sold" && v.status!=="sold") return false;
     if(f.makes.size && !f.makes.has(v.make||"—")) return false;
     if(f.bodies.size && !f.bodies.has(v.bodyStyle||"—")) return false;
-    if(f.docs.size){
-      const kinds = new Set((v.docs||[]).map(d=>d.kind));
-      for(const k of f.docs){ if(!kinds.has(k)) return false; }
-    }
     const p = num(v.price), m = num(v.mileage), y = num(v.year);
     if(f.priceMin!=="" && (p==null || p < Number(f.priceMin))) return false;
     if(f.priceMax!=="" && (p==null || p > Number(f.priceMax))) return false;
@@ -714,12 +710,6 @@ function facet(field){
   S.vehicles.forEach(v=>{ if(S.filters.status==="forsale" && v.status==="sold") return;
     const k = v[field] || "—"; m.set(k,(m.get(k)||0)+1); });
   return [...m.entries()].sort((a,b)=> a[0]==="—" ? 1 : b[0]==="—" ? -1 : a[0].localeCompare(b[0]));
-}
-function docFacet(){
-  const m = new Map();
-  S.vehicles.forEach(v=>{ if(S.filters.status==="forsale" && v.status==="sold") return;
-    new Set((v.docs||[]).map(d=>d.kind)).forEach(k=> m.set(k,(m.get(k)||0)+1)); });
-  return DOC_KINDS.filter(d=>m.has(d.k) && d.k!=="other").map(d=>[d, m.get(d.k)]);
 }
 
 /* ============================ render ============================ */
@@ -833,7 +823,7 @@ function viewList(){
 
 function activeFilterCount(){
   const f = S.filters;
-  return f.makes.size + f.bodies.size + f.docs.size +
+  return f.makes.size + f.bodies.size +
     (f.q?1:0) + (f.priceMin!==""?1:0) + (f.priceMax!==""?1:0) +
     (f.milesMax!==""?1:0) + (f.yearMin!==""?1:0) + (f.yearMax!==""?1:0) +
     (f.status!=="forsale"?1:0);
@@ -841,7 +831,7 @@ function activeFilterCount(){
 
 function viewFilters(){
   const f = S.filters;
-  const makes = facet("make"), bodies = facet("bodyStyle"), docs = docFacet();
+  const makes = facet("make"), bodies = facet("bodyStyle");
   const chkList = (items, setName) => items.map(([k,c])=>`
     <label class="chk"><input type="checkbox" data-facet="${setName}" value="${esc(k)}"${f[setName].has(k)?" checked":""}>
       <span>${esc(k==="—"?"Not specified":k)}</span><span class="cnt">${c}</span></label>`).join("");
@@ -858,9 +848,6 @@ function viewFilters(){
     <label class="chk"><input type="radio" name="statusf" value="all"${f.status==="all"?" checked":""}><span>Everything, including sold</span></label>
     <label class="chk"><input type="radio" name="statusf" value="sold"${f.status==="sold"?" checked":""}><span>Recently sold</span></label>
   </div>
-  ${docs.length ? `<div class="fgroup"><h3>Paperwork on file</h3>
-    ${docs.map(([d,c])=>`<label class="chk"><input type="checkbox" data-facet="docs" value="${d.k}"${f.docs.has(d.k)?" checked":""}>
-      <span>${esc(d.short)}</span><span class="cnt">${c}</span></label>`).join("")}</div>` : ""}
   ${makes.length>1 ? `<div class="fgroup"><h3>Make</h3>${chkList(makes,"makes")}</div>` : ""}
   ${bodies.length>1 ? `<div class="fgroup"><h3>Body style</h3>${chkList(bodies,"bodies")}</div>` : ""}
   <div class="fgroup">
@@ -1053,7 +1040,7 @@ function docRow(d){
 }
 
 function defaultFilters(status){
-  return {q:"",makes:new Set(),bodies:new Set(),docs:new Set(),status:status||"forsale",
+  return {q:"",makes:new Set(),bodies:new Set(),status:status||"forsale",
     priceMin:"",priceMax:"",yearMin:"",yearMax:"",milesMax:""};
 }
 
