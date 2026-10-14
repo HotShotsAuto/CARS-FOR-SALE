@@ -9,8 +9,8 @@ WHAT IS HERE
                       each opens straight to that vehicle, e.g. yoursite.com/1FT.../
 
 THIS IS AN UPDATE, NOT A FRESH SITE
-  0 file(s) are new or changed and are included in assets/ here.
-  212 file(s) are unchanged and were skipped to keep this build fast —
+  19 file(s) are new or changed and are included in assets/ here.
+  194 file(s) are unchanged and were skipped to keep this build fast —
   they already exist in your original site folder, so nothing to do for those.
   All 17 {VIN} folders are freshly rebuilt every time (they're small
   text files, not images) — always copy every one of them in, overwriting
@@ -25,5 +25,26 @@ HOW TO APPLY THIS UPDATE
      any folders with the same name.
   5. Re-upload: drag your original (now updated) folder onto your host's
      deploy area again, or push it through GitHub Desktop as usual.
+
+OPTIONAL CLEANUP — these files are no longer used by any listing and
+can be deleted from your site's assets/ folder if you want to tidy up:
+  - assets/2012-porsche-cayenne-turbo-photo-1.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-2.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-3.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-4.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-5.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-6.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-7.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-8.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-9.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-10.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-11.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-12.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-13.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-14.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-15.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-16.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-17.jpg
+  - assets/2012-porsche-cayenne-turbo-photo-18.jpg
 
 KEEP THE FOLDER STRUCTURE. index.html looks for assets/ files next to itself.
