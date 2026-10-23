@@ -344,6 +344,37 @@ footer.site .wrap{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-bet
 footer.site .nm{font-family:"Fraunces",serif;font-weight:700;font-size:19px;margin-bottom:5px}
 footer.site .fine{color:rgba(233,241,248,.6);max-width:54ch;font-size:12.3px;line-height:1.5}
 
+.adminbody .inner.wide{max-width:1200px}
+.cgwrap{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:22px;align-items:start}
+.cgmain{position:sticky;top:0;min-width:0;max-height:calc(100vh - 100px);overflow:auto;padding-bottom:6px}
+.cgstage{margin:0 auto;line-height:0;border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.2);background:repeating-conic-gradient(var(--wash-2) 0 25%,var(--wash) 0 50%) 0 0/20px 20px}
+.cgstage canvas{width:100%;height:auto;display:block;touch-action:none;cursor:grab}
+.cgstage canvas:active{cursor:grabbing}
+.cgdl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0}
+.cgside .panel,.cgmain .panel{margin-bottom:14px}
+.cgrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.cgck{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;cursor:pointer}
+.cgsizes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cgsize{text-align:left;border:1px solid var(--line-strong);background:var(--paper);border-radius:var(--radius);padding:9px 10px;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.cgsize b{font-size:13.5px;font-weight:600}.cgsize small{font-size:11.5px;color:var(--ink-3)}
+.cgsize[aria-pressed="true"],.cglay[aria-pressed="true"],.cgsw[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.cglayouts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cglay{border:1px solid var(--line-strong);background:var(--paper);color:var(--ink-2);border-radius:var(--radius);padding:7px 4px 5px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.cglay small{font-size:10.5px;color:var(--ink-3);text-align:center;line-height:1.15}
+.cgsw{width:30px;height:30px;border-radius:50%;border:1px solid var(--line-strong);cursor:pointer;padding:0}
+.cgtray{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px;margin-top:12px;max-height:230px;overflow:auto}
+.cgtp{padding:0;border:2px solid transparent;border-radius:4px;overflow:hidden;cursor:pointer;background:var(--wash-2);aspect-ratio:4/3}
+.cgtp img{width:100%;height:100%;object-fit:cover;display:block}
+.cgtp.used{border-color:var(--gold)}
+.cgstick{display:flex;flex-wrap:wrap;gap:6px}
+.cgst{border:1px solid var(--line-strong);background:var(--paper);border-radius:999px;padding:6px 11px;font-size:12.5px;cursor:pointer}
+.cgst:hover,.cgem:hover{border-color:var(--gold)}
+.cgem{border:1px solid var(--line-strong);background:var(--paper);border-radius:var(--radius);width:38px;height:38px;font-size:20px;cursor:pointer;padding:0}
+.cgv{font-weight:400;color:var(--ink-3);margin-left:4px}
+@media (max-width:900px){
+  .cgwrap{grid-template-columns:1fr}
+  .cgmain{position:static;max-height:none;overflow:visible}
+}
 @media (max-width:1040px){
   .grid{grid-template-columns:repeat(2,1fr)}
   .dgrid{grid-template-columns:1fr}
@@ -444,6 +475,7 @@ const S = {
   sort: "price_hi",
   railOpen: false,
   usage: null,
+  collage: null,
   localBlobs: new Map()
 };
 
@@ -745,8 +777,8 @@ function visibleVehicles(){
   const by = S.sort;
   const n = (x,d)=> x==null?d:Number(x);
   list.sort((a,b)=>{
-    const aHas = (a.photos||[]).length>0 ? 0 : 1;
-    const bHas = (b.photos||[]).length>0 ? 0 : 1;
+    const tier = v => { const k = (v.photos||[]).length; return k>=10 ? 0 : k>0 ? 1 : 2; };
+    const aHas = tier(a), bHas = tier(b);
     if(aHas !== bHas) return aHas - bHas;
     switch(by){
       case "oldest":   return (a.createdAt||0)-(b.createdAt||0);
@@ -1366,14 +1398,15 @@ function viewAdmin(){
       <div class="tabs">
         <button data-tab="inventory" aria-current="${a.tab==='inventory'}">Vehicles</button>
         <button data-tab="site" aria-current="${a.tab==='site'}">Site details</button>
+        <button data-tab="collage" aria-current="${a.tab==='collage'}">Collage</button>
         <button data-tab="storage" aria-current="${a.tab==='storage'}">Storage</button>
         <button data-tab="export" aria-current="${a.tab==='export'}">Publish</button>
       </div>
       <span style="margin-left:auto"></span>
       <button class="ghostbtn" data-admin="close">Back to site</button>
     </div>
-    <div class="adminbody"><div class="inner">
-      ${a.draft ? adminEditor(a.draft) : a.tab==="site" ? adminSite() : a.tab==="storage" ? adminStorage() : a.tab==="export" ? adminExport() : adminInventory()}
+    <div class="adminbody"><div class="inner${a.tab==="collage" && !a.draft ? " wide" : ""}">
+      ${a.draft ? adminEditor(a.draft) : a.tab==="collage" ? adminCollage() : a.tab==="site" ? adminSite() : a.tab==="storage" ? adminStorage() : a.tab==="export" ? adminExport() : adminInventory()}
     </div></div>
   </div>`;
 }
@@ -2233,6 +2266,621 @@ async function renameAllPhotosForSEO(d){
   }
 }
 
+/* ============================ collage maker ============================ */
+const CG_SIZES = [
+  {k:"square",   w:1080, h:1080, name:"Square post",   note:"1080 × 1080 · feed and Marketplace"},
+  {k:"portrait", w:1080, h:1350, name:"Portrait post", note:"1080 × 1350 · tallest feed size"},
+  {k:"link",     w:1200, h:630,  name:"Link or ad",    note:"1200 × 630 · link previews and ads"},
+  {k:"story",    w:1080, h:1920, name:"Story or Reel", note:"1080 × 1920 · full-screen vertical"}
+];
+const CG_LAYOUTS = [
+  {k:"one", name:"Single hero",  n:1, r:[[0,0,1,1]]},
+  {k:"two", name:"Side by side", n:2, r:[[0,0,.5,1],[.5,0,.5,1]]},
+  {k:"h2",  name:"Hero + 2",     n:3, r:[[0,0,.62,1],[.62,0,.38,.5],[.62,.5,.38,.5]]},
+  {k:"h3",  name:"Hero + 3",     n:4, r:[[0,0,1,.64],[0,.64,1/3,.36],[1/3,.64,1/3,.36],[2/3,.64,1/3,.36]]},
+  {k:"g4",  name:"Grid of 4",    n:4, r:[[0,0,.5,.5],[.5,0,.5,.5],[0,.5,.5,.5],[.5,.5,.5,.5]]},
+  {k:"h4",  name:"Hero + 4",     n:5, r:[[0,0,.5,1],[.5,0,.25,.5],[.75,0,.25,.5],[.5,.5,.25,.5],[.75,.5,.25,.5]]},
+  {k:"m5",  name:"Mosaic 5",     n:5, r:[[0,0,.5,.55],[.5,0,.5,.55],[0,.55,1/3,.45],[1/3,.55,1/3,.45],[2/3,.55,1/3,.45]]},
+  {k:"g6",  name:"Grid of 6",    n:6, r:[[0,0,1/3,.5],[1/3,0,1/3,.5],[2/3,0,1/3,.5],[0,.5,1/3,.5],[1/3,.5,1/3,.5],[2/3,.5,1/3,.5]]}
+];
+const CG_BGS = ["#0b0c0e","#f4f0e6","#b3905c","#ffffff","#1d3557"];
+const CG_STICKERS = [
+  {label:"Just arrived",       text:"JUST ARRIVED",                  shape:"pill",  fill:"#b3905c", color:"#0b0c0e", size:.042, track:2},
+  {label:"New price",          text:"NEW\nPRICE",                    shape:"burst", fill:"#c0392b", color:"#ffffff", size:.05,  rot:-8},
+  {label:"Sale pending",       text:"SALE PENDING",                  shape:"pill",  fill:"#d99a00", color:"#0b0c0e", size:.042, track:2},
+  {label:"Sold",               text:"SOLD",                          shape:"stamp", fill:"#c0392b", color:"#c0392b", size:.13,  rot:-12, track:6},
+  {label:"$0 Dealer & Handling", text:"$0 DEALER &\nHANDLING FEE",   shape:"rect",  fill:"#0b0c0e", color:"#c6a473", size:.032, track:1.5},
+  {label:"Loaner with purchase", text:"LOANER AVAILABLE\nWITH PURCHASE", shape:"rect", fill:"#0b0c0e", color:"#c6a473", size:.03, track:1.5},
+  {label:"Carfax available",   text:"CARFAX AVAILABLE",              shape:"pill",  fill:"#ffffff", color:"#0b0c0e", size:.036, track:1.5},
+  {label:"Low miles",          text:"LOW MILES",                     shape:"pill",  fill:"#1f7a4d", color:"#ffffff", size:.042, track:2},
+  {label:"Call us",            text:"@phone",                        shape:"pill",  fill:"#0b0c0e", color:"#ffffff", size:.042, track:1, caps:false},
+  {label:"Price",              text:"@price",                        shape:"burst", fill:"#b3905c", color:"#0b0c0e", size:.055, rot:-6, caps:false},
+  {label:"Miles",              text:"@miles",                        shape:"pill",  fill:"#ffffff", color:"#0b0c0e", size:.04,  caps:false}
+];
+const CG_EMOJI = ["⭐","🔥","✅","🚗","🔑","📞","💥","👉","❗","🏁","💎","🛠️"];
+
+function cgInit(){
+  if(S.collage) return;
+  const withPhotos = S.vehicles.filter(v=>(v.photos||[]).length && v.status!=="sold");
+  const first = withPhotos[0] || S.vehicles.find(v=>(v.photos||[]).length) || S.vehicles[0] || null;
+  S.collage = {
+    size:"square", layout:"h2", vid:first?first.id:"", srcVid:first?first.id:"",
+    slots:[0,1,2,3,4,5].map(()=>({key:null,fx:.5,fy:.5,z:1})),
+    sel:{t:"slot",i:0}, objs:[], nextId:1, local:[],
+    gap:8, margin:0, radius:0, bg:"#0b0c0e", info:"bar",
+    showPrice:true, showSpecs:true, showPhone:true, frame:false
+  };
+  cgFillSlots(true);
+}
+const cgImgs = new Map();           // key -> {img}|null
+const cgLocalUrls = new Map();      // "l:n" -> object URL
+let cgRaf = 0, cgDrag = null, cgBound = false;
+
+const cgFV = () => S.collage ? (S.vehicles.find(v=>v.id===S.collage.vid) || null) : null;
+const cgSize = () => CG_SIZES.find(s=>s.k===S.collage.size) || CG_SIZES[0];
+const cgLayout = () => CG_LAYOUTS.find(l=>l.k===S.collage.layout) || CG_LAYOUTS[0];
+const cgIsTall = () => { const s = cgSize(); return s.h > s.w*1.1; };
+const cgRectsFor = (l, tall) => tall ? l.r.map(([x,y,w,h])=>[y,x,h,w]) : l.r;
+function cgPool(){
+  const c = S.collage, v = S.vehicles.find(x=>x.id===c.srcVid);
+  return [...(v?(v.photos||[]).map(p=>"a:"+p.id):[]), ...c.local];
+}
+function cgSrc(key){
+  if(key.startsWith("l:")) return cgLocalUrls.get(key) || "";
+  return assetUrl(key.slice(2));
+}
+function cgFillSlots(replace){
+  const c = S.collage, n = cgLayout().n, pool = cgPool();
+  const used = new Set();
+  if(!replace) for(let i=0;i<n;i++) if(c.slots[i].key) used.add(c.slots[i].key);
+  for(let i=0;i<n;i++){
+    const s = c.slots[i];
+    if(replace || !s.key){
+      const k = pool.find(p=>!used.has(p)) || null;
+      s.key = k; s.fx = .5; s.fy = .5; s.z = 1;
+      if(k) used.add(k);
+    }
+  }
+}
+function cgImg(key){
+  if(!key) return null;
+  const hit = cgImgs.get(key);
+  if(hit !== undefined) return hit && hit.img ? hit.img : null;
+  cgImgs.set(key, {img:null, loading:true});
+  (async ()=>{
+    try{
+      const url = cgSrc(key);
+      let objUrl = url;
+      if(!url.startsWith("blob:") && !url.startsWith("data:")){
+        const res = await fetch(url);
+        if(!res.ok) throw new Error("fetch");
+        objUrl = URL.createObjectURL(await res.blob());
+      }
+      const img = new Image();
+      img.src = objUrl;
+      await img.decode();
+      cgImgs.set(key, {img});
+    }catch(e){ cgImgs.set(key, null); }
+    cgSchedule();
+  })();
+  return null;
+}
+async function cgLoadAll(){
+  const c = S.collage, n = cgLayout().n;
+  for(let i=0;i<n;i++){
+    const k = c.slots[i].key; if(!k) continue;
+    cgImg(k);
+    for(let t=0; t<80; t++){
+      const e = cgImgs.get(k);
+      if(!e || !e.loading) break;
+      await new Promise(r=>setTimeout(r,50));
+    }
+  }
+  try{ await Promise.all(['700 40px Fraunces','italic 600 40px Fraunces','500 40px Inter','800 40px Inter'].map(f=>document.fonts.load(f))); }catch(e){}
+}
+function cgSchedule(){
+  if(cgRaf) return;
+  cgRaf = requestAnimationFrame(()=>{ cgRaf = 0; cgRedraw(); });
+}
+function cgRedraw(){
+  const cv = document.getElementById("cgcanvas");
+  if(!cv || !S.collage) return;
+  const sz = cgSize();
+  if(cv.width !== sz.w || cv.height !== sz.h){ cv.width = sz.w; cv.height = sz.h; }
+  cgDraw(cv.getContext("2d"), sz.w, sz.h, true);
+}
+function cgRR(ctx,x,y,w,h,r){
+  r = Math.max(0, Math.min(r, w/2, h/2));
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+}
+function cgCoverDims(img,w,h,z){
+  const s = Math.max(w/img.naturalWidth, h/img.naturalHeight) * z;
+  return {dw:img.naturalWidth*s, dh:img.naturalHeight*s};
+}
+
+function cgDraw(ctx, W, H, ui){
+  const c = S.collage, fv = cgFV();
+  const u = Math.min(W, H*1.2);
+  ctx.save();
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = c.bg; ctx.fillRect(0,0,W,H);
+  const barH = (c.info==="bar" && fv) ? Math.round(u*.15) : 0;
+  const m = c.margin;
+  const ax = m, ay = m, aw = W-2*m, ah = H - barH - 2*m;
+  const L = cgLayout(), rects = cgRectsFor(L, H > W*1.1), g = c.gap;
+  c._rects = [];
+  rects.forEach((r,i)=>{
+    const l = r[0]<.001 ? 0 : g/2, t = r[1]<.001 ? 0 : g/2;
+    const rr = r[0]+r[2]>.999 ? 0 : g/2, bb = r[1]+r[3]>.999 ? 0 : g/2;
+    const x = ax + r[0]*aw + l, y = ay + r[1]*ah + t;
+    const w = r[2]*aw - l - rr, h = r[3]*ah - t - bb;
+    c._rects.push({x,y,w,h});
+    const s = c.slots[i], img = cgImg(s.key);
+    ctx.save();
+    cgRR(ctx,x,y,w,h,c.radius); ctx.clip();
+    if(img){
+      const d = cgCoverDims(img,w,h,s.z);
+      ctx.drawImage(img, x+(w-d.dw)*s.fx, y+(h-d.dh)*s.fy, d.dw, d.dh);
+    }else{
+      ctx.fillStyle = "#1c1d22"; ctx.fillRect(x,y,w,h);
+      if(ui){
+        ctx.fillStyle = "rgba(255,255,255,.35)"; ctx.textAlign="center"; ctx.textBaseline="middle";
+        ctx.font = `500 ${Math.round(u*.03)}px Inter, Arial, sans-serif`;
+        ctx.fillText(s.key ? "Loading photo…" : "Pick a photo below", x+w/2, y+h/2);
+      }
+    }
+    ctx.restore();
+  });
+  if(fv && c.info==="overlay"){
+    const gh = u*.42, grd = ctx.createLinearGradient(0,H-gh,0,H);
+    grd.addColorStop(0,"rgba(0,0,0,0)"); grd.addColorStop(1,"rgba(0,0,0,.86)");
+    ctx.fillStyle = grd; ctx.fillRect(0,H-gh,W,gh);
+    cgInfo(ctx,W,H,u,H-Math.round(u*.15),Math.round(u*.15),fv,c,true);
+  }
+  if(fv && c.info==="bar"){
+    const y0 = H-barH;
+    ctx.fillStyle = "#0b0c0e"; ctx.fillRect(0,y0,W,barH);
+    ctx.fillStyle = "#b3905c"; ctx.fillRect(0,y0,W,Math.max(2,u*.004));
+    cgInfo(ctx,W,H,u,y0,barH,fv,c,false);
+  }
+  c._bottom = H - barH;
+  if(c.frame){
+    ctx.strokeStyle = "#c6a473"; ctx.lineWidth = Math.max(2,u*.005);
+    const f = u*.022; ctx.strokeRect(f,f,W-2*f,H-barH-2*f+(barH?0:0));
+  }
+  c.objs.forEach(o=>cgObj(ctx,o,W,H,u,ui,ui && c.sel && c.sel.t==="obj" && c.sel.id===o.id));
+  if(ui && c.sel && c.sel.t==="slot" && c._rects[c.sel.i]){
+    const r = c._rects[c.sel.i];
+    ctx.save();
+    ctx.lineWidth = 6; ctx.strokeStyle = "rgba(255,255,255,.95)"; ctx.strokeRect(r.x+3,r.y+3,r.w-6,r.h-6);
+    ctx.lineWidth = 3; ctx.setLineDash([14,10]); ctx.strokeStyle = "#2f86ff"; ctx.strokeRect(r.x+3,r.y+3,r.w-6,r.h-6);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+function cgInfo(ctx,W,H,u,y0,h,fv,c,shadow){
+  const pad = u*.04, gold = "#c6a473", ivory = "#f4f0e6";
+  const title = carName(fv) + (fv.trim ? " " + fv.trim : "");
+  const specs = c.showSpecs ? [fv.mileage!=null?miles(fv.mileage):"", fv.transmission?shortTrans(fv.transmission):"", fv.drivetrain].filter(Boolean).join("   ·   ") : "";
+  const phone = c.showPhone ? (S.settings.phone || "") : "";
+  const price = c.showPrice && fv.price!=null ? money(fv.price) : "";
+  const serif = s => `600 ${s}px "Fraunces", Georgia, serif`, sans = s => `500 ${s}px "Inter", Arial, sans-serif`;
+  ctx.save();
+  if(shadow){ ctx.shadowColor = "rgba(0,0,0,.6)"; ctx.shadowBlur = u*.012; }
+  ctx.textBaseline = "middle";
+  const pf = u*.056, sf = u*.026;
+  let rightW = 0;
+  if(price){ ctx.font = serif(pf); rightW = Math.max(rightW, ctx.measureText(price).width); }
+  if(phone){ ctx.font = sans(sf); rightW = Math.max(rightW, ctx.measureText(phone).width); }
+  const hasSub = !!(specs || phone);
+  const y1 = y0 + h*(hasSub ? .40 : .5), y2 = y0 + h*.76;
+  ctx.textAlign = "right";
+  if(price){ ctx.fillStyle = gold; ctx.font = serif(pf); ctx.fillText(price, W-pad, y1); }
+  if(phone){ ctx.fillStyle = ivory; ctx.font = sans(sf); ctx.fillText(phone, W-pad, price ? y2 : y0+h/2); }
+  ctx.textAlign = "left";
+  const maxW = W - pad*2 - (rightW ? rightW + pad : 0);
+  let ts = u*.043; ctx.font = `700 ${ts}px "Fraunces", Georgia, serif`;
+  while(ctx.measureText(title).width > maxW && ts > u*.02){ ts -= 1; ctx.font = `700 ${ts}px "Fraunces", Georgia, serif`; }
+  ctx.fillStyle = ivory; ctx.fillText(title, pad, y1);
+  if(specs){
+    let ss = sf; ctx.font = sans(ss);
+    while(ctx.measureText(specs).width > maxW && ss > u*.014){ ss -= 1; ctx.font = sans(ss); }
+    ctx.fillStyle = "rgba(244,240,230,.8)"; ctx.fillText(specs, pad, y2);
+  }
+  ctx.restore();
+}
+
+function cgObj(ctx,o,W,H,u,ui,selected){
+  const fs = o.size*u;
+  const fam = o.font==="serif" ? '"Fraunces", Georgia, serif'
+    : o.font==="emoji" ? '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif'
+    : '"Inter", "Helvetica Neue", Arial, sans-serif';
+  ctx.save();
+  ctx.font = `${o.italic?"italic ":""}${o.weight} ${fs}px ${fam}`;
+  if("letterSpacing" in ctx) ctx.letterSpacing = (o.track||0)+"px";
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  const txt = o.caps ? o.text.toUpperCase() : o.text;
+  const lines = txt.split("\n"), lh = fs*1.16;
+  let tw = 0; lines.forEach(l=>{ tw = Math.max(tw, ctx.measureText(l).width); });
+  let hw = tw/2, hh = lines.length*lh/2;
+  const shape = o.shape;
+  if(shape==="pill"){ hw += fs*.7; hh += fs*.38; }
+  else if(shape==="rect"){ hw += fs*.6; hh += fs*.4; }
+  else if(shape==="stamp"){ hw += fs*.55; hh += fs*.35; }
+  else if(shape==="circle"){ hw = hh = Math.hypot(hw,hh) + fs*.3; }
+  else if(shape==="burst"){ hw = hh = Math.hypot(hw,hh) + fs*.45; }
+  if(o.anchor){
+    const pad = u*.04, top = pad + (S.collage.margin||0), bot = (S.collage._bottom||H) - pad;
+    const a = o.anchor;
+    o.x = (a.includes("l") ? pad+hw : a.includes("r") ? W-pad-hw : W/2) / W;
+    o.y = (a.includes("t") ? top+hh : a.includes("b") ? bot-hh : (a==="c" ? (S.collage._bottom||H)/2 : H/2)) / H;
+    delete o.anchor;
+  }
+  ctx.translate(o.x*W, o.y*H); ctx.rotate(o.rot*Math.PI/180);
+  if(shape!=="none"){
+    if(o.shadow){ ctx.shadowColor = "rgba(0,0,0,.45)"; ctx.shadowBlur = fs*.3; ctx.shadowOffsetY = fs*.1; }
+    ctx.fillStyle = o.fill;
+    if(shape==="pill"){ cgRR(ctx,-hw,-hh,hw*2,hh*2,hh); ctx.fill(); }
+    else if(shape==="rect"){ cgRR(ctx,-hw,-hh,hw*2,hh*2,fs*.12); ctx.fill(); }
+    else if(shape==="circle"){ ctx.beginPath(); ctx.arc(0,0,hw,0,Math.PI*2); ctx.fill(); }
+    else if(shape==="burst"){
+      const n = 18; ctx.beginPath();
+      for(let i=0;i<n*2;i++){ const a = Math.PI*i/n, r = i%2 ? hw*.84 : hw; ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r); }
+      ctx.closePath(); ctx.fill();
+    }else if(shape==="stamp"){
+      ctx.fillStyle = "rgba(255,255,255,.9)"; cgRR(ctx,-hw,-hh,hw*2,hh*2,fs*.12); ctx.fill();
+      ctx.shadowColor = "transparent";
+      ctx.strokeStyle = o.fill; ctx.lineWidth = fs*.1; cgRR(ctx,-hw,-hh,hw*2,hh*2,fs*.12); ctx.stroke();
+      ctx.lineWidth = fs*.03; cgRR(ctx,-hw+fs*.17,-hh+fs*.17,hw*2-fs*.34,hh*2-fs*.34,fs*.06); ctx.stroke();
+    }
+    ctx.shadowColor = "transparent"; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+  }else if(o.shadow){
+    ctx.shadowColor = "rgba(0,0,0,.6)"; ctx.shadowBlur = fs*.2; ctx.shadowOffsetY = fs*.05;
+  }
+  ctx.fillStyle = o.color;
+  lines.forEach((l,i)=>ctx.fillText(l, 0, (i-(lines.length-1)/2)*lh + fs*.03));
+  o._hw = hw+4; o._hh = hh+4;
+  if(selected){
+    ctx.shadowColor = "transparent";
+    ctx.lineWidth = 5; ctx.strokeStyle = "rgba(255,255,255,.95)"; ctx.setLineDash([]); ctx.strokeRect(-o._hw,-o._hh,o._hw*2,o._hh*2);
+    ctx.lineWidth = 3; ctx.setLineDash([12,8]); ctx.strokeStyle = "#2f86ff"; ctx.strokeRect(-o._hw,-o._hh,o._hw*2,o._hh*2);
+  }
+  ctx.restore();
+}
+
+/* ---- objects ---- */
+function cgNewObj(p){
+  const c = S.collage;
+  const o = Object.assign({text:"Your text", font:"sans", weight:800, italic:false, caps:false,
+    size:.06, color:"#ffffff", fill:"#b3905c", shape:"none", rot:0, x:.5, y:.5, shadow:true, track:0}, p, {id:c.nextId++});
+  c.objs.push(o); c.sel = {t:"obj", id:o.id};
+  return o;
+}
+function cgAddSticker(i, opts){
+  const p = CG_STICKERS[i], fv = cgFV();
+  let text = p.text;
+  if(text==="@phone") text = S.settings.phone || "Call us";
+  if(text==="@price") text = fv && fv.price!=null ? money(fv.price) : "$00,000";
+  if(text==="@miles") text = fv && fv.mileage!=null ? miles(fv.mileage) : "00,000 mi";
+  const n = S.collage.objs.length;
+  return cgNewObj(Object.assign({text, shape:p.shape, fill:p.fill, color:p.color, size:p.size, rot:p.rot||0,
+    track:p.track||0, caps:p.caps!==false && !p.text.startsWith("@"), weight:800,
+    x:.5+((n%4)-1.5)*.04, y:.4+((n%5)*.05)}, opts||{}));
+}
+function cgLook(k){
+  const c = S.collage;
+  c.objs = []; c.sel = null; c.info = "bar"; c.showPrice = true; c.showSpecs = true; c.showPhone = true;
+  const idx = label => CG_STICKERS.findIndex(s=>s.label===label);
+  if(k==="arrived"){ c.layout = "h2"; cgAddSticker(idx("Just arrived"), {anchor:"tl"}); }
+  if(k==="price"){ c.layout = "one"; c.info = "overlay"; cgAddSticker(idx("New price"), {anchor:"tr"}); }
+  if(k==="sold"){ c.layout = "h2"; c.showPrice = false; cgAddSticker(idx("Sold"), {anchor:"c"}); }
+  if(k==="perks"){ c.layout = "h3"; cgAddSticker(idx("$0 Dealer & Handling"), {anchor:"tl"}); cgAddSticker(idx("Loaner with purchase"), {anchor:"tr"}); }
+  cgFillSlots(false);
+  c.sel = c.objs.length ? {t:"obj", id:c.objs[c.objs.length-1].id} : {t:"slot", i:0};
+}
+
+/* ---- panels ---- */
+const cgOptLabel = v => carName(v) + (v.trim ? " " + v.trim : "") + " (" + (STATUSES[v.status]||"Available") + ")";
+function cgThumbSvg(l, tall){
+  return `<svg viewBox="0 0 40 40" width="38" height="38" aria-hidden="true">${cgRectsFor(l,tall).map(([x,y,w,h])=>
+    `<rect x="${(x*40+1).toFixed(1)}" y="${(y*40+1).toFixed(1)}" width="${(w*40-2).toFixed(1)}" height="${(h*40-2).toFixed(1)}" rx="1.5" fill="currentColor"/>`).join("")}</svg>`;
+}
+function cgRng(key,label,min,max,step,val,suffix){
+  return `<div class="field"><label>${label} <span class="cgv">${suffix?Math.round(val*100)/100:Math.round(val*1000)/1000}</span></label>
+    <input type="range" data-cgi="${key}" min="${min}" max="${max}" step="${step}" value="${val}"></div>`;
+}
+function adminCollage(){
+  return `<div class="cgwrap" id="cgroot">
+    <div class="cgmain">
+      <div class="cgstage" id="cgstage"><canvas id="cgcanvas" aria-label="Collage preview"></canvas></div>
+      <div class="cgdl">
+        <button class="btn" data-cg="dlj">Download JPG</button>
+        <button class="btn sec" data-cg="dlp">Download PNG</button>
+        <span class="hint" id="cgsizenote"></span>
+      </div>
+      <div id="cgsel"></div>
+    </div>
+    <div class="cgside" id="cgside"></div>
+  </div>`;
+}
+function cgRenderSel(){
+  const el = document.getElementById("cgsel"); if(!el) return;
+  const c = S.collage, sel = c.sel;
+  let h = "";
+  if(sel && sel.t==="obj"){
+    const o = c.objs.find(x=>x.id===sel.id);
+    if(o){
+      h = `<div class="panel"><h3 class="sectiontitle">Edit selected text or sticker</h3>
+        <div class="fieldgrid">
+          <div class="field wide"><label>Text</label><textarea data-cgi="o:text" style="min-height:64px">${esc(o.text)}</textarea></div>
+          <div class="field"><label>Font</label><select data-cgi="o:font">
+            ${[["sans","Clean sans"],["serif","Elegant serif"],["emoji","Emoji"]].map(([k,n])=>`<option value="${k}" ${o.font===k?"selected":""}>${n}</option>`).join("")}</select></div>
+          <div class="field"><label>Weight</label><select data-cgi="o:weight">
+            ${[[500,"Regular"],[700,"Bold"],[800,"Heavy"]].map(([k,n])=>`<option value="${k}" ${o.weight==k?"selected":""}>${n}</option>`).join("")}</select></div>
+          <div class="field"><label>Background shape</label><select data-cgi="o:shape">
+            ${[["none","None"],["pill","Pill"],["rect","Box"],["circle","Circle"],["burst","Starburst"],["stamp","Stamp"]].map(([k,n])=>`<option value="${k}" ${o.shape===k?"selected":""}>${n}</option>`).join("")}</select></div>
+          <div class="field"><label>Text color</label><input type="color" data-cgi="o:color" value="${o.color}"></div>
+          <div class="field"><label>Shape color</label><input type="color" data-cgi="o:fill" value="${o.fill}"></div>
+          ${cgRng("o:size","Size",.015,.35,.002,o.size)}
+          ${cgRng("o:rot","Rotate",-180,180,1,o.rot)}
+          ${cgRng("o:track","Letter spacing",0,16,.5,o.track||0)}
+          <div class="field wide" style="flex-direction:row;gap:16px;flex-wrap:wrap">
+            <label class="cgck"><input type="checkbox" data-cgi="o:shadow" ${o.shadow?"checked":""}> Shadow</label>
+            <label class="cgck"><input type="checkbox" data-cgi="o:caps" ${o.caps?"checked":""}> All caps</label>
+            <label class="cgck"><input type="checkbox" data-cgi="o:italic" ${o.italic?"checked":""}> Italic</label>
+          </div>
+        </div>
+        <div class="cgrow" style="margin-top:12px">
+          <button class="btn sec sm" data-cg="dup">Duplicate</button>
+          <button class="btn sec sm" data-cg="front">Bring to front</button>
+          <button class="btn danger sm" data-cg="del">Delete</button>
+        </div>
+        <p class="hint" style="margin-top:10px">Drag it on the picture to move it.</p></div>`;
+    }
+  }else if(sel && sel.t==="slot"){
+    const s = c.slots[sel.i];
+    h = `<div class="panel"><h3 class="sectiontitle">Photo frame ${sel.i+1}</h3>
+      ${s && s.key ? `${cgRng("s:z","Zoom",1,3,.01,s.z,1)}
+        <div class="cgrow"><button class="btn sec sm" data-cg="slotreset">Reset position</button>
+        <button class="btn danger sm" data-cg="slotclear">Remove photo</button></div>
+        <p class="hint" style="margin-top:10px">Drag the photo on the picture to reposition it inside the frame. Pick another photo below to swap it.</p>`
+      : `<p class="hint">This frame is empty. Pick a photo below to fill it.</p>`}</div>`;
+  }else{
+    h = `<div class="panel"><p class="hint">Tap a photo frame to reposition or zoom it. Tap text or a sticker to edit it.</p></div>`;
+  }
+  el.innerHTML = h;
+}
+function cgRenderSide(){
+  const el = document.getElementById("cgside"); if(!el) return;
+  const c = S.collage, tall = cgIsTall();
+  const order = {available:0,pending:1,sold:2};
+  const vs = [...S.vehicles].sort((a,b)=>(order[a.status]??0)-(order[b.status]??0));
+  const src = S.vehicles.find(v=>v.id===c.srcVid);
+  const pool = cgPool(), n = cgLayout().n;
+  const usedKeys = new Set(c.slots.slice(0,n).map(s=>s.key).filter(Boolean));
+  const selSlot = c.sel && c.sel.t==="slot" ? c.sel.i : -1;
+  el.innerHTML = `
+    <div class="panel"><h3 class="sectiontitle">Quick looks</h3>
+      <div class="cgrow">
+        <button class="btn sec sm" data-cg="look:arrived">Just arrived</button>
+        <button class="btn sec sm" data-cg="look:price">New price</button>
+        <button class="btn sec sm" data-cg="look:sold">Sold</button>
+        <button class="btn sec sm" data-cg="look:perks">Perks</button>
+      </div>
+      <p class="hint" style="margin-top:8px">One tap sets the layout and adds stickers. Change anything after.</p>
+    </div>
+    <div class="panel"><h3 class="sectiontitle">Format</h3>
+      <div class="cgsizes">${CG_SIZES.map(s=>`<button class="cgsize" data-cg="size:${s.k}" aria-pressed="${c.size===s.k}">
+        <b>${s.name}</b><small>${s.note}</small></button>`).join("")}</div>
+    </div>
+    <div class="panel"><h3 class="sectiontitle">Vehicle and photos</h3>
+      <div class="field"><label>Feature vehicle (for the price bar)</label>
+        <select data-cgs="vid"><option value="">None — no price bar</option>
+        ${vs.map(v=>`<option value="${v.id}" ${c.vid===v.id?"selected":""}>${esc(cgOptLabel(v))}</option>`).join("")}</select></div>
+      <div class="field" style="margin-top:10px"><label>Photos from</label>
+        <select data-cgs="src"><option value="">Only my uploads</option>
+        ${vs.map(v=>`<option value="${v.id}" ${c.srcVid===v.id?"selected":""}>${esc(cgOptLabel(v))} — ${(v.photos||[]).length} photos</option>`).join("")}</select></div>
+      <div class="cgtray">${pool.length ? pool.map(k=>`<button class="cgtp ${usedKeys.has(k)?"used":""}" data-cg="photo:${k}" title="Put in frame ${selSlot>=0?selSlot+1:""}">
+        <img src="${esc(cgSrc(k))}" alt="" loading="lazy"></button>`).join("") : `<p class="hint">No photos yet. Pick a vehicle that has photos, or add your own.</p>`}</div>
+      <div class="cgrow" style="margin-top:10px"><button class="btn sec sm" data-cg="upload">Add photos from this device</button>
+        ${c.local.length ? `<button class="btn sec sm" data-cg="clearlocal">Remove my uploads</button>` : ""}
+        <button class="btn sec sm" data-cg="refill">Auto-fill frames</button></div>
+      <input type="file" id="cgfile" accept="image/*" multiple hidden>
+      <p class="hint" style="margin-top:8px">Tap a frame on the picture, then tap a photo here. Device photos only last until you reload.</p>
+    </div>
+    <div class="panel"><h3 class="sectiontitle">Layout</h3>
+      <div class="cglayouts">${CG_LAYOUTS.map(l=>`<button class="cglay" data-cg="layout:${l.k}" aria-pressed="${c.layout===l.k}" title="${l.name}">${cgThumbSvg(l,tall)}<small>${l.name}</small></button>`).join("")}</div>
+      <div class="fieldgrid" style="margin-top:12px">
+        ${cgRng("g:gap","Space between photos",0,40,1,c.gap)}
+        ${cgRng("g:margin","Outer margin",0,60,1,c.margin)}
+        ${cgRng("g:radius","Rounded corners",0,60,1,c.radius)}
+      </div>
+      <div class="field" style="margin-top:12px"><label>Background</label>
+        <div class="cgrow">${CG_BGS.map(b=>`<button class="cgsw" data-cg="bgc:${b}" style="background:${b}" aria-label="Background ${b}" aria-pressed="${c.bg===b}"></button>`).join("")}
+        <input type="color" data-cgi="g:bg" value="${c.bg}" aria-label="Custom background" style="width:38px;height:30px;padding:0"></div></div>
+    </div>
+    <div class="panel"><h3 class="sectiontitle">Price bar</h3>
+      <div class="cgrow">${[["bar","Bar below"],["overlay","On the photo"],["none","Off"]].map(([k,n])=>`<button class="btn ${c.info===k?"":"sec"} sm" data-cg="info:${k}">${n}</button>`).join("")}</div>
+      <div class="cgrow" style="margin-top:10px;gap:16px">
+        <label class="cgck"><input type="checkbox" data-cgi="g:showPrice" ${c.showPrice?"checked":""}> Price</label>
+        <label class="cgck"><input type="checkbox" data-cgi="g:showSpecs" ${c.showSpecs?"checked":""}> Miles, trans, drive</label>
+        <label class="cgck"><input type="checkbox" data-cgi="g:showPhone" ${c.showPhone?"checked":""}> Phone</label>
+        <label class="cgck"><input type="checkbox" data-cgi="g:frame" ${c.frame?"checked":""}> Brass frame</label>
+      </div>
+      ${!cgFV() ? `<p class="hint" style="margin-top:8px">Pick a feature vehicle above to show its name and price.</p>` : ""}
+    </div>
+    <div class="panel"><h3 class="sectiontitle">Stickers and text</h3>
+      <button class="btn sm" data-cg="addtext">Add your own text</button>
+      <div class="cgstick" style="margin-top:12px">${CG_STICKERS.map((s,i)=>`<button class="cgst" data-cg="sticker:${i}">${esc(s.label)}</button>`).join("")}</div>
+      <div class="cgrow" style="margin-top:12px">${CG_EMOJI.map((e,i)=>`<button class="cgem" data-cg="emoji:${i}" aria-label="Add ${e}">${e}</button>`).join("")}</div>
+      ${c.objs.length ? `<p class="hint" style="margin-top:10px">${c.objs.length} on the picture. Tap one to edit it.</p>` : ""}
+      <div style="margin-top:12px"><button class="linkbtn" data-cg="restart">Start over</button></div>
+    </div>`;
+  const f = document.getElementById("cgfile");
+  if(f) f.addEventListener("change", ()=>{
+    [...f.files].forEach(file=>{
+      const key = "l:" + (cgLocalUrls.size + 1) + "_" + Date.now().toString(36);
+      cgLocalUrls.set(key, URL.createObjectURL(file)); c.local.push(key);
+    });
+    f.value = ""; cgFillSlots(false); cgRenderSide(); cgSchedule();
+  });
+}
+function cgFit(){
+  const st = document.getElementById("cgstage"); if(!st) return;
+  const sz = cgSize(), maxH = Math.max(320, window.innerHeight*.74);
+  st.style.maxWidth = Math.min(760, maxH*sz.w/sz.h) + "px";
+  const note = document.getElementById("cgsizenote");
+  if(note) note.textContent = sz.name + " · " + sz.note.split(" · ")[0];
+}
+function cgSelectedObj(){ const c = S.collage; return c.sel && c.sel.t==="obj" ? c.objs.find(o=>o.id===c.sel.id) : null; }
+
+async function cgDownload(type){
+  const c = S.collage, sz = cgSize();
+  toast("Building your picture…", 1500);
+  await cgLoadAll();
+  const cv = document.createElement("canvas"); cv.width = sz.w; cv.height = sz.h;
+  cgDraw(cv.getContext("2d"), sz.w, sz.h, false);
+  const mime = type==="png" ? "image/png" : "image/jpeg";
+  const blob = await new Promise(r=>cv.toBlob(r, mime, .92));
+  if(!blob){ toast("Couldn't build the picture. Try again.", 5000); return; }
+  const fv = cgFV();
+  const filename = slugify(fv ? [carName(fv), fv.trim, "facebook"].filter(Boolean).join(" ") : "hotshots-facebook") + "-" + sz.k + "." + (type==="png" ? "png" : "jpg");
+  const dl = window.claude ? await claude.use("downloads").catch(()=>null) : null;
+  try{
+    if(dl){ await dl.save({filename, data:blob}); }
+    else{
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+    toast("Saved " + filename);
+  }catch(e){ toast("Couldn't save that picture. Try again.", 5000); }
+}
+
+function wireCollage(){
+  cgInit();
+  const c = S.collage, root = document.getElementById("cgroot"), cv = document.getElementById("cgcanvas");
+  if(!root || !cv) return;
+  cgFit(); cgRenderSide(); cgRenderSel(); cgRedraw();
+  Promise.all(['700 40px Fraunces','italic 600 40px Fraunces','500 40px Inter','800 40px Inter'].map(f=>document.fonts.load(f))).then(cgSchedule).catch(()=>{});
+
+  root.addEventListener("click", e=>{
+    const b = e.target.closest("[data-cg]"); if(!b) return;
+    const [a, ...rest] = b.getAttribute("data-cg").split(":"), arg = rest.join(":");
+    if(a==="dlj") cgDownload("jpg");
+    else if(a==="dlp") cgDownload("png");
+    else if(a==="size"){ c.size = arg; cgFit(); cgRenderSide(); cgSchedule(); }
+    else if(a==="layout"){ c.layout = arg; cgFillSlots(false); if(c.sel && c.sel.t==="slot" && c.sel.i>=cgLayout().n) c.sel = {t:"slot",i:0}; cgRenderSide(); cgRenderSel(); cgSchedule(); }
+    else if(a==="look"){ cgLook(arg); cgRenderSide(); cgRenderSel(); cgSchedule(); }
+    else if(a==="info"){ c.info = arg; cgRenderSide(); cgSchedule(); }
+    else if(a==="bgc"){ c.bg = arg; cgRenderSide(); cgSchedule(); }
+    else if(a==="sticker"){ cgAddSticker(+arg); cgRenderSel(); cgRenderSide(); cgSchedule(); }
+    else if(a==="emoji"){ cgNewObj({text:CG_EMOJI[+arg], font:"emoji", size:.12, shadow:true, weight:500, x:.5, y:.45}); cgRenderSel(); cgRenderSide(); cgSchedule(); }
+    else if(a==="addtext"){ cgNewObj({text:"Your text", size:.07, y:.5}); cgRenderSel(); cgRenderSide(); cgSchedule(); }
+    else if(a==="photo"){
+      const n = cgLayout().n;
+      let i = c.sel && c.sel.t==="slot" ? c.sel.i : c.slots.slice(0,n).findIndex(s=>!s.key);
+      if(i<0 || i>=n) i = 0;
+      const s = c.slots[i]; s.key = arg; s.fx = .5; s.fy = .5; s.z = 1;
+      c.sel = {t:"slot", i:(i+1)%n};
+      cgRenderSide(); cgRenderSel(); cgSchedule();
+    }
+    else if(a==="upload"){ const f = document.getElementById("cgfile"); if(f) f.click(); }
+    else if(a==="clearlocal"){ c.local = []; c.slots.forEach(s=>{ if(s.key && s.key.startsWith("l:")) s.key = null; }); cgRenderSide(); cgRenderSel(); cgSchedule(); }
+    else if(a==="refill"){ cgFillSlots(true); cgRenderSide(); cgRenderSel(); cgSchedule(); }
+    else if(a==="restart"){ if(confirm("Remove all text and stickers and reset the layout?")){ c.objs = []; c.layout = "h2"; c.gap = 8; c.margin = 0; c.radius = 0; c.bg = "#0b0c0e"; c.info = "bar"; c.frame = false; cgFillSlots(true); c.sel = {t:"slot",i:0}; cgRenderSide(); cgRenderSel(); cgSchedule(); } }
+    else if(a==="dup"){ const o = cgSelectedObj(); if(o){ cgNewObj(Object.assign({}, o, {x:Math.min(.95,o.x+.04), y:Math.min(.95,o.y+.04)})); cgRenderSel(); cgSchedule(); } }
+    else if(a==="front"){ const o = cgSelectedObj(); if(o){ c.objs = c.objs.filter(x=>x!==o).concat(o); cgSchedule(); } }
+    else if(a==="del"){ const o = cgSelectedObj(); if(o){ c.objs = c.objs.filter(x=>x!==o); c.sel = null; cgRenderSel(); cgRenderSide(); cgSchedule(); } }
+    else if(a==="slotreset"){ const s = c.slots[c.sel.i]; s.fx = .5; s.fy = .5; s.z = 1; cgRenderSel(); cgSchedule(); }
+    else if(a==="slotclear"){ c.slots[c.sel.i].key = null; cgRenderSel(); cgRenderSide(); cgSchedule(); }
+  });
+  root.addEventListener("change", e=>{
+    const t = e.target, k = t.getAttribute("data-cgs"); if(!k) return;
+    if(k==="vid"){
+      c.vid = t.value;
+      if(t.value){ c.srcVid = t.value; cgFillSlots(true); }
+      cgRenderSide(); cgSchedule();
+    }
+    if(k==="src"){ c.srcVid = t.value; cgFillSlots(true); cgRenderSide(); cgRenderSel(); cgSchedule(); }
+  });
+  root.addEventListener("input", e=>{
+    const t = e.target, key = t.getAttribute("data-cgi"); if(!key) return;
+    const val = t.type==="checkbox" ? t.checked : t.type==="range" ? parseFloat(t.value) : t.value;
+    const [scope, prop] = key.split(":");
+    if(scope==="g"){ c[prop] = val; }
+    else if(scope==="o"){
+      const o = cgSelectedObj(); if(!o) return;
+      o[prop] = (prop==="weight") ? +val : val;
+      if(prop==="font" && val==="emoji") o.weight = 500;
+    }
+    else if(scope==="s"){ const s = c.slots[c.sel.i]; if(s) s[prop] = val; }
+    if(t.type==="range"){ const sp = t.parentElement.querySelector(".cgv"); if(sp) sp.textContent = Math.round(val*1000)/1000; }
+    cgSchedule();
+  });
+
+  const pos = e => { const r = cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*cv.width/r.width, y:(e.clientY-r.top)*cv.height/r.height}; };
+  cv.addEventListener("pointerdown", e=>{
+    const p = pos(e), W = cv.width, H = cv.height;
+    for(let i=c.objs.length-1;i>=0;i--){
+      const o = c.objs[i]; if(o._hw==null) continue;
+      const a = -o.rot*Math.PI/180, dx = p.x-o.x*W, dy = p.y-o.y*H;
+      const lx = dx*Math.cos(a) - dy*Math.sin(a), ly = dx*Math.sin(a) + dy*Math.cos(a);
+      if(Math.abs(lx)<=o._hw && Math.abs(ly)<=o._hh){
+        c.sel = {t:"obj", id:o.id};
+        cgDrag = {t:"obj", o, ox:o.x*W-p.x, oy:o.y*H-p.y, id:e.pointerId};
+        cv.setPointerCapture(e.pointerId); cgRenderSel(); cgSchedule(); return;
+      }
+    }
+    const rects = c._rects || [], n = cgLayout().n;
+    for(let i=0;i<n;i++){
+      const r = rects[i]; if(!r) continue;
+      if(p.x>=r.x && p.x<=r.x+r.w && p.y>=r.y && p.y<=r.y+r.h){
+        c.sel = {t:"slot", i};
+        const s = c.slots[i];
+        cgDrag = {t:"slot", i, sx:p.x, sy:p.y, fx:s.fx, fy:s.fy, id:e.pointerId};
+        cv.setPointerCapture(e.pointerId); cgRenderSel(); cgRenderSide(); cgSchedule(); return;
+      }
+    }
+    c.sel = null; cgRenderSel(); cgRenderSide(); cgSchedule();
+  });
+  cv.addEventListener("pointermove", e=>{
+    if(!cgDrag || cgDrag.id!==e.pointerId) return;
+    const p = pos(e), W = cv.width, H = cv.height;
+    if(cgDrag.t==="obj"){
+      cgDrag.o.x = Math.max(0, Math.min(1, (p.x+cgDrag.ox)/W));
+      cgDrag.o.y = Math.max(0, Math.min(1, (p.y+cgDrag.oy)/H));
+    }else{
+      const s = c.slots[cgDrag.i], r = c._rects[cgDrag.i], img = cgImg(s.key);
+      if(!img) return;
+      const d = cgCoverDims(img, r.w, r.h, s.z), rx = r.w-d.dw, ry = r.h-d.dh;
+      if(rx) s.fx = Math.max(0, Math.min(1, cgDrag.fx + (p.x-cgDrag.sx)/rx));
+      if(ry) s.fy = Math.max(0, Math.min(1, cgDrag.fy + (p.y-cgDrag.sy)/ry));
+    }
+    cgSchedule();
+  });
+  const end = e=>{ if(cgDrag && cgDrag.id===e.pointerId) cgDrag = null; };
+  cv.addEventListener("pointerup", end); cv.addEventListener("pointercancel", end);
+
+  if(!cgBound){
+    cgBound = true;
+    window.addEventListener("resize", ()=>{ if(S.admin && S.admin.tab==="collage") cgFit(); });
+    document.addEventListener("keydown", e=>{
+      if(!S.admin || S.admin.tab!=="collage" || !S.collage) return;
+      if(/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||"")) return;
+      const o = cgSelectedObj(); if(!o) return;
+      if(e.key==="Delete" || e.key==="Backspace"){ S.collage.objs = S.collage.objs.filter(x=>x!==o); S.collage.sel = null; cgRenderSel(); cgSchedule(); e.preventDefault(); }
+      const st = e.shiftKey ? .02 : .005;
+      if(e.key==="ArrowLeft"){ o.x -= st; cgSchedule(); e.preventDefault(); }
+      if(e.key==="ArrowRight"){ o.x += st; cgSchedule(); e.preventDefault(); }
+      if(e.key==="ArrowUp"){ o.y -= st; cgSchedule(); e.preventDefault(); }
+      if(e.key==="ArrowDown"){ o.y += st; cgSchedule(); e.preventDefault(); }
+    });
+  }
+}
+
 /* ---------- admin wiring ---------- */
 function wireAdmin(){
   document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{
@@ -2320,6 +2968,7 @@ function wireAdmin(){
     render();
   }));
 
+  if(!S.admin.draft && S.admin.tab==="collage"){ wireCollage(); return; }
   if(!S.admin.draft){ wireSiteFields(); return; }
   const d = S.admin.draft;
 
