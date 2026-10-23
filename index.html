@@ -1574,6 +1574,14 @@ function adminSite(){
     <div class="field wide"><label for="s_disclaimer">Fine print in the footer</label>
       <textarea id="s_disclaimer" data-s="disclaimer" style="min-height:80px" placeholder="Prices exclude tax, title and license…">${esc(s.disclaimer||"")}</textarea></div>
     ${f("faviconUrl","Favicon (browser tab icon)",'placeholder="https://yoursite.com/favicon.ico"')}
+    <div class="field wide"><label>Favicon image (recommended)</label>
+      <div class="cgrow">
+        ${s.faviconAsset ? `<img src="${esc(assetUrl(s.faviconAsset))}" alt="Current favicon" width="40" height="40" style="border:1px solid var(--line);border-radius:6px;object-fit:contain;background:var(--wash)">` : ""}
+        <button class="btn sec sm" data-admin="favpick">${s.faviconAsset ? "Replace image" : "Upload image"}</button>
+        ${s.faviconAsset ? `<button class="linkbtn" data-admin="favclear">Remove</button>` : ""}
+      </div>
+      <input type="file" id="favfile" accept="image/*" hidden>
+      <span class="hint">Upload your logo or hotshotsauto.com's icon (square PNG, 128 px or bigger). Publishing then ships it as a real icon file with every page, so it shows on all tabs and on phones' home screens.</span></div>
     <div class="field wide" style="margin-top:-8px"><span class="hint">Defaults to your main site's icon so the two match. Only matters when you publish the site to your own domain — leave as-is unless you want something different.</span></div>
   </div>
   <div class="savebar">
@@ -1899,6 +1907,30 @@ function extFor(type, name){
   return m ? m[1].toLowerCase() : "jpg";
 }
 
+async function buildFavicon(){
+  const s = S.settings;
+  const tryFetch = async u => {
+    try{ const r = await fetch(u); if(!r.ok) return null; const b = await r.blob(); return b && b.size>0 ? b : null; }catch(e){ return null; }
+  };
+  let blob = null;
+  if(s.faviconAsset) blob = await tryFetch(assetUrl(s.faviconAsset));
+  if(!blob){
+    for(const u of [s.faviconUrl, "https://hotshotsauto.com/favicon.ico", "https://www.google.com/s2/favicons?sz=128&domain=hotshotsauto.com"]){
+      if(u && (blob = await tryFetch(u))) break;
+    }
+  }
+  if(!blob) return null;
+  try{
+    const bmp = await createImageBitmap(blob);
+    const cv = document.createElement("canvas"); cv.width = cv.height = 192;
+    const sc = Math.min(192/bmp.width, 192/bmp.height), w = bmp.width*sc, hh = bmp.height*sc;
+    cv.getContext("2d").drawImage(bmp, (192-w)/2, (192-hh)/2, w, hh);
+    const png = await new Promise(r=>cv.toBlob(r,"image/png"));
+    if(png) return {blob:png, png:true};
+  }catch(e){}
+  return {blob, png:false};
+}
+
 function exportReadme(info){
   const lines = [
     "YOUR INVENTORY WEBSITE",
@@ -1907,6 +1939,7 @@ function exportReadme(info){
     "",
     "WHAT IS HERE",
     "  index.html          the page itself — ALWAYS replace your old copy with this one",
+    info.favicon ? "  favicon.ico/.png    your tab icon — copy in next to index.html" : null,
     "  assets/             photos and documents this build actually packed",
     info.vinPages ? `  {VIN}/index.html    ${info.vinPages} folder(s), one per vehicle with a VIN —` : null,
     info.vinPages ? "                      each opens straight to that vehicle, e.g. yoursite.com/1FT.../" : null,
@@ -2037,13 +2070,19 @@ async function exportSite(){
     const data = JSON.stringify({vehicles:S.vehicles, settings:S.settings, files})
       .replace(/</g, "\\u003c").replace(/\u2028/g,"\\u2028").replace(/\u2029/g,"\\u2029");
     const name = S.settings.dealerName || "Used vehicle inventory";
+    log("Preparing the tab icon…");
+    const fav = await buildFavicon();
+    const favTags = fav
+      ? (fav.png ? '<link rel="icon" type="image/png" sizes="192x192" href="favicon.png">\n<link rel="apple-touch-icon" href="favicon.png">\n'
+                 : '<link rel="icon" href="favicon.ico">\n') + '<link rel="shortcut icon" href="favicon.ico">\n'
+      : (S.settings.faviconUrl ? '<link rel="icon" href="' + esc(S.settings.faviconUrl) + '">\n' : '');
 
     const html =
       '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n' +
       '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' +
       '<title>' + esc(name) + ' — Used vehicle inventory</title>\n' +
       '<meta name="description" content="' + esc((S.settings.intro||"Used vehicles for sale, with photos and full service paperwork attached.").slice(0,180)) + '">\n' +
-      (S.settings.faviconUrl ? '<link rel="icon" href="' + esc(S.settings.faviconUrl) + '">\n' : '') +
+      favTags +
       '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
       '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
       '<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">\n' +
@@ -2052,6 +2091,20 @@ async function exportSite(){
       '<script>\n' + js + '\n<\/script>\n</body>\n</html>\n';
 
     zip.file("index.html", html);
+    if(fav){
+      zip.file("favicon.ico", fav.blob);
+      if(fav.png) zip.file("favicon.png", fav.blob);
+      zip.file("ONE-TIME - icon for PDF tabs/favicon.ico", fav.blob);
+      zip.file("ONE-TIME - icon for PDF tabs/READ ME.txt",
+        "PDF tabs have no page of their own, so Chrome looks for favicon.ico at the very top of\r\n" +
+        "your github.io address (hotshotsauto.github.io/favicon.ico).\r\n\r\n" +
+        "One-time setup, about 3 minutes, in GitHub Desktop:\r\n" +
+        "  1. File > New repository. Name it exactly:  hotshotsauto.github.io  (all lowercase). Create it.\r\n" +
+        "  2. Put the favicon.ico from this folder into the new repository's folder.\r\n" +
+        "  3. Commit, then Publish repository (leave 'Keep this code private' UNCHECKED).\r\n" +
+        "  4. On github.com open that repository > Settings > Pages > Source: main, folder / (root) > Save.\r\n" +
+        "Give it a few minutes, then hard refresh. Your icon then shows on every PDF and file tab.\r\n");
+    }
 
     // One /{VIN}/index.html per vehicle that has a VIN — same page, same
     // full dataset, just with a tiny preset that opens straight to that
@@ -2075,7 +2128,7 @@ async function exportSite(){
       vinPages++;
     }
 
-    zip.file("READ ME FIRST.txt", exportReadme({isFirstBuild, packed, skipped, obsolete, vinPages}));
+    zip.file("READ ME FIRST.txt", exportReadme({isFirstBuild, packed, skipped, obsolete, vinPages, favicon:!!fav}));
 
     log("Compressing…");
     const blob = await zip.generateAsync({type:"blob"});
@@ -2281,6 +2334,9 @@ const CG_LAYOUTS = [
   {k:"g4",  name:"Grid of 4",    n:4, r:[[0,0,.5,.5],[.5,0,.5,.5],[0,.5,.5,.5],[.5,.5,.5,.5]]},
   {k:"h4",  name:"Hero + 4",     n:5, r:[[0,0,.5,1],[.5,0,.25,.5],[.75,0,.25,.5],[.5,.5,.25,.5],[.75,.5,.25,.5]]},
   {k:"m5",  name:"Mosaic 5",     n:5, r:[[0,0,.5,.55],[.5,0,.5,.55],[0,.55,1/3,.45],[1/3,.55,1/3,.45],[2/3,.55,1/3,.45]]},
+  {k:"g8",  name:"Grid of 8",    n:8, r:[0,1,2,3].flatMap(i=>[[i/4,0,.25,.5],[i/4,.5,.25,.5]])},
+  {k:"g9",  name:"Grid of 9",    n:9, r:[0,1,2].flatMap(j=>[0,1,2].map(i=>[i/3,j/3,1/3,1/3]))},
+  {k:"g12", name:"Grid of 12",   n:12, r:[0,1,2].flatMap(j=>[0,1,2,3].map(i=>[i/4,j/3,.25,1/3]))},
   {k:"g6",  name:"Grid of 6",    n:6, r:[[0,0,1/3,.5],[1/3,0,1/3,.5],[2/3,0,1/3,.5],[0,.5,1/3,.5],[1/3,.5,1/3,.5],[2/3,.5,1/3,.5]]}
 ];
 const CG_BGS = ["#0b0c0e","#f4f0e6","#b3905c","#ffffff","#1d3557"];
@@ -2305,10 +2361,10 @@ function cgInit(){
   const first = withPhotos[0] || S.vehicles.find(v=>(v.photos||[]).length) || S.vehicles[0] || null;
   S.collage = {
     size:"square", layout:"h2", vid:first?first.id:"", srcVid:first?first.id:"",
-    slots:[0,1,2,3,4,5].map(()=>({key:null,fx:.5,fy:.5,z:1})),
+    slots:[0,1,2,3,4,5,6,7,8,9,10,11].map(()=>({key:null,fx:.5,fy:.5,z:1})),
     sel:{t:"slot",i:0}, objs:[], nextId:1, local:[],
     gap:8, margin:0, radius:0, bg:"#0b0c0e", info:"bar",
-    showPrice:true, showSpecs:true, showPhone:true, frame:false
+    showPrice:true, showSpecs:true, showPhone:true, frame:false, caption:false, lineupAll:false
   };
   cgFillSlots(true);
 }
@@ -2322,8 +2378,30 @@ const cgLayout = () => CG_LAYOUTS.find(l=>l.k===S.collage.layout) || CG_LAYOUTS[
 const cgIsTall = () => { const s = cgSize(); return s.h > s.w*1.1; };
 const cgRectsFor = (l, tall) => tall ? l.r.map(([x,y,w,h])=>[y,x,h,w]) : l.r;
 function cgPool(){
-  const c = S.collage, v = S.vehicles.find(x=>x.id===c.srcVid);
+  const c = S.collage;
+  if(c.srcVid==="all") return [...S.vehicles.flatMap(x=>(x.photos||[]).map(p=>"a:"+p.id)), ...c.local];
+  const v = S.vehicles.find(x=>x.id===c.srcVid);
   return [...(v?(v.photos||[]).map(p=>"a:"+p.id):[]), ...c.local];
+}
+function cgVehOfKey(key){
+  if(!key || !key.startsWith("a:")) return null;
+  const id = key.slice(2);
+  return S.vehicles.find(v=>(v.photos||[]).some(p=>p.id===id)) || null;
+}
+function cgBuildLineup(scope){
+  const c = S.collage, order = {available:0,pending:1,sold:2};
+  let vs = S.vehicles.filter(v=>(v.photos||[]).length && (scope==="all" || v.status!=="sold"))
+    .sort((a,b)=>((order[a.status]??0)-(order[b.status]??0)) || ((b.createdAt||0)-(a.createdAt||0)));
+  if(!vs.length){ toast("No vehicles with photos to build a lineup from.", 4000); return; }
+  const total = vs.length; vs = vs.slice(0,12);
+  const n = vs.length;
+  c.layout = n<=1?"one":n===2?"two":n===3?"h2":n===4?"g4":n===5?"m5":n===6?"g6":n<=8?"g8":n<=9?"g9":"g12";
+  const L = CG_LAYOUTS.find(l=>l.k===c.layout);
+  c.slots.forEach(s=>{ s.key=null; s.fx=.5; s.fy=.5; s.z=1; });
+  vs.forEach((v,i)=>{ if(i<L.n) c.slots[i].key = "a:"+v.photos[0].id; });
+  c.vid = ""; c.srcVid = "all"; c.info = "none"; c.caption = true; c.gap = Math.max(c.gap,6);
+  c.sel = {t:"slot", i:0};
+  toast(total>12 ? `Showing 12 of ${total} vehicles. Collages hold up to 12.` : `Lineup built with ${n} vehicle${n>1?"s":""}.`, 4000);
 }
 function cgSrc(key){
   if(key.startsWith("l:")) return cgLocalUrls.get(key) || "";
@@ -2429,6 +2507,21 @@ function cgDraw(ctx, W, H, ui){
         ctx.fillStyle = "rgba(255,255,255,.35)"; ctx.textAlign="center"; ctx.textBaseline="middle";
         ctx.font = `500 ${Math.round(u*.03)}px Inter, Arial, sans-serif`;
         ctx.fillText(s.key ? "Loading photo…" : "Pick a photo below", x+w/2, y+h/2);
+      }
+    }
+    if(c.caption && s.key){
+      const cv2 = cgVehOfKey(s.key);
+      if(cv2){
+        const f = Math.max(13, Math.min(w*.085, h*.11, u*.04)), gh = f*3.4;
+        const gr = ctx.createLinearGradient(0,y+h-gh,0,y+h);
+        gr.addColorStop(0,"rgba(0,0,0,0)"); gr.addColorStop(1,"rgba(0,0,0,.82)");
+        ctx.fillStyle = gr; ctx.fillRect(x,y+h-gh,w,gh);
+        ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+        let nf = f; const nm = carName(cv2);
+        ctx.font = `700 ${nf}px "Fraunces", Georgia, serif`;
+        while(ctx.measureText(nm).width > w-f*1.2 && nf > 9){ nf -= 1; ctx.font = `700 ${nf}px "Fraunces", Georgia, serif`; }
+        ctx.fillStyle = "#f4f0e6"; ctx.fillText(nm, x+f*.6, y+h-f*1.45);
+        if(cv2.price!=null){ ctx.font = `600 ${f*.95}px "Fraunces", Georgia, serif`; ctx.fillStyle = "#c6a473"; ctx.fillText(money(cv2.price), x+f*.6, y+h-f*.45); }
       }
     }
     ctx.restore();
@@ -2672,6 +2765,14 @@ function cgRenderSide(){
       </div>
       <p class="hint" style="margin-top:8px">One tap sets the layout and adds stickers. Change anything after.</p>
     </div>
+    <div class="panel"><h3 class="sectiontitle">Lineup of all vehicles</h3>
+      <div class="cgrow">
+        <button class="btn sm" data-cg="lineup:lot">Build from vehicles on the lot</button>
+        <button class="btn sec sm" data-cg="lineup:all">Include sold</button>
+      </div>
+      <label class="cgck" style="margin-top:10px"><input type="checkbox" data-cgi="g:caption" ${c.caption?"checked":""}> Show name and price on each photo</label>
+      <p class="hint" style="margin-top:8px">Puts one photo from each vehicle (up to 12) into the best-fitting grid. Tap a frame, then pick another photo to change which shot is used.</p>
+    </div>
     <div class="panel"><h3 class="sectiontitle">Format</h3>
       <div class="cgsizes">${CG_SIZES.map(s=>`<button class="cgsize" data-cg="size:${s.k}" aria-pressed="${c.size===s.k}">
         <b>${s.name}</b><small>${s.note}</small></button>`).join("")}</div>
@@ -2682,6 +2783,7 @@ function cgRenderSide(){
         ${vs.map(v=>`<option value="${v.id}" ${c.vid===v.id?"selected":""}>${esc(cgOptLabel(v))}</option>`).join("")}</select></div>
       <div class="field" style="margin-top:10px"><label>Photos from</label>
         <select data-cgs="src"><option value="">Only my uploads</option>
+        <option value="all" ${c.srcVid==="all"?"selected":""}>All vehicles — every photo</option>
         ${vs.map(v=>`<option value="${v.id}" ${c.srcVid===v.id?"selected":""}>${esc(cgOptLabel(v))} — ${(v.photos||[]).length} photos</option>`).join("")}</select></div>
       <div class="cgtray">${pool.length ? pool.map(k=>`<button class="cgtp ${usedKeys.has(k)?"used":""}" data-cg="photo:${k}" title="Put in frame ${selSlot>=0?selSlot+1:""}">
         <img src="${esc(cgSrc(k))}" alt="" loading="lazy"></button>`).join("") : `<p class="hint">No photos yet. Pick a vehicle that has photos, or add your own.</p>`}</div>
@@ -2774,6 +2876,7 @@ function wireCollage(){
     else if(a==="size"){ c.size = arg; cgFit(); cgRenderSide(); cgSchedule(); }
     else if(a==="layout"){ c.layout = arg; cgFillSlots(false); if(c.sel && c.sel.t==="slot" && c.sel.i>=cgLayout().n) c.sel = {t:"slot",i:0}; cgRenderSide(); cgRenderSel(); cgSchedule(); }
     else if(a==="look"){ cgLook(arg); cgRenderSide(); cgRenderSel(); cgSchedule(); }
+    else if(a==="lineup"){ cgBuildLineup(arg); cgRenderSide(); cgRenderSel(); cgSchedule(); }
     else if(a==="info"){ c.info = arg; cgRenderSide(); cgSchedule(); }
     else if(a==="bgc"){ c.bg = arg; cgRenderSide(); cgSchedule(); }
     else if(a==="sticker"){ cgAddSticker(+arg); cgRenderSel(); cgRenderSide(); cgSchedule(); }
@@ -2898,6 +3001,8 @@ function wireAdmin(){
     }
     if(a==="save"){ await commitVehicle(); }
     if(a==="save-site"){ await commitSite(); }
+    if(a==="favpick"){ const f = document.getElementById("favfile"); if(f) f.click(); }
+    if(a==="favclear"){ delete S.settings.faviconAsset; await commitSite(); render(); }
     if(a==="export"){ await exportSite(); }
     if(a==="renamephotos"){ if(S.admin.draft) renameAllPhotosForSEO(S.admin.draft); }
     if(a==="build-embed" || a==="rebuild-embed"){
@@ -2998,6 +3103,22 @@ function wireAdmin(){
 }
 
 function wireSiteFields(){
+  const ff = document.getElementById("favfile");
+  if(ff) ff.addEventListener("change", async ()=>{
+    const file = ff.files[0]; ff.value = ""; if(!file) return;
+    try{
+      const bmp = await createImageBitmap(file);
+      const cv = document.createElement("canvas"); cv.width = cv.height = 256;
+      const sc = Math.min(256/bmp.width, 256/bmp.height);
+      cv.getContext("2d").drawImage(bmp, (256-bmp.width*sc)/2, (256-bmp.height*sc)/2, bmp.width*sc, bmp.height*sc);
+      const png = await new Promise(r=>cv.toBlob(r,"image/png"));
+      let id;
+      if(S.assets){ id = (await S.assets.upload(png, {type:"image/png"})).id; }
+      else{ id = "local:" + uid(); S.localBlobs.set(id, URL.createObjectURL(png)); }
+      S.settings.faviconAsset = id;
+      await commitSite(); render();
+    }catch(e){ toast("Couldn't read that image. Use a PNG or JPG.", 5000); }
+  });
   document.querySelectorAll("[data-s]").forEach(el=>{
     el.addEventListener("input", ()=>{ S.settings[el.getAttribute("data-s")] = el.value; });
   });
